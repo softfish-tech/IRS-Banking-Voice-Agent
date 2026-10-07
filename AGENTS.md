@@ -2,6 +2,18 @@
 
 For team-wide collaboration, testing, configuration, and trace requirements, see `docs/engineering_conventions.md`.
 
+## Authoritative project references
+
+Before implementing or changing a module, read the relevant project references:
+
+- `docs/module_ownership.md` defines ownership and responsibility boundaries.
+- `docs/module_api_contract.md` defines module inputs, outputs, failure behavior, and E/C integration rules.
+- `docs/scenario_table.md` defines required business behavior, safety constraints, and E2E acceptance scenarios.
+- `src/banking_agent/schemas/state.py` and `src/banking_agent/schemas/enums.py` are the canonical executable State and enum definitions.
+- `docs/engineering_conventions.md` defines Git, testing, configuration, decision-trace, and completion rules.
+
+When these sources overlap, the executable schema and enums take precedence for field names and allowed values, followed by the API contract and Scenario Table. Do not duplicate their detailed contents in this file.
+
 ## Repository rules
 
 - Use the existing checkout; do not create Git worktrees.
@@ -21,4 +33,5 @@ For team-wide collaboration, testing, configuration, and trace requirements, see
 
 - Put tests in `tests/unit/`, `tests/integration/`, or `tests/e2e/`.
 - Before changing shared schemas or orchestration, update the relevant contracts and scenario documentation.
+- Do not introduce shared fields, enum values, module outputs, or cross-module dependencies without updating the canonical schema and all affected contracts, scenarios, and tests.
 - Preserve module ownership and coordinate cross-module contract changes with the integration owner.
