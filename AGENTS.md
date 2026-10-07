@@ -1,5 +1,7 @@
 # Development Guide
 
+For team-wide collaboration, testing, configuration, and trace requirements, see `docs/engineering_conventions.md`.
+
 ## Repository rules
 
 - Use the existing checkout; do not create Git worktrees.
