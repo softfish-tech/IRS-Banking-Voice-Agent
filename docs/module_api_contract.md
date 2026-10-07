@@ -4,7 +4,7 @@
 
 This document defines the integration boundary between the four domain modules and the E-owned application layer. It specifies the structured data each module receives and returns; it does not prescribe HTTP routes, models, databases, or implementation frameworks.
 
-The canonical shared fields and enums will be defined in `agent_state_schema.md`.
+The canonical shared fields and enums are implemented in [`../src/banking_agent/schemas/state.py`](../src/banking_agent/schemas/state.py) and [`../src/banking_agent/schemas/enums.py`](../src/banking_agent/schemas/enums.py).
 
 ## Shared conventions
 
@@ -127,12 +127,15 @@ C receives the business-decision view of `AgentState`, not UI, API, or logging d
 {
   "session_id": "session-001",
   "user_text": "Someone used my card without my permission.",
-  "intent": "unauthorized_transaction",
-  "intent_confidence": 0.97,
-  "risk_level": "HIGH",
+  "understanding": {
+    "intent": "unauthorized_transaction",
+    "confidence": 0.97,
+    "risk_level": "HIGH",
+    "entities": []
+  },
   "complaint_status": "NONE",
-  "consent": false,
-  "eligibility": null
+  "consent": "UNKNOWN",
+  "eligibility": "UNKNOWN"
 }
 ```
 
@@ -166,10 +169,8 @@ C receives the business-decision view of `AgentState`, not UI, API, or logging d
 {
   "session_id": "session-001",
   "complaint_status": "RESOLVED",
-  "consent": true,
-  "eligibility": {
-    "eligible_products": ["savings_account"]
-  }
+  "consent": "GRANTED",
+  "eligibility": "ELIGIBLE"
 }
 ```
 

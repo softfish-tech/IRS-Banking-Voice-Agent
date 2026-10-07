@@ -4,7 +4,7 @@
 
 - Use the existing checkout; do not create Git worktrees.
 - Keep application code under `src/banking_agent/`.
-- Keep shared state and interface contracts in `src/banking_agent/schemas/`.
+- Keep shared state and interface contracts in `src/banking_agent/schemas/`; `state.py` is the canonical AgentState definition.
 - Do not commit secrets, `.env` files, raw sensitive data, model binaries, or generated caches.
 
 ## Module boundaries
