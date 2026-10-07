@@ -11,6 +11,7 @@
 
 - `app/orchestrator/` owns module sequencing and final-response assembly.
 - High-risk routing and recommendation permission must go through `modules/rules/`.
+- Use `ABSTAIN` when a question is understood but lacks reliable evidence; use `CLARIFY` only when user intent or required information is unclear.
 - Modules must use public contracts and must not import another module's internals.
 - `modules/voice/` is an extension point and is outside the phase-one text mock path.
 

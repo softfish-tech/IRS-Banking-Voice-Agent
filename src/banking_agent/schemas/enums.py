@@ -12,6 +12,7 @@ class Action(StrEnum):
     RECOMMEND = "RECOMMEND"
     CLARIFY = "CLARIFY"
     BLOCK = "BLOCK"
+    ABSTAIN = "ABSTAIN"
 
 
 class ComplaintStatus(StrEnum):
@@ -21,6 +22,13 @@ class ComplaintStatus(StrEnum):
     OPEN = "OPEN"
     UNDER_REVIEW = "UNDER_REVIEW"
     RESOLVED = "RESOLVED"
+
+
+class HandoffStatus(StrEnum):
+    """Status of escalation or human-handoff handling."""
+
+    NOT_REQUIRED = "NOT_REQUIRED"
+    PENDING = "PENDING"
     ESCALATED = "ESCALATED"
 
 
@@ -39,11 +47,3 @@ class ConsentStatus(StrEnum):
     UNKNOWN = "UNKNOWN"
     GRANTED = "GRANTED"
     DENIED = "DENIED"
-
-
-class EligibilityStatus(StrEnum):
-    """Eligibility fact supplied by the synthetic data/recommendation domain."""
-
-    UNKNOWN = "UNKNOWN"
-    ELIGIBLE = "ELIGIBLE"
-    INELIGIBLE = "INELIGIBLE"

@@ -6,7 +6,7 @@ from .enums import (
     Action,
     ComplaintStatus,
     ConsentStatus,
-    EligibilityStatus,
+    HandoffStatus,
     RiskLevel,
 )
 
@@ -48,6 +48,7 @@ class RuleStatePatch(SchemaModel):
     """Whitelisted business-state changes returned by the Rules module."""
 
     complaint_status: ComplaintStatus | None = None
+    handoff_status: HandoffStatus | None = None
 
 
 class Decision(SchemaModel):
@@ -80,8 +81,8 @@ class AgentState(SchemaModel):
     understanding: UnderstandingResult = Field(default_factory=UnderstandingResult)
 
     complaint_status: ComplaintStatus = ComplaintStatus.NONE
+    handoff_status: HandoffStatus = HandoffStatus.NOT_REQUIRED
     consent: ConsentStatus = ConsentStatus.UNKNOWN
-    eligibility: EligibilityStatus = EligibilityStatus.UNKNOWN
 
     retrieved_docs: list[RetrievedDocument] = Field(default_factory=list)
     decision: Decision | None = None

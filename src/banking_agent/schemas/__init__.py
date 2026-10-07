@@ -4,7 +4,7 @@ from .enums import (
     Action,
     ComplaintStatus,
     ConsentStatus,
-    EligibilityStatus,
+    HandoffStatus,
     RiskLevel,
 )
 from .state import (
@@ -23,8 +23,8 @@ __all__ = [
     "ComplaintStatus",
     "ConsentStatus",
     "Decision",
-    "EligibilityStatus",
     "Entity",
+    "HandoffStatus",
     "RecommendationItem",
     "RetrievedDocument",
     "RiskLevel",
