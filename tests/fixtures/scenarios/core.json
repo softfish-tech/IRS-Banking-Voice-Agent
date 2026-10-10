@@ -1,0 +1,428 @@
+[
+  {
+    "id": "S01",
+    "input": {
+      "session_id": "session-s01",
+      "user_text": "What is the replacement fee for my card?"
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "card_fee_enquiry",
+          "confidence": 0.94,
+          "risk_level": "LOW",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "ANSWER",
+            "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+            "next_state": {}
+          }
+        },
+        {
+          "status": "ok",
+          "data": {
+            "action": "ANSWER",
+            "reason_code": "POLICY_EVIDENCE_FOUND",
+            "next_state": {}
+          }
+        }
+      ],
+      "B": {
+        "status": "ok",
+        "data": {
+          "docs": [
+            {
+              "document_id": "policy-card-fees-v1",
+              "title": "Card Fees Policy",
+              "source": "Synthetic Bank Policy",
+              "score": 0.89,
+              "excerpt": "The synthetic replacement card fee is SGD 10."
+            }
+          ]
+        }
+      }
+    },
+    "expected": {
+      "action": "ANSWER",
+      "reason_code": "POLICY_EVIDENCE_FOUND",
+      "modules_called": [
+        "A",
+        "C",
+        "B",
+        "C"
+      ],
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [
+        "policy-card-fees-v1"
+      ],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S02",
+    "input": {
+      "session_id": "session-s02",
+      "user_text": "I was charged a fee I do not understand."
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "fee_complaint",
+          "confidence": 0.92,
+          "risk_level": "MEDIUM",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "HANDLE_COMPLAINT",
+            "reason_code": "FEE_COMPLAINT",
+            "next_state": {
+              "complaint_status": "OPEN"
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "action": "HANDLE_COMPLAINT",
+      "reason_code": "FEE_COMPLAINT",
+      "modules_called": [
+        "A",
+        "C"
+      ],
+      "complaint_status": "OPEN",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S03",
+    "input": {
+      "session_id": "session-s03",
+      "user_text": "Someone used my card without my permission."
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "unauthorized_transaction",
+          "confidence": 0.97,
+          "risk_level": "HIGH",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "ESCALATE",
+            "reason_code": "HIGH_RISK_TRANSACTION",
+            "next_state": {
+              "complaint_status": "OPEN",
+              "handoff_status": "ESCALATED"
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "action": "ESCALATE",
+      "reason_code": "HIGH_RISK_TRANSACTION",
+      "modules_called": [
+        "A",
+        "C"
+      ],
+      "complaint_status": "OPEN",
+      "handoff_status": "ESCALATED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S04",
+    "input": {
+      "session_id": "session-s04",
+      "user_text": "I think this transfer may be a scam."
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "fraud_suspicion",
+          "confidence": 0.95,
+          "risk_level": "HIGH",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "ESCALATE",
+            "reason_code": "FRAUD_SUSPICION",
+            "next_state": {
+              "complaint_status": "OPEN",
+              "handoff_status": "ESCALATED"
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "action": "ESCALATE",
+      "reason_code": "FRAUD_SUSPICION",
+      "modules_called": [
+        "A",
+        "C"
+      ],
+      "complaint_status": "OPEN",
+      "handoff_status": "ESCALATED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S05",
+    "input": {
+      "session_id": "session-s05",
+      "user_text": "Can you recommend a savings product while my fee complaint is still open?"
+    },
+    "initial_state": {
+      "complaint_status": "OPEN",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "GRANTED"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "product_recommendation",
+          "confidence": 0.91,
+          "risk_level": "LOW",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "BLOCK",
+            "reason_code": "UNRESOLVED_COMPLAINT",
+            "next_state": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "action": "BLOCK",
+      "reason_code": "UNRESOLVED_COMPLAINT",
+      "modules_called": [
+        "A",
+        "C"
+      ],
+      "complaint_status": "OPEN",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S06",
+    "input": {
+      "session_id": "session-s06",
+      "user_text": "My complaint is resolved. Can you recommend a suitable savings product?"
+    },
+    "initial_state": {
+      "complaint_status": "RESOLVED",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "GRANTED"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "product_recommendation",
+          "confidence": 0.93,
+          "risk_level": "LOW",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "RECOMMEND",
+            "reason_code": "RECOMMENDATION_PERMITTED",
+            "next_state": {}
+          }
+        }
+      ],
+      "D": {
+        "status": "ok",
+        "data": {
+          "allowed": true,
+          "reason_code": "ELIGIBLE_WITH_CONSENT",
+          "items": [
+            {
+              "product_id": "savings-account",
+              "name": "Smart Savings Account",
+              "rank": 1,
+              "reason": "Matches eligible synthetic profile"
+            }
+          ]
+        }
+      }
+    },
+    "expected": {
+      "action": "RECOMMEND",
+      "reason_code": "RECOMMENDATION_PERMITTED",
+      "modules_called": [
+        "A",
+        "C",
+        "D"
+      ],
+      "complaint_status": "RESOLVED",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [],
+      "recommendation_count": 1
+    }
+  },
+  {
+    "id": "S07",
+    "input": {
+      "session_id": "session-s07",
+      "user_text": "I need help with that thing from before."
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "UNKNOWN",
+          "confidence": 0.31,
+          "risk_level": "UNKNOWN",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "CLARIFY",
+            "reason_code": "LOW_INTENT_CONFIDENCE",
+            "next_state": {}
+          }
+        }
+      ]
+    },
+    "expected": {
+      "action": "CLARIFY",
+      "reason_code": "LOW_INTENT_CONFIDENCE",
+      "modules_called": [
+        "A",
+        "C"
+      ],
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  },
+  {
+    "id": "S08",
+    "input": {
+      "session_id": "session-s08",
+      "user_text": "What is the bank policy for crypto wallet recovery?"
+    },
+    "initial_state": {
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "consent": "UNKNOWN"
+    },
+    "mock_outputs": {
+      "A": {
+        "status": "ok",
+        "data": {
+          "intent": "policy_enquiry",
+          "confidence": 0.88,
+          "risk_level": "LOW",
+          "entities": []
+        }
+      },
+      "C": [
+        {
+          "status": "ok",
+          "data": {
+            "action": "ANSWER",
+            "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+            "next_state": {}
+          }
+        },
+        {
+          "status": "ok",
+          "data": {
+            "action": "ABSTAIN",
+            "reason_code": "INSUFFICIENT_EVIDENCE",
+            "next_state": {}
+          }
+        }
+      ],
+      "B": {
+        "status": "empty",
+        "data": {
+          "docs": []
+        }
+      }
+    },
+    "expected": {
+      "action": "ABSTAIN",
+      "reason_code": "INSUFFICIENT_EVIDENCE",
+      "modules_called": [
+        "A",
+        "C",
+        "B",
+        "C"
+      ],
+      "complaint_status": "NONE",
+      "handoff_status": "NOT_REQUIRED",
+      "citation_ids": [],
+      "recommendation_count": 0
+    }
+  }
+]

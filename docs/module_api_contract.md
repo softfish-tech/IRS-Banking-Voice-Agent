@@ -238,3 +238,44 @@ E owns system-execution semantics: module invocation, state integration, API/UI/
 ## Phase-one mock requirement
 
 Each module provides a deterministic mock implementation for the agreed scenarios. This allows the text-only end-to-end workflow to run before production models, retrieval infrastructure, recommendation logic, or voice adapters are introduced.
+
+## E text-mock adapter implementation
+
+The first integration implementation uses async Python adapters in
+`app/orchestrator/interfaces.py`. This is an initial integration contract for
+module owners to review; existing business semantics and canonical enums are unchanged.
+
+- A: `analyze(session_id, user_text)` → `IntentResult`.
+- B: `retrieve(query, top_k)` → `RetrievalResult`.
+- C: `decide(state)` → `RulesResult`. Receives an isolated `AgentState` snapshot;
+  UI/logging fields are not business-decision inputs. Evidence is available in
+  `retrieved_docs` on the second call.
+- D: `recommend(session_id, complaint_status, handoff_status, consent)` →
+  `RecommendationResult`.
+
+Adapters may return a validated result model or a mapping conforming to that
+model. Non-error envelopes require typed `data`; `error` may omit data. A normal
+empty A result includes an unknown understanding; B includes an empty docs list;
+D includes its permission result and items. C must return `ok` with a decision.
+The orchestrator validates every envelope and applies only the canonical
+`RuleStatePatch`. It does not implement business-policy conditions.
+
+The default per-call timeout is 10 seconds and can be overridden at construction.
+Timeouts, exceptions, invalid results and explicit module errors return an
+application response with `status=error`, a sanitized module/error code, and no
+final business decision, citations or recommendations. Partial state is retained
+for internal inspection; it is not a successful business outcome. An evidence-free
+final `ANSWER` from C is a contract error, not an E-created `ABSTAIN` decision.
+The input state is not mutated; previous-turn evidence, decisions, recommendations
+and response text are cleared before processing a new request.
+
+`AgentResponse` is an internal application result, not a finalized public HTTP
+schema. It includes state for testing; a future API must explicitly choose its
+public fields. Text rendering currently uses deterministic templates and synthetic
+evidence excerpts. Request IDs are generated, but decision-trace logging is deferred.
+
+`tests/helpers/mock_modules.py` contains E-owned test doubles, not production
+A/B/C/D implementations or domain policies. S01–S08 fixtures follow the Scenario
+Table. `POLICY_RETRIEVAL_PERMITTED` is a provisional pre-evidence mock reason code
+for C to confirm; final reason codes match the documented scenarios. Mock test
+passes establish integration behavior, not domain-model accuracy or production readiness.
