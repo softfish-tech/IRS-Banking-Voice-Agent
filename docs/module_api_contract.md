@@ -270,9 +270,111 @@ The input state is not mutated; previous-turn evidence, decisions, recommendatio
 and response text are cleared before processing a new request.
 
 `AgentResponse` is an internal application result, not a finalized public HTTP
-schema. It includes state for testing; a future API must explicitly choose its
-public fields. Text rendering currently uses deterministic templates and synthetic
-evidence excerpts. Request IDs are generated, but decision-trace logging is deferred.
+schema. It includes state for testing. The local application explicitly converts
+it into `ChatTurnResponseV1` in `app/api/dto.py`; the public model exposes only
+the request ID, a user-facing message, action, safe citation metadata, rendered
+recommendations, and a generic error code. It excludes State, reason codes,
+state patches, technical module/error details, document IDs, scores, and excerpts.
+Text rendering currently uses deterministic templates and synthetic evidence
+excerpts. Request IDs are generated and sanitized decision traces are persisted
+by the local application layer.
+
+## Local text-mock application API
+
+The dependency-free local application at `app/api/server.py` is an E-owned
+development aid, not a production banking API. It exposes the browser page at
+`/`, uses a local SQLite file of synthetic-only test accounts, and sends a
+random opaque session token in a loopback-only HttpOnly cookie. Passwords are
+salted and derived with `scrypt`; the database stores only hashes. It has these
+same-origin JSON endpoints:
+
+| Endpoint | Purpose | Request / response |
+| --- | --- | --- |
+| `POST /api/auth/register` | Creates a synthetic local account. | Username and 6+ character test password. |
+| `POST /api/auth/login` / `logout` | Starts or clears the local session. | Login returns an HttpOnly cookie. |
+| `GET /api/me` | Returns the current synthetic account. | Requires authentication. |
+| `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Scenario IDs and fixture user text only. |
+| `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Create with `{"scenario_id":"S01"}`. |
+| `GET /api/conversations/{id}` | Returns one caller-owned conversation and its history. | Other users receive `conversation_not_found`. |
+| `POST /api/conversations/{id}/messages` | Runs one selected fixture through the real orchestrator. | Persists the user/assistant turn and a successful C-controlled state update. |
+| `GET /api/developer/conversations/{id}/traces` | Returns restricted developer trace metadata. | Disabled unless explicit local developer mode is enabled. |
+
+The message endpoint returns this versioned public shape inside its `response`
+field (alongside the separately defined conversation object):
+
+```json
+{
+  "api_version": "v1",
+  "request_id": "request-id",
+  "status": "ok",
+  "message": {"kind": "answer", "text": "..."},
+  "decision": {"action": "ANSWER"},
+  "citations": [{"title": "Card Fees Policy", "source": "Synthetic Bank Policy"}],
+  "recommendations": [],
+  "error": null
+}
+```
+
+For an application failure, `message.kind` is `technical_error`, `decision`,
+citations and recommendations are empty, and `error.code` is the stable public
+value `agent_unavailable`. The internal module identity and technical code remain
+only in the decision trace.
+
+The server uses `ScenarioModules`, which replays the fixture's pre-scripted
+module envelopes and is deliberately not an A/B/C/D implementation. It accepts
+no arbitrary customer text, listens on loopback only, and must not be exposed
+as a production endpoint. The core orchestrator remains storage-independent:
+the application restores a state snapshot before a turn and saves only the
+resulting valid state after a successful response. The persisted message history
+contains the public response only; the independently stored conversation state
+is not exposed in the per-turn response.
+
+The API depends on the E-owned `ApplicationStore` Protocol rather than a
+database implementation. `SQLiteStore` remains the local synthetic-data default;
+`InMemoryStore` is used for application tests. A future durable implementation
+must satisfy the same user, session, conversation, turn, and trace methods, so
+changing databases does not alter API routes or agent orchestration.
+
+## Module composition and migration
+
+`app/bootstrap.py` is the E-owned composition root. Routes request a
+`ModuleBundle` from its `ModuleFactory`; routes do not import or construct A/B/C/D
+adapters. The default `fixture` mode creates a fresh `ScenarioModules` bundle for
+each selected fixture, preserving deterministic scenario behavior. `production`
+mode fails closed until E explicitly supplies a `ModuleBundle` of owner-provided
+adapters implementing the existing public Protocols. Thus, replacing fixtures
+with real implementations changes composition only—not the API, session store,
+frontend, shared schema, or orchestrator.
+
+## Decision traces
+
+The E-owned `app/observability.py` produces one sanitized `DecisionTrace` for
+every orchestrator request, including technical failures. It records request and
+session identifiers, fixture/production mode, scenario ID when applicable,
+module call order/status/duration, understanding summary, before/after complaint
+and handoff states, final action/reason, retrieved document IDs, recommendation
+count, controlled state patch, result status, a sanitized technical-error code,
+and total duration. A SHA-256 hash may associate duplicate text without storing
+the text itself.
+
+The local SQLite store writes these traces to `decision_traces`. The only trace
+route is protected by an explicit local developer-mode flag and configured local
+developer username; it is disabled by default and is not linked from the user
+chat UI. Full user text, assistant text, passwords, cookies, tokens, exception
+details, and full evidence excerpts are excluded. Failure to write a trace never
+changes an otherwise safe agent result. Production deployment requires proper
+role-based access control rather than this local allow-list.
+
+## Adapter contract test harness
+
+`tests/helpers/adapter_contracts.py` is an E-owned reusable validation harness
+for module handoff. It calls only the public adapter Protocols and validates the
+result envelopes and integration invariants: A's normal empty understanding is
+unknown; B's empty result has no documents; C has no normal empty result; and D
+denial uses `ok`, `allowed=false`, and no items. Technical `error` envelopes are
+valid for safe failure handling. The harness does not evaluate intent accuracy,
+retrieval quality, rules policy, or recommendation ranking; those remain with
+the relevant owner.
 
 `tests/helpers/mock_modules.py` contains E-owned test doubles, not production
 A/B/C/D implementations or domain policies. S01–S08 fixtures follow the Scenario

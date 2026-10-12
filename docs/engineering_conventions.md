@@ -31,6 +31,13 @@ Use concise, imperative commit messages with a category prefix, for example `fea
 
 Every pull request should state its purpose, affected modules/contracts, validation performed, shared-schema or scenario changes, and any remaining limitation or follow-up work.
 
+### Continuous integration
+
+GitHub Actions runs `.github/workflows/verify.yml` on every push and pull
+request. The workflow uses Python 3.11 and runs unit, integration (including
+adapter-contract), and E2E tests without secrets or external banking services.
+Changes to test commands must keep this workflow and `tests/README.md` aligned.
+
 ## 3. Module boundaries and shared contracts
 
 Modules follow the ownership boundaries in `module_ownership.md`. A, B, C, and D must not import another domain module's internal implementation. Cross-module data uses the public models in `src/banking_agent/schemas/` and the contracts in `module_api_contract.md`.
@@ -107,4 +114,8 @@ A change is ready for pull-request review when all applicable conditions are met
 
 ## 9. Deferred decisions
 
-This document does not yet prescribe a Web/API framework, deployment platform, CI provider, formatter/linter, model provider, or mandatory reviewer count. The team should add these decisions when selected without weakening the boundaries and safety rules above.
+This document does not yet prescribe a Web/API framework, deployment platform,
+formatter/linter, model provider, or mandatory reviewer count. GitHub Actions is
+the selected CI provider for the current Python verification workflow. The team
+should add remaining decisions when selected without weakening the boundaries and
+safety rules above.

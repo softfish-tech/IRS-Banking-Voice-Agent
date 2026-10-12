@@ -1,0 +1,29 @@
+name: Verify
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python 3.11 tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package and test dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -e .
+      - name: Run unit tests
+        run: PYTHONPATH=src:tests python -m unittest discover -s tests/unit -v
+      - name: Run integration and adapter contract tests
+        run: PYTHONPATH=src:tests python -m unittest discover -s tests/integration -v
+      - name: Run end-to-end scenario tests
+        run: PYTHONPATH=src:tests python -m unittest discover -s tests/e2e -v
