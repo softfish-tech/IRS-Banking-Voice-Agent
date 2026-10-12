@@ -1,0 +1,643 @@
+{
+  "card_arrival": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "card_delivery_estimate",
+      "get_physical_card",
+      "order_physical_card"
+    ]
+  },
+  "card_linking": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "card_not_working",
+      "contactless_not_working",
+      "activate_my_card",
+      "apple_pay_or_google_pay"
+    ]
+  },
+  "exchange_rate": {
+    "Category": "currency_exchange",
+    "Related Intents": [
+      "card_payment_wrong_exchange_rate",
+      "fiat_currency_support",
+      "exchange_via_app",
+      "wrong_exchange_rate_for_cash_withdrawal",
+      "exchange_charge"
+    ]
+  },
+  "card_payment_wrong_exchange_rate": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "exchange_rate",
+      "wrong_exchange_rate_for_cash_withdrawal"
+    ]
+  },
+  "extra_charge_on_statement": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "card_payment_fee_charged",
+      "transaction_charged_twice"
+    ]
+  },
+  "pending_cash_withdrawal": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "wrong_amount_of_cash_received",
+      "declined_cash_withdrawal"
+    ]
+  },
+  "fiat_currency_support": {
+    "Category": "currency_exchange",
+    "Related Intents": [
+      "exchange_rate",
+      "exchange_via_app",
+      "supported_cards_and_currencies",
+      "exchange_charge"
+    ]
+  },
+  "card_delivery_estimate": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "card_arrival",
+      "get_physical_card",
+      "order_physical_card"
+    ]
+  },
+  "automatic_top_up": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "top_up_limits",
+      "supported_cards_and_currencies",
+      "topping_up_by_card"
+    ]
+  },
+  "card_not_working": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "card_linking",
+      "contactless_not_working",
+      "declined_card_payment",
+      "virtual_card_not_working",
+      "activate_my_card"
+    ]
+  },
+  "exchange_via_app": {
+    "Category": "currency_exchange",
+    "Related Intents": [
+      "exchange_rate",
+      "fiat_currency_support",
+      "exchange_charge"
+    ]
+  },
+  "lost_or_stolen_card": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "card_payment_not_recognised",
+      "compromised_card",
+      "card_swallowed",
+      "getting_spare_card"
+    ]
+  },
+  "age_limit": {
+    "Category": "account_management",
+    "Related Intents": [
+      "get_physical_card",
+      "country_support"
+    ]
+  },
+  "pin_blocked": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "passcode_forgotten",
+      "change_pin"
+    ]
+  },
+  "contactless_not_working": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "card_linking",
+      "card_not_working",
+      "declined_card_payment",
+      "virtual_card_not_working",
+      "apple_pay_or_google_pay"
+    ]
+  },
+  "top_up_by_bank_transfer_charge": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "transfer_fee_charged",
+      "transfer_into_account",
+      "top_up_by_card_charge"
+    ]
+  },
+  "pending_top_up": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "top_up_reverted",
+      "top_up_failed"
+    ]
+  },
+  "cancel_transfer": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "pending_transfer",
+      "failed_transfer"
+    ]
+  },
+  "top_up_limits": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "automatic_top_up",
+      "supported_cards_and_currencies",
+      "topping_up_by_card"
+    ]
+  },
+  "wrong_amount_of_cash_received": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "pending_cash_withdrawal",
+      "declined_cash_withdrawal"
+    ]
+  },
+  "card_payment_fee_charged": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "extra_charge_on_statement",
+      "transaction_charged_twice"
+    ]
+  },
+  "transfer_not_received_by_recipient": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "pending_transfer",
+      "transfer_timing",
+      "failed_transfer"
+    ]
+  },
+  "supported_cards_and_currencies": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "fiat_currency_support",
+      "automatic_top_up",
+      "top_up_limits",
+      "card_acceptance",
+      "visa_or_mastercard",
+      "topping_up_by_card"
+    ]
+  },
+  "getting_virtual_card": {
+    "Category": "virtual_cards",
+    "Related Intents": [
+      "disposable_card_limits",
+      "virtual_card_not_working",
+      "get_disposable_virtual_card"
+    ]
+  },
+  "card_acceptance": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "supported_cards_and_currencies",
+      "visa_or_mastercard",
+      "atm_support",
+      "declined_cash_withdrawal"
+    ]
+  },
+  "top_up_reverted": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "pending_top_up",
+      "top_up_failed"
+    ]
+  },
+  "balance_not_updated_after_cheque_or_cash_deposit": {
+    "Category": "cash_and_cheque_deposits",
+    "Related Intents": [
+      "top_up_by_cash_or_cheque"
+    ]
+  },
+  "card_payment_not_recognised": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "lost_or_stolen_card",
+      "compromised_card",
+      "direct_debit_payment_not_recognised",
+      "cash_withdrawal_not_recognised"
+    ]
+  },
+  "edit_personal_details": {
+    "Category": "account_management",
+    "Related Intents": [
+      "terminate_account",
+      "verify_my_identity"
+    ]
+  },
+  "why_verify_identity": {
+    "Category": "identity_verification",
+    "Related Intents": [
+      "unable_to_verify_identity",
+      "verify_source_of_funds",
+      "verify_my_identity"
+    ]
+  },
+  "unable_to_verify_identity": {
+    "Category": "identity_verification",
+    "Related Intents": [
+      "why_verify_identity",
+      "verify_source_of_funds",
+      "verify_my_identity"
+    ]
+  },
+  "get_physical_card": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "card_arrival",
+      "card_delivery_estimate",
+      "age_limit",
+      "getting_spare_card",
+      "order_physical_card",
+      "card_about_to_expire",
+      "country_support"
+    ]
+  },
+  "visa_or_mastercard": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "supported_cards_and_currencies",
+      "card_acceptance"
+    ]
+  },
+  "topping_up_by_card": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "automatic_top_up",
+      "top_up_limits",
+      "supported_cards_and_currencies",
+      "verify_top_up",
+      "top_up_failed",
+      "top_up_by_card_charge"
+    ]
+  },
+  "disposable_card_limits": {
+    "Category": "virtual_cards",
+    "Related Intents": [
+      "getting_virtual_card",
+      "virtual_card_not_working",
+      "get_disposable_virtual_card"
+    ]
+  },
+  "compromised_card": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "lost_or_stolen_card",
+      "card_payment_not_recognised",
+      "lost_or_stolen_phone"
+    ]
+  },
+  "atm_support": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "card_acceptance",
+      "declined_cash_withdrawal"
+    ]
+  },
+  "direct_debit_payment_not_recognised": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "card_payment_not_recognised",
+      "cash_withdrawal_not_recognised"
+    ]
+  },
+  "passcode_forgotten": {
+    "Category": "account_management",
+    "Related Intents": [
+      "pin_blocked",
+      "lost_or_stolen_phone",
+      "change_pin"
+    ]
+  },
+  "declined_cash_withdrawal": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "pending_cash_withdrawal",
+      "wrong_amount_of_cash_received",
+      "card_acceptance",
+      "atm_support"
+    ]
+  },
+  "pending_card_payment": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "declined_card_payment",
+      "reverted_card_payment?"
+    ]
+  },
+  "lost_or_stolen_phone": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "compromised_card",
+      "passcode_forgotten"
+    ]
+  },
+  "request_refund": {
+    "Category": "refunds",
+    "Related Intents": [
+      "Refund_not_showing_up",
+      "transaction_charged_twice",
+      "reverted_card_payment?"
+    ]
+  },
+  "declined_transfer": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "beneficiary_not_allowed",
+      "failed_transfer"
+    ]
+  },
+  "Refund_not_showing_up": {
+    "Category": "refunds",
+    "Related Intents": [
+      "request_refund",
+      "transaction_charged_twice",
+      "reverted_card_payment?"
+    ]
+  },
+  "declined_card_payment": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "card_not_working",
+      "contactless_not_working",
+      "pending_card_payment",
+      "reverted_card_payment?",
+      "virtual_card_not_working"
+    ]
+  },
+  "pending_transfer": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "cancel_transfer",
+      "transfer_not_received_by_recipient",
+      "transfer_timing",
+      "failed_transfer"
+    ]
+  },
+  "terminate_account": {
+    "Category": "account_management",
+    "Related Intents": [
+      "edit_personal_details",
+      "verify_my_identity"
+    ]
+  },
+  "card_swallowed": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "lost_or_stolen_card",
+      "getting_spare_card"
+    ]
+  },
+  "transaction_charged_twice": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "extra_charge_on_statement",
+      "card_payment_fee_charged",
+      "request_refund",
+      "Refund_not_showing_up",
+      "reverted_card_payment?"
+    ]
+  },
+  "verify_source_of_funds": {
+    "Category": "identity_verification",
+    "Related Intents": [
+      "why_verify_identity",
+      "unable_to_verify_identity",
+      "verify_top_up",
+      "verify_my_identity"
+    ]
+  },
+  "transfer_timing": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "transfer_not_received_by_recipient",
+      "pending_transfer",
+      "receiving_money",
+      "failed_transfer",
+      "transfer_into_account",
+      "balance_not_updated_after_bank_transfer"
+    ]
+  },
+  "reverted_card_payment?": {
+    "Category": "card_payments",
+    "Related Intents": [
+      "pending_card_payment",
+      "request_refund",
+      "Refund_not_showing_up",
+      "declined_card_payment",
+      "transaction_charged_twice"
+    ]
+  },
+  "change_pin": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "pin_blocked",
+      "passcode_forgotten"
+    ]
+  },
+  "beneficiary_not_allowed": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "declined_transfer",
+      "failed_transfer"
+    ]
+  },
+  "transfer_fee_charged": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "top_up_by_bank_transfer_charge",
+      "transfer_into_account",
+      "top_up_by_card_charge"
+    ]
+  },
+  "receiving_money": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "transfer_timing",
+      "transfer_into_account",
+      "balance_not_updated_after_bank_transfer"
+    ]
+  },
+  "failed_transfer": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "cancel_transfer",
+      "transfer_not_received_by_recipient",
+      "declined_transfer",
+      "pending_transfer",
+      "transfer_timing",
+      "beneficiary_not_allowed"
+    ]
+  },
+  "transfer_into_account": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "top_up_by_bank_transfer_charge",
+      "transfer_timing",
+      "transfer_fee_charged",
+      "receiving_money",
+      "balance_not_updated_after_bank_transfer"
+    ]
+  },
+  "verify_top_up": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "topping_up_by_card",
+      "verify_source_of_funds",
+      "top_up_failed",
+      "top_up_by_card_charge"
+    ]
+  },
+  "getting_spare_card": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "lost_or_stolen_card",
+      "get_physical_card",
+      "card_swallowed",
+      "order_physical_card",
+      "card_about_to_expire"
+    ]
+  },
+  "top_up_by_cash_or_cheque": {
+    "Category": "cash_and_cheque_deposits",
+    "Related Intents": [
+      "balance_not_updated_after_cheque_or_cash_deposit"
+    ]
+  },
+  "order_physical_card": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "card_arrival",
+      "card_delivery_estimate",
+      "get_physical_card",
+      "getting_spare_card",
+      "card_about_to_expire"
+    ]
+  },
+  "virtual_card_not_working": {
+    "Category": "virtual_cards",
+    "Related Intents": [
+      "card_not_working",
+      "contactless_not_working",
+      "getting_virtual_card",
+      "disposable_card_limits",
+      "declined_card_payment",
+      "get_disposable_virtual_card"
+    ]
+  },
+  "wrong_exchange_rate_for_cash_withdrawal": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "exchange_rate",
+      "card_payment_wrong_exchange_rate",
+      "exchange_charge",
+      "cash_withdrawal_charge"
+    ]
+  },
+  "get_disposable_virtual_card": {
+    "Category": "virtual_cards",
+    "Related Intents": [
+      "getting_virtual_card",
+      "disposable_card_limits",
+      "virtual_card_not_working"
+    ]
+  },
+  "top_up_failed": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "pending_top_up",
+      "top_up_reverted",
+      "topping_up_by_card",
+      "verify_top_up",
+      "top_up_by_card_charge"
+    ]
+  },
+  "balance_not_updated_after_bank_transfer": {
+    "Category": "bank_transfers",
+    "Related Intents": [
+      "transfer_timing",
+      "receiving_money",
+      "transfer_into_account"
+    ]
+  },
+  "cash_withdrawal_not_recognised": {
+    "Category": "security_and_unrecognised_transactions",
+    "Related Intents": [
+      "card_payment_not_recognised",
+      "direct_debit_payment_not_recognised"
+    ]
+  },
+  "exchange_charge": {
+    "Category": "currency_exchange",
+    "Related Intents": [
+      "exchange_rate",
+      "fiat_currency_support",
+      "exchange_via_app",
+      "wrong_exchange_rate_for_cash_withdrawal",
+      "cash_withdrawal_charge"
+    ]
+  },
+  "top_up_by_card_charge": {
+    "Category": "card_top_ups",
+    "Related Intents": [
+      "top_up_by_bank_transfer_charge",
+      "topping_up_by_card",
+      "transfer_fee_charged",
+      "verify_top_up",
+      "top_up_failed"
+    ]
+  },
+  "activate_my_card": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "card_linking",
+      "card_not_working"
+    ]
+  },
+  "cash_withdrawal_charge": {
+    "Category": "cash_withdrawals",
+    "Related Intents": [
+      "wrong_exchange_rate_for_cash_withdrawal",
+      "exchange_charge"
+    ]
+  },
+  "card_about_to_expire": {
+    "Category": "card_lifecycle",
+    "Related Intents": [
+      "get_physical_card",
+      "getting_spare_card",
+      "order_physical_card"
+    ]
+  },
+  "apple_pay_or_google_pay": {
+    "Category": "card_usage_and_access",
+    "Related Intents": [
+      "card_linking",
+      "contactless_not_working"
+    ]
+  },
+  "verify_my_identity": {
+    "Category": "identity_verification",
+    "Related Intents": [
+      "edit_personal_details",
+      "why_verify_identity",
+      "unable_to_verify_identity",
+      "terminate_account",
+      "verify_source_of_funds"
+    ]
+  },
+  "country_support": {
+    "Category": "account_management",
+    "Related Intents": [
+      "age_limit",
+      "get_physical_card"
+    ]
+  }
+}
