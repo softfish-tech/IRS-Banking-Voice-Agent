@@ -55,3 +55,19 @@ These scenarios are valuable but are not required for the first text-mock demons
 ## Future E2E fixture mapping
 
 When implementation begins, each core scenario maps to a fixture under `tests/fixtures/scenarios/` and a test under `tests/e2e/`, using the same `S01`–`S08` identifier.
+
+## D reference fixtures and replacement verification
+
+D's synthetic S05/S06/S09/S10 cases live in
+`tests/fixtures/scenarios/recommendation.json`.
+Direct S05/S09 calls test defensive rejection only; C/E must prevent those calls
+in an integrated workflow. S09/S10 remain optional focused scenarios.
+
+`scripts/check_recommendation_e.py` requires E's public test harness and
+orchestrator, replaces only D with the real recommendation implementation,
+and replays S01-S08 with scripted A/B/C. S06 returns three demo products instead
+of E's one scripted product; the acceptance requirement remains non-empty,
+eligible, ranked recommendations. The existing core fixture is unchanged.
+The same check covers no eligible products, unknown sessions, defensive denial,
+C's complaint patch before D, and rejection of a consent patch.
+This establishes E/D compatibility, not real A/B/C quality or voice completion.

@@ -238,3 +238,33 @@ E owns system-execution semantics: module invocation, state integration, API/UI/
 ## Phase-one mock requirement
 
 Each module provides a deterministic mock implementation for the agreed scenarios. This allows the text-only end-to-end workflow to run before production models, retrieval infrastructure, recommendation logic, or voice adapters are introduced.
+
+## D phase-one implementation and async handoff
+
+D exposes the pure function `recommend(request, *, customer_profiles, products)`
+and `RecommendationAdapter(dataset)`, whose async method is
+`recommend(session_id, complaint_status, handoff_status, consent)`.
+The async method matches E's proposed public Protocol and returns a mapping
+compatible with E's RecommendationResult. Data is injected at initialization;
+D does not import the orchestrator or any other domain module.
+
+The pure function keeps its generic error envelope `{"status":"error","data":{}}`.
+The async adapter omits data on errors (`{"status":"error"}`), because E's typed
+RecommendationData rejects an empty object even when status is error.
+Business denials always use ok, allowed=false and items=[], never empty.
+
+Synthetic session/profile association is explicit and is not authentication.
+Unknown sessions fail closed; E must associate application session IDs with the
+intended synthetic profile before injecting D. D never supplies a default profile.
+Demo product eligibility checks age, Singapore residence and integer SGD cents.
+Ranking is goal match, ascending demo_priority, then product_id.
+These three demo products are not authorized NovaBank offerings or interest-rate
+policies. Their inclusion in the final bank catalog needs B/C/E review.
+
+C remains responsible for risk and recommendation permission. E calls D only
+after C returns RECOMMEND; the four-field input cannot independently prove that
+permission. Defensive complaint/consent checks can only reject.
+The canonical RuleStatePatch excludes consent; D does not create consent.
+
+See [D handoff](d_recommendation_handoff.md) for data injection, error handling,
+scenario expectations, reproduction commands and remaining team decisions.

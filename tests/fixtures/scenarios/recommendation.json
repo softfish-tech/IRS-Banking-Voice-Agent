@@ -1,0 +1,82 @@
+{
+  "synthetic": true,
+  "scope": "D fixtures. Direct S05/S09 calls test defense only; integrated C/E must not call D.",
+  "scenarios": [
+    {
+      "id": "S05",
+      "user_text": "Can you recommend a savings product while my fee complaint is still open?",
+      "request": {
+        "session_id": "session-001",
+        "complaint_status": "OPEN",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "expected_c_action": "BLOCK",
+      "expected_c_reason_code": "UNRESOLVED_COMPLAINT",
+      "expected_d_called": false,
+      "expected_d": {
+        "allowed": false,
+        "reason_code": "UNRESOLVED_COMPLAINT",
+        "product_ids": []
+      }
+    },
+    {
+      "id": "S06",
+      "user_text": "My complaint is resolved. Can you recommend a suitable savings product?",
+      "request": {
+        "session_id": "session-001",
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "expected_c_action": "RECOMMEND",
+      "expected_c_reason_code": "RECOMMENDATION_PERMITTED",
+      "expected_d_called": true,
+      "expected_d": {
+        "allowed": true,
+        "reason_code": "ELIGIBLE_WITH_CONSENT",
+        "product_ids": [
+          "savings-premium",
+          "savings-flex",
+          "emergency-reserve"
+        ]
+      }
+    },
+    {
+      "id": "S09",
+      "user_text": "My complaint is resolved, but I have not agreed to product recommendations.",
+      "request": {
+        "session_id": "session-001",
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "expected_c_action": "BLOCK",
+      "expected_c_reason_code": "CONSENT_REQUIRED",
+      "expected_d_called": false,
+      "expected_d": {
+        "allowed": false,
+        "reason_code": "CONSENT_REQUIRED",
+        "product_ids": []
+      }
+    },
+    {
+      "id": "S10",
+      "user_text": "Can you recommend a suitable savings product?",
+      "request": {
+        "session_id": "session-002",
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "expected_c_action": "RECOMMEND",
+      "expected_c_reason_code": "RECOMMENDATION_PERMITTED",
+      "expected_d_called": true,
+      "expected_d": {
+        "allowed": false,
+        "reason_code": "NO_ELIGIBLE_PRODUCT",
+        "product_ids": []
+      }
+    }
+  ]
+}
