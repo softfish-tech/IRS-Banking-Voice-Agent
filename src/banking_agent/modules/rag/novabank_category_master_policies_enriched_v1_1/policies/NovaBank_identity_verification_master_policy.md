@@ -92,7 +92,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 - Check whether the document is valid, all corners are visible, the name and birth date match the application, the live selfie is clear, and Singapore address evidence is no older than 90 calendar days.
 - Permit up to 3 automated submissions within 24 hours. After the third unsuccessful attempt, require manual review instead of repeated automated retries; do not treat the account as verified.
 - Automated assessment takes up to 10 minutes per complete submission. Manual review takes up to 2 business days after complete evidence, and costs SGD 0.
-- The secure rejection screen identifies a resubmittable defect or a final eligibility decision. A customer disputing a final decision may request one staff review within 30 calendar days; staff decide within 5 business days after complete evidence.
+- The secure rejection screen identifies a resubmittable defect or a final eligibility decision. A customer disputing a final decision may request one staff review within 30 calendar days after the final decision is notified to the customer through the secure app or registered contact channel; staff decide within 5 business days after complete evidence.
 
 **Verification and required evidence:** Use secure onboarding to submit a valid government-issued photo ID, live selfie and Singapore proof of address issued within 90 calendar days. For funding-origin review, supply a transfer reference and matching salary slip, savings statement or sale agreement; bank statements must be issued within 90 calendar days. Ordinary support chat cannot approve uploaded documents.
 
@@ -103,7 +103,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Operational exceptions and status checks:**
 
 - Identify whether failure concerns expired ID, missing document side, glare/cropping, mismatched legal name/date of birth, address freshness or live-selfie quality. Enable camera permissions and submit clear original evidence securely; a static selfie, altered image or another person's document is unacceptable.
-- Allow at most three automated submissions per rolling 24 hours at SGD 0; after the third unsuccessful submission move to manual review, targeted within 2 business days of complete evidence. A documented final decision may receive one staff reconsideration requested within 30 calendar days, targeted within 5 business days. Retrying incomplete or identical files does not restart eligibility or bypass controls.
+- Allow at most three automated submissions per rolling 24 hours at SGD 0; after the third unsuccessful submission move to manual review, targeted within 2 business days of complete evidence. A documented final decision may receive one staff reconsideration requested within 30 calendar days after the final decision is notified to the customer through the secure app or registered contact channel, with a decision within 5 business days after complete evidence. Recording a decision internally or uploading more documents does not start or restart the 30-calendar-day window. Retrying incomplete or identical files does not restart eligibility or bypass controls.
 
 ### verify_source_of_funds — Review the origin of funding under NovaBank's synthetic source-of-funds control
 

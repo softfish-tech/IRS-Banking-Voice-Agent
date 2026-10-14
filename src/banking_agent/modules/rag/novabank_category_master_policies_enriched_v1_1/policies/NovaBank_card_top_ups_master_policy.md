@@ -39,6 +39,10 @@ Manual or opt-in automatic funding of the NovaBank SGD balance using a same-owne
 
 Top-ups are SGD-only: minimum 20 and maximum 2,000 each, maximum 5,000 per Singapore calendar day, and maximum 20,000 per calendar month. NovaBank top-up fee is SGD 0. Manual and automatic attempts share these counters. Pending authorised attempts reserve capacity; failed uncredited attempts release it; reversals of completed credits do not restore used capacity.
 
+### Pending Top-Up Start Event
+
+For every manual or automatic card top-up, the 72-hour pending/finalisation clock starts at the recorded issuer-authorisation timestamp, not request initiation or NovaBank acceptance. Ownership review does not restart this clock. The separate release-instruction clock starts at final FAILED status; the issuer release window starts when NovaBank sends that instruction.
+
 ### Common Calendar, Authentication and Evidence Rules
 
 All amounts are SGD unless explicitly stated as SGD-equivalent or another supported currency. Fees include any simulated taxes; no additional tax is added. Singapore time is UTC+08:00. Daily limits reset at 00:00 Singapore Time; calendar-month limits reset at 00:00 on the first day of the next month. Rolling 24-hour and rolling 30-calendar-day windows do not reset at midnight.
@@ -118,7 +122,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Operational exceptions and status checks:**
 
 - Compare the NovaBank attempt reference with the issuer authorisation, amount and currency; statement booking dates can differ. An external debit or hold alone does not prove a NovaBank credit. No duplicate retry or cancellation is offered for a pending authorised attempt.
-- Normal accepted credit is within 60 seconds; pending may last at most 72 hours from acceptance. If it ends FAILED, NovaBank sends a release instruction within 1 business day of that final status; the external issuer release target is 5 business days from that instruction, not from the attempt. Escalate status overdue beyond 72 hours at SGD 0 for a 2-business-day technical review.
+- Normal accepted credit is within 60 seconds; pending may last at most 72 hours from issuer authorisation, not NovaBank acceptance or request initiation. If it ends FAILED, NovaBank sends a release instruction within 1 business day of that final status; the external issuer release target is 5 business days from that instruction, not from the attempt. Escalate status overdue beyond 72 hours at SGD 0 for a 2-business-day technical review.
 
 ### top_up_limits — State the shared limits for manual and automatic debit-card funding
 

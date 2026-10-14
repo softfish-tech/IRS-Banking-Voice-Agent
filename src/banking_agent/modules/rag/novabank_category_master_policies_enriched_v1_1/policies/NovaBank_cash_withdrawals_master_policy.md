@@ -85,7 +85,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Processing, conditions, fees and limits:**
 
 - Record the ATM location, withdrawal date/time, requested currency/amount, transaction reference, and whether any cash was dispensed. A normal ATM authorisation settles or reverses within 3 calendar days.
-- If the third calendar day ends with the authorisation still pending, open an ATM enquiry. Staff acknowledge within 1 business day and complete an ATM reconciliation decision within 10 business days after complete evidence.
+- If the third calendar day ends with the authorisation still pending, open an ATM enquiry at SGD 0. Staff acknowledge within 1 business day. A status-only enquiry is reviewed within 2 business days after complete evidence. If no cash, short cash or excess cash is reported, use the separate cash-dispensing reconciliation decision target of 10 business days after complete evidence, with a 30-calendar-day intake window from withdrawal; report a cash problem immediately even while pending.
 - If no cash was dispensed, report the failure immediately rather than retrying solely because the balance has a hold. A confirmed erroneous debit is restored within 2 business days after approval.
 - ATM withdrawals are limited to SGD-equivalent 500 per transaction and 1,000 per Singapore calendar day. Each completed withdrawal has a SGD 2 NovaBank fee; a failed withdrawal must not retain that bank fee.
 
@@ -98,7 +98,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Operational exceptions and status checks:**
 
 - Record requested amount, actual cash received, ATM operator/location/ID, local time with timezone and masked reference. No cash or short cash must be reported immediately even if the ledger is PENDING; the customer is not required to wait three days before reporting.
-- The pending hold ceiling is 3 calendar days. An internal overdue-status case is reviewed within 2 business days at SGD 0; a cash-dispensing discrepancy uses the 30-calendar-day intake, acknowledgement within 1 business day and 10-business-day reconciliation after complete evidence. A failed no-cash attempt has no NovaBank withdrawal fee; assess any operator charge separately.
+- The pending hold ceiling is 3 calendar days. A status-only overdue enquiry is reviewed within 2 business days after complete evidence at SGD 0, with acknowledgement within 1 business day; a no-cash, short-cash or excess-cash discrepancy instead uses the 30-calendar-day intake from withdrawal, acknowledgement within 1 business day and 10-business-day reconciliation decision target after complete evidence. Reporting a cash problem must not wait for the pending ceiling. A failed no-cash attempt has no NovaBank withdrawal fee; assess any operator charge separately.
 
 ### wrong_amount_of_cash_received — Investigate a cash shortage or excess from a recognised ATM withdrawal
 
@@ -196,7 +196,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 
 - NovaBank ATM withdrawals debit SGD, including supported foreign-currency cash withdrawals. When converting, apply the transaction quote plus a 0.50% conversion fee with a SGD 0.50 minimum; each completed withdrawal also has a SGD 2 bank fee.
 - ATM dynamic currency conversion uses the operator's rate when the customer accepts it. An operator surcharge is separate from NovaBank conversion and withdrawal fees.
-- Provide the ATM identifier, receipt, requested currency, cash amount, SGD debit and transaction reference. Submit an alleged rate-calculation error within 60 calendar days of settlement.
+- Provide the ATM identifier, receipt, requested currency, cash amount, SGD debit and transaction reference. Submit an alleged rate-calculation error within 60 calendar days of the disputed withdrawal posting to the NovaBank ledger, not settlement if the dates differ.
 - Staff acknowledge within 1 business day and finish an internal calculation review within 5 business days after complete evidence. A confirmed NovaBank error is corrected within 2 business days after approval.
 
 **Verification and required evidence:** Authenticate before accessing the debit or changing card state. Provide ATM identifier/location, date/time, reference, currency, requested amount and dispensed amount; include a masked ATM receipt if available. No fresh ID is required with current verification. Never supply a PIN; a missing receipt does not postpone urgent security escalation.
@@ -208,7 +208,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Operational exceptions and status checks:**
 
 - The receipt must identify local cash currency/amount and whether the operator converted into SGD. NovaBank converts supported foreign cash from SGD; holding enough foreign currency does not change this. Operator DCC rates are distinct from NovaBank settlement-rate calculations.
-- Fee-free rate review intake is 60 calendar days after posting; internal calculation review takes 5 business days with approved correction within 2 business days. Separate the SGD 2 withdrawal fee, 0.50% FX fee with minimum equivalent 0.50 and operator surcharge. A cash shortage instead uses the 30-calendar-day ATM reconciliation window.
+- Fee-free rate review intake is 60 calendar days after the disputed withdrawal posting to the NovaBank ledger, not settlement if the dates differ; internal calculation review takes 5 business days with approved correction within 2 business days. Separate the SGD 2 withdrawal fee, 0.50% FX fee with minimum equivalent 0.50 and operator surcharge. A cash shortage instead uses the 30-calendar-day ATM reconciliation window.
 
 ### cash_withdrawal_charge — Explain fees on a completed recognised ATM withdrawal
 
