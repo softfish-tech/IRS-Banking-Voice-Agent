@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "rows": 151,
+  "unique_ids": 151,
+  "required_fields": [
+    "chunk_id",
+    "title",
+    "content",
+    "source_type",
+    "source_policy_id",
+    "source_policy_version",
+    "source_document"
+  ],
+  "corpus_file": "NovaBank_knowledge_chunks_v1_1.jsonl",
+  "corpus_sha256": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
+  "all_sources_allowlisted": true,
+  "all_source_paths_resolve": true,
+  "all_status_active": true,
+  "note": "Delivery metadata/provenance checks, not evidence-sufficiency certification"
+}

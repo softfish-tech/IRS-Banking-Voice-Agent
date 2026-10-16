@@ -101,7 +101,8 @@ def main() -> None:
      def field(name):
       m=re.search(r'^'+name+r':\s*(.+)$',front,re.M)
       return m.group(1).strip() if m else None
-     meta={k:field(k) for k in ['policy_id','business_category','version','status','effective_date','jurisdiction_context','synthetic']}
+     meta={k:field(k) for k in ['policy_id','business_category','version','status','effective_date','jurisdiction_context','synthetic','source_type']}
+     assert meta['source_type'] == 'Category Master Policy', f'{p}: invalid or missing source_type'
      assert meta['version']=='1.1' and meta['status']=='Active' and meta['effective_date']=='2026-10-11'
      assert meta['policy_id']==record['policy_id'] and meta['business_category']==record['business_category']
      assert hashlib.sha256(p.read_bytes()).hexdigest()==record['sha256'],str(p)
@@ -176,7 +177,7 @@ def main() -> None:
      for word in re.findall(r'[a-z]+(?:-[a-z]+)*',title.lower()):
       if word not in stop and word not in kws and len(word)>2:kws.append(word)
      kws=list(dict.fromkeys(kws))[:10]
-     chunk={'chunk_id':cid,'title':title,'content':content,'knowledge_type':kind,'intent':intent,'related_intents':related,'category':meta['business_category'],'source_policy_id':meta['policy_id'],'source_policy_version':meta['version'],'source_document':info['path'],'customer_type':'personal','product':products.get(meta['business_category']),'region':meta['jurisdiction_context'],'status':'active','effective_date':meta['effective_date'],'retrieval_keywords':kws}
+     chunk={'chunk_id':cid,'title':title,'content':content,'knowledge_type':kind,'intent':intent,'related_intents':related,'category':meta['business_category'],'source_policy_id':meta['policy_id'],'source_policy_version':meta['version'],'source_document':info['path'],'source_type':meta['source_type'],'customer_type':'personal','product':products.get(meta['business_category']),'region':meta['jurisdiction_context'],'status':'active','effective_date':meta['effective_date'],'retrieval_keywords':kws}
      chunks.append(chunk)
      relevant_headings=[h for h in info['headings'] if any(h['heading'].startswith(i+' — ') for i in [intent]+related) or h['heading'] in ['Common Calendar, Authentication and Evidence Rules','Common Fees, Limits and Service Conditions','Academic Scope and Safety','Physical-Card Delivery Reference','Currency Conversion Boundary','Counter and Available-Balance Interpretation','Funding-Origin Review Boundary','Calendar, Cutoff and Service Start Events','Fees and Delivery Service Matrix','Card Counts, Renewal Overlap and Order States','Authentication, Evidence and Secure Channels','Security, Payment Continuity and Liability Boundaries']]
      audit.append({'chunk_id':cid,'source_sha256':info['record']['sha256'],'source_sections_to_review':relevant_headings,'context_included':context,'faq_phrasing_ids':[f['id'] for f in matched],'source_authority':'Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts.'})
@@ -194,7 +195,7 @@ def main() -> None:
         text = policies[pid]['text']
         assert quote in text, (rid, 'Canonical clarification missing')
         resolutions.append({'review_id': rid, 'status': 'RESOLVED', 'clarification_date': '2026-10-14', 'source_policy_id': pid, 'source_policy_version': '1.1', 'source_document': policies[pid]['path'], 'canonical_source_passage': {'quote': quote, 'line': text[:text.index(quote)].count('\n') + 1}, 'resolution': explanation, 'affected_active_chunk_ids': [c['chunk_id'] for c in chunks if c['intent'] in intents]})
-    fields=['chunk_id','title','content','knowledge_type','intent','related_intents','category','source_policy_id','source_policy_version','source_document','customer_type','product','region','status','effective_date','retrieval_keywords']
+    fields=['chunk_id','title','content','knowledge_type','intent','related_intents','category','source_policy_id','source_policy_version','source_document','source_type','customer_type','product','region','status','effective_date','retrieval_keywords']
     assert chunks and all(list(c)==fields for c in chunks)
     assert len({c['chunk_id'] for c in chunks})==len(chunks)
     assert len({c['content'] for c in chunks})==len(chunks)
@@ -241,7 +242,7 @@ def main() -> None:
     mapping_file = out / 'NovaBank_faq_chunk_mapping_v1_1.jsonl'
     mapping_file.write_text(''.join(json.dumps(row,ensure_ascii=False)+'\n' for row in faq_mapping),encoding='utf-8')
     report['faq_mapping_file'] = {'name': mapping_file.name, 'sha256': hashlib.sha256(mapping_file.read_bytes()).hexdigest()}
-    report['checks'].update({'source_document_paths_resolve':True,'clarified_deadlines_restored_to_active_chunks':True,'all_chunks_name_novabank':True,'near_duplicate_detection_scope':'Token Jaccard >= 0.58 within a business category; candidates only, not a semantic duplicate guarantee.'})
+    report['checks'].update({'source_type_matches_policy_metadata':all(c['source_type']==policies[c['source_policy_id']]['metadata']['source_type'] for c in chunks),'source_document_paths_resolve':True,'clarified_deadlines_restored_to_active_chunks':True,'all_chunks_name_novabank':True,'near_duplicate_detection_scope':'Token Jaccard >= 0.58 within a business category; candidates only, not a semantic duplicate guarantee.'})
     report['output_file']={'name':file.name,'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),'format':'UTF-8 JSONL; one complete object per line; no Markdown fences'}
     report['generation']={'script':str(script_path.relative_to(script_path.parents[4])),'method':'Deterministic packaging of editorially curated policy summaries; no model call, embeddings or live retrieval.','drafts':str(draft_path.relative_to(root)) if draft_path.is_relative_to(root) else str(draft_path),'drafts_sha256':hashlib.sha256(draft_path.read_bytes()).hexdigest(),'faq_sha256':hashlib.sha256(faq_path.read_bytes()).hexdigest(),'manifest_sha256':hashlib.sha256((pack/'manifest.json').read_bytes()).hexdigest()}
     if numeric or near or unmatched:

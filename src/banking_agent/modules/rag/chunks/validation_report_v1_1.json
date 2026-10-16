@@ -127,6 +127,7 @@
     "semantic_support_method": "Editorial policy-based summaries with source-section references and source-local context. Numeric/source checks are mechanical; not a proof of every semantic claim.",
     "numeric_literals_needing_review": [],
     "near_duplicate_candidates": [],
+    "source_type_matches_policy_metadata": true,
     "source_document_paths_resolve": true,
     "clarified_deadlines_restored_to_active_chunks": true,
     "all_chunks_name_novabank": true,
@@ -5761,7 +5762,7 @@
   },
   "output_file": {
     "name": "NovaBank_knowledge_chunks_v1_1.jsonl",
-    "sha256": "f60a8206e01444be887e36b28fecfed28e847173e6a26f72cbc5e6ecc64ef87d",
+    "sha256": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
     "format": "UTF-8 JSONL; one complete object per line; no Markdown fences"
   },
   "generation": {
