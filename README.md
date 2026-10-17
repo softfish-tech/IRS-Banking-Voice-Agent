@@ -23,9 +23,11 @@ PYTHONPATH=src python -m banking_agent.app.api.server
 
 Then open `http://127.0.0.1:8000`. Create a local-only account with a test
 password of at least 6 characters. The SQLite database is stored under
-`data/processed/` and is ignored by Git. The app only runs synthetic S01--S08
-fixtures through the real orchestrator; its scenario adapters are not A/B/C/D
-production implementations. Do not enter real personal or banking data.
+`data/processed/` and is ignored by Git. The default fixture mode runs synthetic
+S01--S08 fixtures through the real orchestrator; its scenario adapters are not
+A/B/C/D production implementations. When E explicitly injects a complete
+production `ModuleBundle`, the local UI switches to a 1--2,000-character
+free-text synthetic-test surface. Do not enter real personal or banking data.
 
 The developer trace page is disabled by default. For local diagnostics only,
 start the server with an explicit registered developer username, then open

@@ -32,7 +32,15 @@ class ApplicationStore(Protocol):
     def create_conversation(self, user_id: int, title: str, initial_state: dict[str, str]) -> dict[str, object]: ...
     def list_conversations(self, user_id: int) -> list[dict[str, object]]: ...
     def get_conversation(self, user_id: int, conversation_id: str) -> dict[str, object]: ...
-    def add_turn(self, user_id: int, conversation_id: str, user_text: str, public_response: dict[str, object], final_state: dict[str, object]) -> None: ...
+    def add_turn(
+        self,
+        user_id: int,
+        conversation_id: str,
+        user_text: str,
+        public_response: dict[str, object],
+        final_state: dict[str, object],
+        expected_version: int,
+    ) -> dict[str, object]: ...
     def record_trace(self, trace: DecisionTrace) -> None: ...
     def list_traces(self, user_id: int, conversation_id: str) -> list[dict[str, object]]: ...
     def close(self) -> None: ...
@@ -61,7 +69,8 @@ class SQLiteStore:
             CREATE TABLE IF NOT EXISTS conversations (
                 id TEXT PRIMARY KEY, user_id INTEGER NOT NULL, title TEXT NOT NULL,
                 complaint_status TEXT NOT NULL, handoff_status TEXT NOT NULL,
-                consent TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL,
+                consent TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0,
+                created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
             );
             CREATE TABLE IF NOT EXISTS messages (
@@ -84,7 +93,14 @@ class SQLiteStore:
             );
             """
         )
+        self._migrate_conversations_version()
         self.connection.commit()
+
+    def _migrate_conversations_version(self) -> None:
+        """Add optimistic-locking support to local databases created before it existed."""
+        columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(conversations)")}
+        if "version" not in columns:
+            self.connection.execute("ALTER TABLE conversations ADD COLUMN version INTEGER NOT NULL DEFAULT 0")
 
     @staticmethod
     def _password_hash(password: str, salt: bytes | None = None) -> str:
@@ -151,8 +167,8 @@ class SQLiteStore:
     def create_conversation(self, user_id: int, title: str, initial_state: dict[str, str]) -> dict[str, object]:
         now, conversation_id = int(time.time()), str(uuid4())
         self.connection.execute(
-            """INSERT INTO conversations(id, user_id, title, complaint_status, handoff_status, consent, created_at, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            """INSERT INTO conversations(id, user_id, title, complaint_status, handoff_status, consent, version, created_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)""",
             (conversation_id, user_id, title, initial_state["complaint_status"], initial_state["handoff_status"], initial_state["consent"], now, now),
         )
         self.connection.commit()
@@ -180,7 +196,10 @@ class SQLiteStore:
 
     @staticmethod
     def _conversation_summary(row: sqlite3.Row) -> dict[str, object]:
-        return {key: row[key] for key in ("id", "title", "complaint_status", "handoff_status", "consent", "created_at", "updated_at")}
+        return {
+            key: row[key]
+            for key in ("id", "title", "complaint_status", "handoff_status", "consent", "version", "created_at", "updated_at")
+        }
 
     def add_turn(
         self,
@@ -189,22 +208,36 @@ class SQLiteStore:
         user_text: str,
         public_response: dict[str, object],
         final_state: dict[str, object],
-    ) -> None:
+        expected_version: int,
+    ) -> dict[str, object]:
+        """Atomically persist one successful turn if the caller has a current snapshot."""
         self.get_conversation(user_id, conversation_id)
         if public_response["status"] != "ok":
             raise StoreError("agent_response_not_persisted")
+        if isinstance(expected_version, bool) or not isinstance(expected_version, int) or expected_version < 0:
+            raise StoreError("expected_version_must_be_non_negative_integer")
         now = int(time.time())
-        self.connection.execute("INSERT INTO messages(conversation_id, role, content, created_at) VALUES (?, 'user', ?, ?)", (conversation_id, user_text, now))
-        self.connection.execute(
-            "INSERT INTO messages(conversation_id, role, content, response_json, created_at) VALUES (?, 'assistant', ?, ?, ?)",
-            (conversation_id, public_response["message"]["text"], json.dumps(public_response), now),
-        )
-        self.connection.execute(
-            """UPDATE conversations SET complaint_status = ?, handoff_status = ?, consent = ?, updated_at = ?
-               WHERE id = ? AND user_id = ?""",
-            (final_state["complaint_status"], final_state["handoff_status"], final_state["consent"], now, conversation_id, user_id),
-        )
-        self.connection.commit()
+        with self.connection:
+            updated = self.connection.execute(
+                """UPDATE conversations
+                   SET complaint_status = ?, handoff_status = ?, consent = ?, updated_at = ?, version = version + 1
+                   WHERE id = ? AND user_id = ? AND version = ?""",
+                (
+                    final_state["complaint_status"], final_state["handoff_status"], final_state["consent"],
+                    now, conversation_id, user_id, expected_version,
+                ),
+            )
+            if updated.rowcount != 1:
+                raise StoreError("conversation_version_conflict")
+            self.connection.execute(
+                "INSERT INTO messages(conversation_id, role, content, created_at) VALUES (?, 'user', ?, ?)",
+                (conversation_id, user_text, now),
+            )
+            self.connection.execute(
+                "INSERT INTO messages(conversation_id, role, content, response_json, created_at) VALUES (?, 'assistant', ?, ?, ?)",
+                (conversation_id, public_response["message"]["text"], json.dumps(public_response), now),
+            )
+        return self.get_conversation(user_id, conversation_id)
 
     def record_trace(self, trace: DecisionTrace) -> None:
         """Persist a sanitised trace. Failures are isolated by the orchestrator."""

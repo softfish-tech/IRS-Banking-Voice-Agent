@@ -293,10 +293,11 @@ same-origin JSON endpoints:
 | `POST /api/auth/register` | Creates a synthetic local account. | Username and 6+ character test password. |
 | `POST /api/auth/login` / `logout` | Starts or clears the local session. | Login returns an HttpOnly cookie. |
 | `GET /api/me` | Returns the current synthetic account. | Requires authentication. |
-| `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Scenario IDs and fixture user text only. |
-| `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Create with `{"scenario_id":"S01"}`. |
+| `GET /api/config` | Returns the active application module mode. | `{ "module_mode": "fixture" | "production" }`; used by the local UI to select its input surface. |
+| `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Fixture mode only; scenario IDs and fixture user text only. |
+| `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Fixture mode creates with `{"scenario_id":"S01"}`. Production mode creates and runs the first turn with `{"user_text":"synthetic test text"}`. |
 | `GET /api/conversations/{id}` | Returns one caller-owned conversation and its history. | Other users receive `conversation_not_found`. |
-| `POST /api/conversations/{id}/messages` | Runs one selected fixture through the real orchestrator. | Persists the user/assistant turn and a successful C-controlled state update. |
+| `POST /api/conversations/{id}/messages` | Runs one controlled turn through the real orchestrator. | Fixture mode requires `{"scenario_id":"S01","expected_version":0}`; production mode requires `{"user_text":"synthetic test text","expected_version":0}`. It atomically persists the user/assistant turn and a successful C-controlled state update. A stale version returns `409 conversation_version_conflict`. |
 | `GET /api/developer/conversations/{id}/traces` | Returns restricted developer trace metadata. | Disabled unless explicit local developer mode is enabled. |
 
 The message endpoint returns this versioned public shape inside its `response`
@@ -320,10 +321,12 @@ citations and recommendations are empty, and `error.code` is the stable public
 value `agent_unavailable`. The internal module identity and technical code remain
 only in the decision trace.
 
-The server uses `ScenarioModules`, which replays the fixture's pre-scripted
-module envelopes and is deliberately not an A/B/C/D implementation. It accepts
-no arbitrary customer text, listens on loopback only, and must not be exposed
-as a production endpoint. The core orchestrator remains storage-independent:
+In fixture mode, the server uses `ScenarioModules`, which replays the fixture's
+pre-scripted module envelopes and is deliberately not an A/B/C/D implementation.
+Production mode accepts only 1--2,000-character synthetic test text after E has
+explicitly injected a complete owner-provided `ModuleBundle`; it remains a loopback
+development aid and must not be exposed as a production banking endpoint. The core
+orchestrator remains storage-independent:
 the application restores a state snapshot before a turn and saves only the
 resulting valid state after a successful response. The persisted message history
 contains the public response only; the independently stored conversation state
@@ -332,8 +335,10 @@ is not exposed in the per-turn response.
 The API depends on the E-owned `ApplicationStore` Protocol rather than a
 database implementation. `SQLiteStore` remains the local synthetic-data default;
 `InMemoryStore` is used for application tests. A future durable implementation
-must satisfy the same user, session, conversation, turn, and trace methods, so
-changing databases does not alter API routes or agent orchestration.
+must satisfy the same user, session, conversation, turn, and trace methods, including
+an atomic `expected_version` conversation-turn commit, so changing databases does not
+alter API routes or agent orchestration. `SQLiteStore` migrates local databases created
+before this field by adding a version of zero.
 
 ## Module composition and migration
 

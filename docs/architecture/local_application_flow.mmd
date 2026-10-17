@@ -10,7 +10,7 @@ flowchart LR
     Orchestrator --> C[C adapter]
     Orchestrator --> B[B adapter when permitted]
     Orchestrator --> D[D adapter when permitted]
-    Orchestrator --> Persist[Persist successful controlled state]
+    Orchestrator --> Persist[Atomically persist successful state + turn (expected version)]
     Orchestrator --> Trace[Sanitized decision trace]
     Persist --> Store
     Trace --> Store

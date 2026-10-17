@@ -5,12 +5,12 @@ import json
 import unittest
 
 from banking_agent.app.api.server import DemoApplication
-from banking_agent.app.bootstrap import FixtureModuleFactory
+from banking_agent.app.bootstrap import FixtureModuleFactory, ModuleBundle, StaticModuleFactory
 from banking_agent.app.persistence import InMemoryStore
 
 
 class RecordingFactory:
-    mode = "test"
+    mode = "fixture"
 
     def __init__(self) -> None:
         self.scenarios = []
@@ -19,6 +19,37 @@ class RecordingFactory:
     def create(self, *, scenario):
         self.scenarios.append(scenario["id"])
         return self.delegate.create(scenario=scenario)
+
+
+class ProductionModules:
+    """E-owned fake adapters for exercising the production integration path."""
+
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+        self.user_texts: list[str] = []
+
+    async def analyze(self, session_id, user_text):
+        self.calls.append("A")
+        self.user_texts.append(user_text)
+        return {
+            "status": "ok",
+            "data": {"intent": "policy_enquiry", "confidence": 0.95, "risk_level": "LOW", "entities": []},
+        }
+
+    async def retrieve(self, query, top_k):
+        self.calls.append("B")
+        return {
+            "status": "ok",
+            "data": {"docs": [{"document_id": "synthetic-policy-v1", "title": "Synthetic Policy", "source": "Test", "score": 0.9, "excerpt": "Synthetic evidence."}]},
+        }
+
+    async def decide(self, state):
+        self.calls.append("C")
+        return {"status": "ok", "data": {"action": "ANSWER", "reason_code": "POLICY_EVIDENCE_FOUND", "next_state": {}}}
+
+    async def recommend(self, session_id, complaint_status, handoff_status, consent):
+        self.calls.append("D")
+        return {"status": "ok", "data": {"allowed": False, "reason_code": "NOT_REQUESTED", "items": []}}
 
 
 class DemoApiTests(unittest.TestCase):
@@ -41,16 +72,78 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(status.value, 200)
         return headers["Set-Cookie"].split(";", 1)[0]
 
+    def use_production_modules(self) -> ProductionModules:
+        self.app.store.close()
+        modules = ProductionModules()
+        bundle = ModuleBundle(modules, modules, modules, modules)
+        self.app = DemoApplication(store=InMemoryStore(), module_factory=StaticModuleFactory(bundle))
+        return modules
+
     def test_lists_all_core_scenarios(self) -> None:
         _, _, body = self.api("GET", "/api/scenarios")
         self.assertEqual([item["id"] for item in body["scenarios"]], [f"S{i:02}" for i in range(1, 9)])
+
+    def test_production_mode_runs_free_text_and_keeps_trace_sanitized(self) -> None:
+        modules = self.use_production_modules()
+        status, _, config = self.api("GET", "/api/config")
+        self.assertEqual(status.value, 200)
+        self.assertEqual(config, {"module_mode": "production"})
+        cookie = self.account("alice")
+        text = "What is the synthetic replacement fee?"
+        status, _, created = self.api("POST", "/api/conversations", {"user_text": text}, cookie)
+        self.assertEqual(status.value, 201)
+        self.assertEqual(created["response"]["decision"]["action"], "ANSWER")
+        conversation = created["conversation"]
+        self.assertEqual(conversation["title"], text[:48])
+        self.assertEqual(conversation["version"], 1)
+        self.assertEqual([item["role"] for item in conversation["messages"]], ["user", "assistant"])
+        self.assertEqual(modules.calls, ["A", "C", "B", "C"])
+
+        status, _, updated = self.api(
+            "POST", f"/api/conversations/{conversation['id']}/messages",
+            {"user_text": "Can you repeat that?", "expected_version": 1}, cookie,
+        )
+        self.assertEqual(status.value, 200)
+        self.assertEqual(updated["conversation"]["version"], 2)
+        self.assertEqual(modules.user_texts, [text, "Can you repeat that?"])
+        trace = self.app.store.list_traces(1, conversation["id"])[0]
+        self.assertIsNone(trace["scenario_id"])
+        self.assertNotIn(text, str(trace))
+
+    def test_modes_reject_the_other_mode_input_shape(self) -> None:
+        cookie = self.account("alice")
+        status, _, body = self.api("POST", "/api/conversations", {"user_text": "hello"}, cookie)
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "user_text_not_allowed_in_fixture_mode"})
+
+        self.use_production_modules()
+        cookie = self.account("alice")
+        status, _, body = self.api("GET", "/api/scenarios", cookie=cookie)
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "scenarios_are_only_available_in_fixture_mode"})
+        status, _, body = self.api("POST", "/api/conversations", {"scenario_id": "S01"}, cookie)
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "scenario_id_not_allowed_in_production_mode"})
+
+    def test_production_text_requires_non_blank_text_within_limit(self) -> None:
+        self.use_production_modules()
+        cookie = self.account("alice")
+        for text in ("   ", "x" * 2001):
+            status, _, body = self.api("POST", "/api/conversations", {"user_text": text}, cookie)
+            self.assertEqual(status.value, 400)
+            self.assertEqual(body, {"error": "user_text_must_be_1_to_2000_characters"})
 
     def test_login_conversation_and_safe_turn_are_persisted(self) -> None:
         cookie = self.account("alice")
         status, _, created = self.api("POST", "/api/conversations", {"scenario_id": "S03"}, cookie)
         self.assertEqual(status.value, 201)
         conversation_id = created["conversation"]["id"]
-        status, _, result = self.api("POST", f"/api/conversations/{conversation_id}/messages", {"scenario_id": "S03"}, cookie)
+        self.assertEqual(created["conversation"]["version"], 0)
+        status, _, result = self.api(
+            "POST", f"/api/conversations/{conversation_id}/messages",
+            {"scenario_id": "S03", "expected_version": 0},
+            cookie,
+        )
         self.assertEqual(status.value, 200)
         self.assertEqual(result["response"]["api_version"], "v1")
         self.assertEqual(result["response"]["decision"]["action"], "ESCALATE")
@@ -59,6 +152,7 @@ class DemoApiTests(unittest.TestCase):
         conversation = result["conversation"]
         self.assertEqual(conversation["complaint_status"], "OPEN")
         self.assertEqual(conversation["handoff_status"], "ESCALATED")
+        self.assertEqual(conversation["version"], 1)
         self.assertEqual([message["role"] for message in conversation["messages"]], ["user", "assistant"])
         self.assertNotIn("state", conversation["messages"][1]["response"])
         self.assertNotIn("reason_code", str(conversation["messages"][1]["response"]))
@@ -88,7 +182,11 @@ class DemoApiTests(unittest.TestCase):
         self.app = DemoApplication(store=InMemoryStore(), module_factory=factory)
         cookie = self.account("alice")
         _, _, created = self.api("POST", "/api/conversations", {"scenario_id": "S03"}, cookie)
-        self.api("POST", f"/api/conversations/{created['conversation']['id']}/messages", {"scenario_id": "S03"}, cookie)
+        self.api(
+            "POST", f"/api/conversations/{created['conversation']['id']}/messages",
+            {"scenario_id": "S03", "expected_version": 0},
+            cookie,
+        )
         self.assertEqual(factory.scenarios, ["S03"])
 
     def test_developer_trace_endpoint_requires_explicit_mode_and_configured_account(self) -> None:
@@ -107,7 +205,11 @@ class DemoApiTests(unittest.TestCase):
         other_user = self.account("otheruser")
         _, _, created = self.api("POST", "/api/conversations", {"scenario_id": "S03"}, developer)
         conversation_id = created["conversation"]["id"]
-        self.api("POST", f"/api/conversations/{conversation_id}/messages", {"scenario_id": "S03"}, developer)
+        self.api(
+            "POST", f"/api/conversations/{conversation_id}/messages",
+            {"scenario_id": "S03", "expected_version": 0},
+            developer,
+        )
 
         status, _, body = self.api("GET", f"/api/developer/conversations/{conversation_id}/traces", cookie=other_user)
         self.assertEqual(status.value, 403)
@@ -119,3 +221,30 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(trace["reason_code"], "HIGH_RISK_TRANSACTION")
         self.assertEqual([(item["module"], item["status"]) for item in trace["modules"]], [("A", "ok"), ("C", "ok")])
         self.assertNotIn("Someone used my card", str(body))
+
+    def test_stale_conversation_version_is_rejected_without_partial_turn(self) -> None:
+        cookie = self.account("alice")
+        _, _, created = self.api("POST", "/api/conversations", {"scenario_id": "S03"}, cookie)
+        conversation_id = created["conversation"]["id"]
+        payload = {"scenario_id": "S03", "expected_version": 0}
+
+        status, _, _ = self.api("POST", f"/api/conversations/{conversation_id}/messages", payload, cookie)
+        self.assertEqual(status.value, 200)
+        status, _, body = self.api("POST", f"/api/conversations/{conversation_id}/messages", payload, cookie)
+        self.assertEqual(status.value, 409)
+        self.assertEqual(body, {"error": "conversation_version_conflict"})
+
+        status, _, body = self.api("GET", f"/api/conversations/{conversation_id}", cookie=cookie)
+        self.assertEqual(status.value, 200)
+        self.assertEqual(body["conversation"]["version"], 1)
+        self.assertEqual([message["role"] for message in body["conversation"]["messages"]], ["user", "assistant"])
+
+    def test_message_requires_a_non_negative_integer_version(self) -> None:
+        cookie = self.account("alice")
+        _, _, created = self.api("POST", "/api/conversations", {"scenario_id": "S03"}, cookie)
+        conversation_id = created["conversation"]["id"]
+        status, _, body = self.api(
+            "POST", f"/api/conversations/{conversation_id}/messages", {"scenario_id": "S03"}, cookie
+        )
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "expected_version_must_be_non_negative_integer"})

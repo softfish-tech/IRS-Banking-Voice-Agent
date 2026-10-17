@@ -24,6 +24,8 @@ DEFAULT_SCENARIOS_PATH = REPOSITORY_ROOT / "tests" / "fixtures" / "scenarios" / 
 DEFAULT_DATABASE_PATH = REPOSITORY_ROOT / "data" / "processed" / "local_demo.sqlite3"
 STATIC_PATH = Path(__file__).with_name("static") / "index.html"
 DEVELOPER_STATIC_PATH = Path(__file__).with_name("static") / "developer.html"
+SAFE_INITIAL_STATE = {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}
+MAX_USER_TEXT_LENGTH = 2000
 
 
 class DeveloperDashboardDisabled(Exception):
@@ -107,9 +109,76 @@ class DemoApplication:
             raise StoreError("valid_scenario_id_required")
         return self._scenarios[scenario_id]
 
+    @property
+    def module_mode(self) -> str:
+        mode = getattr(self.module_factory, "mode", None)
+        if mode not in {"fixture", "production"}:
+            raise StoreError("module_factory_mode_must_be_fixture_or_production")
+        return mode
+
+    @staticmethod
+    def _expected_version(payload: dict[str, Any]) -> int:
+        expected_version = payload.get("expected_version")
+        if isinstance(expected_version, bool) or not isinstance(expected_version, int) or expected_version < 0:
+            raise StoreError("expected_version_must_be_non_negative_integer")
+        return expected_version
+
+    @staticmethod
+    def _user_text(payload: dict[str, Any]) -> str:
+        user_text = payload.get("user_text")
+        if not isinstance(user_text, str):
+            raise StoreError("user_text_must_be_1_to_2000_characters")
+        user_text = user_text.strip()
+        if not user_text or len(user_text) > MAX_USER_TEXT_LENGTH:
+            raise StoreError("user_text_must_be_1_to_2000_characters")
+        return user_text
+
+    async def _run_turn(
+        self,
+        *,
+        user: dict[str, object],
+        conversation: dict[str, object],
+        user_text: str,
+        expected_version: int,
+        scenario: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, object], dict[str, object]]:
+        modules = self.module_factory.create(scenario=scenario)
+        response = await modules.new_orchestrator(
+            trace_sink=self.store,
+            trace_context=TraceContext(
+                mode=self.module_mode,
+                scenario_id=scenario["id"] if scenario else None,
+                conversation_id=str(conversation["id"]),
+                user_id=int(user["id"]),
+            ),
+        ).handle(
+            AgentState(
+                session_id=str(conversation["id"]),
+                user_text=user_text,
+                complaint_status=str(conversation["complaint_status"]),
+                handoff_status=str(conversation["handoff_status"]),
+                consent=str(conversation["consent"]),
+            )
+        )
+        public_response = to_chat_turn_response_v1(response).model_dump(mode="json")
+        if response.status == "ok":
+            conversation = self.store.add_turn(
+                int(user["id"]),
+                str(conversation["id"]),
+                user_text,
+                public_response,
+                response.model_dump(mode="json")["state"],
+                expected_version,
+            )
+        return public_response, conversation
+
     async def api(self, method: str, path: str, body: bytes = b"", cookie_header: str = "") -> tuple[HTTPStatus, list[tuple[str, str]], bytes]:
         try:
+            if method == "GET" and path == "/api/config":
+                return self._json(HTTPStatus.OK, {"module_mode": self.module_mode})
             if method == "GET" and path == "/api/scenarios":
+                if self.module_mode != "fixture":
+                    raise StoreError("scenarios_are_only_available_in_fixture_mode")
                 scenarios = [{"id": item["id"], "user_text": item["input"]["user_text"]} for item in self._scenarios.values()]
                 return self._json(HTTPStatus.OK, {"scenarios": scenarios})
             if method == "POST" and path == "/api/auth/register":
@@ -144,41 +213,52 @@ class DemoApplication:
             if method == "GET" and path == "/api/conversations":
                 return self._json(HTTPStatus.OK, {"conversations": self.store.list_conversations(int(user["id"]))})
             if method == "POST" and path == "/api/conversations":
-                scenario = self._scenario(self._payload(body).get("scenario_id"))
-                conversation = self.store.create_conversation(int(user["id"]), f"{scenario['id']}: {scenario['input']['user_text'][:48]}", scenario["initial_state"])
-                return self._json(HTTPStatus.CREATED, {"conversation": conversation})
+                payload = self._payload(body)
+                if self.module_mode == "fixture":
+                    if "user_text" in payload:
+                        raise StoreError("user_text_not_allowed_in_fixture_mode")
+                    scenario = self._scenario(payload.get("scenario_id"))
+                    conversation = self.store.create_conversation(
+                        int(user["id"]), f"{scenario['id']}: {scenario['input']['user_text'][:48]}", scenario["initial_state"]
+                    )
+                    return self._json(HTTPStatus.CREATED, {"conversation": conversation})
+                if "scenario_id" in payload:
+                    raise StoreError("scenario_id_not_allowed_in_production_mode")
+                user_text = self._user_text(payload)
+                conversation = self.store.create_conversation(int(user["id"]), user_text[:48], SAFE_INITIAL_STATE)
+                public_response, conversation = await self._run_turn(
+                    user=user,
+                    conversation=conversation,
+                    user_text=user_text,
+                    expected_version=0,
+                )
+                return self._json(HTTPStatus.CREATED, {"response": public_response, "conversation": conversation})
 
             parts = path.split("/")
             if len(parts) == 4 and parts[:3] == ["", "api", "conversations"] and method == "GET":
                 return self._json(HTTPStatus.OK, {"conversation": self.store.get_conversation(int(user["id"]), parts[3])})
             if len(parts) == 5 and parts[:3] == ["", "api", "conversations"] and parts[4] == "messages" and method == "POST":
-                scenario = self._scenario(self._payload(body).get("scenario_id"))
+                payload = self._payload(body)
+                expected_version = self._expected_version(payload)
                 conversation = self.store.get_conversation(int(user["id"]), parts[3])
-                modules = self.module_factory.create(scenario=scenario)
-                initial_state = AgentState(
-                    session_id=conversation["id"], user_text=scenario["input"]["user_text"],
-                    complaint_status=conversation["complaint_status"], handoff_status=conversation["handoff_status"], consent=conversation["consent"],
+                if self.module_mode == "fixture":
+                    if "user_text" in payload:
+                        raise StoreError("user_text_not_allowed_in_fixture_mode")
+                    scenario = self._scenario(payload.get("scenario_id"))
+                    user_text = scenario["input"]["user_text"]
+                else:
+                    if "scenario_id" in payload:
+                        raise StoreError("scenario_id_not_allowed_in_production_mode")
+                    scenario = None
+                    user_text = self._user_text(payload)
+                public_response, conversation = await self._run_turn(
+                    user=user,
+                    conversation=conversation,
+                    user_text=user_text,
+                    expected_version=expected_version,
+                    scenario=scenario,
                 )
-                response = await modules.new_orchestrator(
-                    trace_sink=self.store,
-                    trace_context=TraceContext(
-                        mode=getattr(self.module_factory, "mode", "custom"),
-                        scenario_id=scenario["id"],
-                        conversation_id=conversation["id"],
-                        user_id=int(user["id"]),
-                    ),
-                ).handle(initial_state)
-                public_response = to_chat_turn_response_v1(response).model_dump(mode="json")
-                persisted_response = response.model_dump(mode="json")
-                if response.status == "ok":
-                    self.store.add_turn(
-                        int(user["id"]),
-                        parts[3],
-                        scenario["input"]["user_text"],
-                        public_response,
-                        persisted_response["state"],
-                    )
-                return self._json(HTTPStatus.OK, {"response": public_response, "conversation": self.store.get_conversation(int(user["id"]), parts[3])})
+                return self._json(HTTPStatus.OK, {"response": public_response, "conversation": conversation})
             return self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
         except PermissionError:
             return self._json(HTTPStatus.UNAUTHORIZED, {"error": "authentication_required"})
@@ -187,7 +267,11 @@ class DemoApplication:
         except DeveloperAccessDenied:
             return self._json(HTTPStatus.FORBIDDEN, {"error": "developer_access_required"})
         except StoreError as error:
-            status = HTTPStatus.NOT_FOUND if str(error) == "conversation_not_found" else HTTPStatus.BAD_REQUEST
+            status = (
+                HTTPStatus.NOT_FOUND if str(error) == "conversation_not_found"
+                else HTTPStatus.CONFLICT if str(error) == "conversation_version_conflict"
+                else HTTPStatus.BAD_REQUEST
+            )
             return self._json(status, {"error": str(error)})
 
     def __call__(self, environ: dict[str, Any], start_response: Any) -> list[bytes]:
