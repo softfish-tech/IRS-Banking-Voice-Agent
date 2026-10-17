@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "new_pending": 0,
+  "existing_approved_dev_controls": 16,
+  "approval_required_for": "B-FILTER-001 through B-FILTER-024",
+  "corpus_sha256": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
+  "diagnostics_sha256": "61a843c36bf7dffc48fab18c6aa70f72b3146865310826056a7adb4d80544983",
+  "purpose": "development diagnostics only; never held-out test",
+  "new_reviewed_by": "current_user",
+  "new_reviewed_on": "2026-10-15",
+  "new_approved": 24,
+  "approval_basis": "Explicit user confirmation: all 24 reviewed and approved as no_evidence"
+}

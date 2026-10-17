@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-16",
+  "unit_tests": 49,
+  "integration_tests": 4,
+  "test_split_retrieved": false,
+  "corpus_manifest": "src/banking_agent/modules/rag/chunks/corpus_manifest.json",
+  "dev": {
+    "metric_status": "human_approved_only",
+    "evaluated_questions": 76,
+    "excluded_questions": 0,
+    "evidence_cases": {
+      "questions": 71,
+      "recall_at_1": 0.7605633802816901,
+      "hit_at_1": 0.7887323943661971,
+      "all_gold_recall_at_1": 0.0,
+      "recall_at_3": 0.9014084507042254,
+      "hit_at_3": 0.9295774647887324,
+      "all_gold_recall_at_3": 0.3333333333333333,
+      "recall_at_5": 0.9507042253521126,
+      "hit_at_5": 0.9577464788732394,
+      "all_gold_recall_at_5": 0.8333333333333334,
+      "multi_chunk_questions": 6,
+      "mrr_at_5": 0.8530516431924883
+    },
+    "by_case_type": {
+      "supported": {
+        "questions": 62,
+        "recall_at_1": 0.7741935483870968,
+        "hit_at_1": 0.8064516129032258,
+        "all_gold_recall_at_1": 0.0,
+        "recall_at_3": 0.9193548387096774,
+        "hit_at_3": 0.9516129032258065,
+        "all_gold_recall_at_3": 0.3333333333333333,
+        "recall_at_5": 0.9758064516129032,
+        "hit_at_5": 0.9838709677419355,
+        "all_gold_recall_at_5": 0.8333333333333334,
+        "multi_chunk_questions": 6,
+        "mrr_at_5": 0.8720430107526882
+      },
+      "unsupported": {
+        "questions": 9,
+        "recall_at_1": 0.6666666666666666,
+        "hit_at_1": 0.6666666666666666,
+        "all_gold_recall_at_1": null,
+        "recall_at_3": 0.7777777777777778,
+        "hit_at_3": 0.7777777777777778,
+        "all_gold_recall_at_3": null,
+        "recall_at_5": 0.7777777777777778,
+        "hit_at_5": 0.7777777777777778,
+        "all_gold_recall_at_5": null,
+        "multi_chunk_questions": 0,
+        "mrr_at_5": 0.7222222222222222
+      }
+    },
+    "no_evidence_questions": 5,
+    "no_evidence_successful_calls": 5,
+    "false_positive_retrieval_rate": 1.0,
+    "technical_errors": 0,
+    "backend": "real",
+    "split": "dev",
+    "dataset_sha256": "22e8c11b0115849b2dd0282323efdfae5988a43f72616376cd6a49a6eda80fcf",
+    "corpus_sha256": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4"
+  },
+  "dev_reproduces_previous_rerank": true,
+  "threshold_enabled": false,
+  "code_sha256": {
+    "cross_encoder_reranker.py": "455bb1d193e30cb05f8cb9b32ddd6ee6c7724fd5dd73f1cc3674e8298984a5cd",
+    "bm25_retriever.py": "603adc0ff215dbe2ad818fa2241652fe685d9eb364c11914130d490cf060625e",
+    "retriever.py": "a3056f00d48ba29d84cfdeb83f9f056996be21952f885531269cde7c2107d3ad",
+    "__init__.py": "1ef300f36d4f44896f826de3278325d73b2516887a3d5a89fd1d310ed9b55d9b",
+    "build_knowledge_chunks.py": "689c882d96c3d72d56df39fba10afc697d8958eb4b77269f2c70f3d83cf58c3a",
+    "real_retriever.py": "f5e0951ec1202400eddae2fc377e748d2cb10a8e78c89ca7cbd029e7ed1ff92d",
+    "hybrid_retriever.py": "6a2151493ac0b8dc4c9b1e799a21de04c684d8502e98647a411c46329867fcac",
+    "evaluate_retrieval.py": "5e39002bb67b1cd8a218de4759aad08511530b53d7776f97a1a1bd55ad01a61b"
+  },
+  "limitations": [
+    "No calibrated evidence sufficiency gate",
+    "C/E full orchestration acceptance remains to be performed"
+  ]
+}

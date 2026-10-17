@@ -30,3 +30,20 @@
 ### Verification Limits
 
 本记录为人工编辑审阅说明，结构校验为可重复脚本检查。没有运行实际向量检索、模型问答或模拟支付系统；需要团队接入后测召回与拒答。真实法规审查不属于此合成语料校验。
+
+### Timing Clarifications — 2026-10-14
+
+These editorial clarifications preserve policy version 1.1, effective date 2026-10-11, numeric deadlines and fees. Policy, FAQ and chunk drafts are synchronised.
+
+- REVIEW-001: Every manual/automatic card top-up uses recorded issuer authorisation as the 72-hour start event, not request initiation or NovaBank acceptance. Ownership review does not restart it. Final FAILED status starts the one-business-day release instruction clock; sending that instruction starts the issuer five-business-day release window.
+- REVIEW-002: An explicitly disputed purchase fee has a 60-calendar-day intake window from that fee posting to the NovaBank ledger. Recognised purchase/merchant disputes retain their settlement-based windows.
+- REVIEW-003: An ATM rate-calculation error has a 60-calendar-day intake window from the disputed withdrawal posting to the NovaBank ledger. Cash-discrepancy reporting retains 30 calendar days from withdrawal.
+- REVIEW-004: Overdue ATM status-only review takes up to 2 business days after complete evidence; no-cash/short-cash/excess-cash reconciliation has a 10-business-day decision target after complete evidence. Both acknowledge within 1 business day at SGD 0. Cash problems are reported immediately, even while pending.
+
+### Knowledge Quality Clarifications — 2026-10-14
+
+- KQ-001: Additional refunds are limited by remaining original principal after prior credits; aggregate credited refunds including merchant credits and bank-approved principal corrections never exceed original settled principal. These are distinct caps, not a second deduction of prior refunds from the aggregate cap.
+- KQ-002: Every generated delivery cutoff includes late or non-business-day acceptance moving to the next business day; working-day acceptance by 14:00 keeps that day as Day 0.
+- KQ-003: The one-request, 30-calendar-day identity reconsideration window starts when the final decision is notified through the secure app or registered contact channel. Internal recording or subsequent uploads do not start/restart it; staff decision target remains 5 business days after complete evidence.
+
+Numeric policy limits, version 1.1 and effective date 2026-10-11 are preserved.

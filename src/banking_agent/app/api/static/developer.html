@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeBank · Developer Trace</title>
+  <style>
+    :root { font-family:Inter,ui-sans-serif,system-ui,sans-serif; color:#172033; background:#f4f7fb; } body{margin:0} main{max-width:1100px;margin:auto;padding:32px 20px 60px} h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3rem)} p{color:#536078;line-height:1.5}.notice{background:#fff8e7;border-left:4px solid #ed9a20;border-radius:4px;padding:12px 16px}.card{margin-top:18px;background:#fff;border:1px solid #dde4f0;border-radius:16px;padding:22px;box-shadow:0 8px 25px #2533550d}select{width:100%;padding:11px;border:1px solid #adb9cd;border-radius:8px;font:inherit}.trace{border-top:1px solid #dde4f0;padding:18px 0}.trace:first-child{border-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}.metric{background:#eef4fc;border-radius:8px;padding:9px}.metric span{display:block;font-size:.75rem;color:#536078}.flow{font-family:ui-monospace,SFMono-Regular,monospace;white-space:pre-wrap;background:#172033;color:#e9effc;padding:12px;border-radius:8px}.error{color:#a01b1b;font-weight:700}a{color:#165dba}
+  </style>
+</head>
+<body><main>
+  <header><h1>Developer Trace</h1><p>仅限本地开发诊断。Trace 不包含用户原文、密码、cookie、助手正文或完整证据内容。</p><a href="/">返回聊天演示</a></header>
+  <div class="notice">此页面展示内部 action、reason code 与模块执行情况；请勿向普通用户开放。</div>
+  <section class="card"><label for="conversation"><strong>选择会话</strong></label><select id="conversation"><option>加载中…</option></select><p class="error" id="error"></p></section>
+  <section class="card"><h2>请求轨迹</h2><div id="traces"><p>选择会话后加载。</p></div></section>
+  <script>
+    const $=s=>document.querySelector(s), select=$('#conversation'), traces=$('#traces'), error=$('#error');
+    const escape=value=>String(value ?? '—').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const metric=(label,value)=>`<div class="metric"><span>${escape(label)}</span><strong>${escape(value)}</strong></div>`;
+    async function api(path){const response=await fetch(path);const data=await response.json();if(!response.ok)throw Error(data.error||'request_failed');return data;}
+    function render(items){if(!items.length){traces.innerHTML='<p>此会话尚没有 trace。</p>';return;} traces.innerHTML=items.map(trace=>{const flow=trace.modules.map(item=>`${item.module}:${item.status} (${item.duration_ms}ms)`).join(' → ');const state=`投诉 ${trace.complaint_status_before} → ${trace.complaint_status_after}；转人工 ${trace.handoff_status_before} → ${trace.handoff_status_after}`;return `<article class="trace"><div class="grid">${metric('结果',trace.result_status)}${metric('动作',trace.action)}${metric('原因码',trace.reason_code)}${metric('风险',trace.risk_level)}${metric('总耗时',trace.duration_ms+'ms')}${metric('模式',trace.mode)}${metric('场景',trace.scenario_id)}</div><p><strong>状态变化：</strong>${escape(state)}</p><div class="flow">${escape(flow)}</div><p>request: <code>${escape(trace.request_id)}</code> · 文档：${escape(trace.retrieved_document_ids.join(', ')||'无')} · 推荐数：${trace.recommendation_count}</p></article>`}).join('');}
+    async function loadTraces(){error.textContent='';if(!select.value)return;try{render((await api(`/api/developer/conversations/${select.value}/traces`)).traces)}catch(e){error.textContent=`无法加载 trace：${e.message}`;traces.innerHTML='';}}
+    async function load(){try{const conversations=(await api('/api/conversations')).conversations;select.innerHTML=conversations.length?conversations.map(item=>`<option value="${item.id}">${escape(item.title)}</option>`).join(''):'<option value="">暂无会话</option>';select.onchange=loadTraces;await loadTraces();}catch(e){error.textContent=`无法初始化开发者页面：${e.message}`;select.innerHTML='<option value="">不可用</option>';}}
+    load();
+  </script>
+</main></body></html>

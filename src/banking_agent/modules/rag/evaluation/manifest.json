@@ -1,0 +1,699 @@
+{
+  "total": 108,
+  "reviewed_by": "当前用户（不记录姓名）",
+  "reviewed_on": "2026-10-14",
+  "counts_by_split": {
+    "dev": 76,
+    "test": 32
+  },
+  "case_types_by_split": {
+    "dev": {
+      "supported": 62,
+      "unsupported": 9,
+      "no_evidence": 5
+    },
+    "test": {
+      "unsupported": 8,
+      "supported": 19,
+      "no_evidence": 5
+    }
+  },
+  "groups": [
+    {
+      "group_id": "NEED-02d78748dc",
+      "question_ids": [
+        "B-EVAL-032"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-0c018d48de",
+      "question_ids": [
+        "B-EVAL-033"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-0c41fd6a20",
+      "question_ids": [
+        "B-EVAL-051"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-0f53e9528f",
+      "question_ids": [
+        "B-EVAL-056",
+        "B-EVAL-064",
+        "B-EVAL-084"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-1b6b882f4d",
+      "question_ids": [
+        "B-EVAL-061"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-21c9de74ca",
+      "question_ids": [
+        "B-EVAL-043",
+        "B-EVAL-078"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-2353aed2e0",
+      "question_ids": [
+        "B-EVAL-069"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-259bb3c6ba",
+      "question_ids": [
+        "B-EVAL-019"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-2c648861c7",
+      "question_ids": [
+        "B-EVAL-014"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-2e6f6db313",
+      "question_ids": [
+        "B-EVAL-096"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-2fef738f05",
+      "question_ids": [
+        "B-EVAL-046",
+        "B-EVAL-101"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-300374df2e",
+      "question_ids": [
+        "B-EVAL-038",
+        "B-EVAL-058",
+        "B-EVAL-090"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-30078ba488",
+      "question_ids": [
+        "B-EVAL-022"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-30ee366320",
+      "question_ids": [
+        "B-EVAL-007"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-316707b29e",
+      "question_ids": [
+        "B-EVAL-037"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-3942983c2f",
+      "question_ids": [
+        "B-EVAL-060"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-409d3d179b",
+      "question_ids": [
+        "B-EVAL-013"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-414b802758",
+      "question_ids": [
+        "B-EVAL-053"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-415259a94e",
+      "question_ids": [
+        "B-EVAL-002"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-41ec2dfa7b",
+      "question_ids": [
+        "B-EVAL-057"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-42bc05575d",
+      "question_ids": [
+        "B-EVAL-072"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-4350bdaeb8",
+      "question_ids": [
+        "B-EVAL-065"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-443adbb4c1",
+      "question_ids": [
+        "B-EVAL-052"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-45ab86d369",
+      "question_ids": [
+        "B-EVAL-054"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-49d15f7ddb",
+      "question_ids": [
+        "B-EVAL-070"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-4b428abc30",
+      "question_ids": [
+        "B-EVAL-049",
+        "B-EVAL-108"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-54b7ec9509",
+      "question_ids": [
+        "B-EVAL-094"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-5a062efd31",
+      "question_ids": [
+        "B-EVAL-023"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-5aa38f1f01",
+      "question_ids": [
+        "B-EVAL-040"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-64098f8b37",
+      "question_ids": [
+        "B-EVAL-024"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-65ab83629d",
+      "question_ids": [
+        "B-EVAL-059"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-66874ba95b",
+      "question_ids": [
+        "B-EVAL-039"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-6d2761c1c7",
+      "question_ids": [
+        "B-EVAL-055"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-6f87e7d4f4",
+      "question_ids": [
+        "B-EVAL-074"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-709e979079",
+      "question_ids": [
+        "B-EVAL-016"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-73fa4d4c76",
+      "question_ids": [
+        "B-EVAL-045",
+        "B-EVAL-087"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-7c837a984b",
+      "question_ids": [
+        "B-EVAL-035"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-7ea6e8e422",
+      "question_ids": [
+        "B-EVAL-075",
+        "B-EVAL-089"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-7fd6cc2df4",
+      "question_ids": [
+        "B-EVAL-076",
+        "B-EVAL-086"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-85c0f30075",
+      "question_ids": [
+        "B-EVAL-030"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-86ebd4f52a",
+      "question_ids": [
+        "B-EVAL-011"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-873f6d767b",
+      "question_ids": [
+        "B-EVAL-018",
+        "B-EVAL-107"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-8c166f12a6",
+      "question_ids": [
+        "B-EVAL-092"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-8d8bbb48aa",
+      "question_ids": [
+        "B-EVAL-091",
+        "B-EVAL-097",
+        "B-EVAL-098"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-8f909ab8ee",
+      "question_ids": [
+        "B-EVAL-044"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-9181dba4c1",
+      "question_ids": [
+        "B-EVAL-029",
+        "B-EVAL-031",
+        "B-EVAL-083"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-9380e5e15c",
+      "question_ids": [
+        "B-EVAL-050"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-951502a340",
+      "question_ids": [
+        "B-EVAL-003",
+        "B-EVAL-005",
+        "B-EVAL-009",
+        "B-EVAL-079",
+        "B-EVAL-080"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-9a8192412e",
+      "question_ids": [
+        "B-EVAL-042"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-a37ee1d17c",
+      "question_ids": [
+        "B-EVAL-012"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-a644840a10",
+      "question_ids": [
+        "B-EVAL-008"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-a9af8f26db",
+      "question_ids": [
+        "B-EVAL-063"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-b353548907",
+      "question_ids": [
+        "B-EVAL-048",
+        "B-EVAL-088"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-c3a43ec91e",
+      "question_ids": [
+        "B-EVAL-027",
+        "B-EVAL-082",
+        "B-EVAL-106"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-ca44982533",
+      "question_ids": [
+        "B-EVAL-073"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-cd3da6a25b",
+      "question_ids": [
+        "B-EVAL-077"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-ce473528a6",
+      "question_ids": [
+        "B-EVAL-026"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-cf7be07ca8",
+      "question_ids": [
+        "B-EVAL-017",
+        "B-EVAL-104",
+        "B-EVAL-105"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-d54d67e7a1",
+      "question_ids": [
+        "B-EVAL-015"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-d701c1ee5a",
+      "question_ids": [
+        "B-EVAL-066"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-d868cd340d",
+      "question_ids": [
+        "B-EVAL-034"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-d938d443a1",
+      "question_ids": [
+        "B-EVAL-020"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-d9e39ead0e",
+      "question_ids": [
+        "B-EVAL-047",
+        "B-EVAL-085"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-da6474e431",
+      "question_ids": [
+        "B-EVAL-036"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-dc1dcb60c3",
+      "question_ids": [
+        "B-EVAL-025"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-dc3f47a827",
+      "question_ids": [
+        "B-EVAL-093"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-dd1cbe5126",
+      "question_ids": [
+        "B-EVAL-001",
+        "B-EVAL-004",
+        "B-EVAL-081",
+        "B-EVAL-102",
+        "B-EVAL-103"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-deebf0aa01",
+      "question_ids": [
+        "B-EVAL-021"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-e5dbb5e6f1",
+      "question_ids": [
+        "B-EVAL-028"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-ee1e242099",
+      "question_ids": [
+        "B-EVAL-099"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-f0005180ca",
+      "question_ids": [
+        "B-EVAL-041"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-f7746cb4d7",
+      "question_ids": [
+        "B-EVAL-071"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-f824eb9fd6",
+      "question_ids": [
+        "B-EVAL-062"
+      ],
+      "forced_dev": true,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-fb7127eac6",
+      "question_ids": [
+        "B-EVAL-068"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-fb7c3c05ff",
+      "question_ids": [
+        "B-EVAL-010"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-fc8d42e130",
+      "question_ids": [
+        "B-EVAL-067"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    },
+    {
+      "group_id": "NEED-fd71562ff3",
+      "question_ids": [
+        "B-EVAL-095",
+        "B-EVAL-100"
+      ],
+      "forced_dev": false,
+      "split": "test"
+    },
+    {
+      "group_id": "NEED-fd9381bb66",
+      "question_ids": [
+        "B-EVAL-006"
+      ],
+      "forced_dev": false,
+      "split": "dev"
+    }
+  ],
+  "exposed_questions": 19,
+  "exposed_group_questions_forced_dev": 29,
+  "source_dataset_sha256": "8592f43646a0e67e1bccfa323072a187d28cbc89021cb0b3a9723c0422975feb",
+  "dataset_sha256": "ee94fcce28efab82f8ec39860ee3a96f22aef5c3419b1e19c88f3955ee37e117",
+  "limitations": [
+    "Test is nonexposed by recorded repository checks, not an externally blinded benchmark.",
+    "Shared intent/evidence components are conservative and may limit test coverage.",
+    "Keep test queries/results out of tuning; reusing them for tuning requires a new final test."
+  ],
+  "dataset_files": {
+    "dev": {
+      "path": "dev.jsonl",
+      "sha256": "22e8c11b0115849b2dd0282323efdfae5988a43f72616376cd6a49a6eda80fcf"
+    },
+    "test": {
+      "path": "test.jsonl",
+      "sha256": "1c4875431f72524feb2059a480774b471fa4bc6193fec51afdd5a1deb676bc68"
+    }
+  },
+  "approval_basis": "User explicitly approved all 108 existing gold labels, with no changes or added alternatives.",
+  "gold_semantics": "All listed gold chunks are required; no additional alternative evidence was approved.",
+  "history_archive": "history_v1.zip"
+}

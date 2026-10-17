@@ -106,7 +106,7 @@
       "source_type": "Category Master Policy",
       "synthetic": true,
       "path": "policies/NovaBank_card_payments_master_policy.md",
-      "sha256": "ef5e6a96792d5989219bbc5f55b829926ee4d16df820d58c3fefb2d74a529a8e",
+      "sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
       "analysis_path": "reports/card_payments_analysis.md",
       "reference_ids": [
         "REF-04",
@@ -131,7 +131,7 @@
       "source_type": "Category Master Policy",
       "synthetic": true,
       "path": "policies/NovaBank_cash_withdrawals_master_policy.md",
-      "sha256": "4b3b9c7798c4b3202275771405a0ff9ac34c63409d703e1679a04002c8ad48c8",
+      "sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
       "analysis_path": "reports/cash_withdrawals_analysis.md",
       "reference_ids": [
         "REF-07",
@@ -159,7 +159,7 @@
       "source_type": "Category Master Policy",
       "synthetic": true,
       "path": "policies/NovaBank_card_top_ups_master_policy.md",
-      "sha256": "6a050160f21d65b3911a265c71228423b18a4a33977062702dff778d40a28d21",
+      "sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
       "analysis_path": "reports/card_top_ups_analysis.md",
       "reference_ids": [
         "REF-09",
@@ -300,7 +300,7 @@
       "source_type": "Category Master Policy",
       "synthetic": true,
       "path": "policies/NovaBank_identity_verification_master_policy.md",
-      "sha256": "ea5ecdf81736136f879eebc55190919464ce4509419b607b286a91f9b080cc4e",
+      "sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
       "analysis_path": "reports/identity_verification_analysis.md",
       "reference_ids": [
         "REF-22",
@@ -319,7 +319,7 @@
       "source_type": "Category Master Policy",
       "synthetic": true,
       "path": "policies/NovaBank_refunds_master_policy.md",
-      "sha256": "80661b06522d19e7b919225005d179d3d0d4b7e867e9c2decbdaf561dca05ec2",
+      "sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
       "analysis_path": "reports/refunds_analysis.md",
       "reference_ids": [
         "REF-24",
@@ -327,6 +327,42 @@
         "REF-18",
         "REF-04"
       ]
+    }
+  ],
+  "clarification_date": "2026-10-14",
+  "clarifications": [
+    {
+      "id": "REVIEW-001",
+      "resolution": "72 hours from recorded issuer authorisation; acceptance/initiation are not the start event."
+    },
+    {
+      "id": "REVIEW-002",
+      "resolution": "60 calendar days from disputed fee ledger posting."
+    },
+    {
+      "id": "REVIEW-003",
+      "resolution": "60 calendar days from disputed ATM withdrawal ledger posting."
+    },
+    {
+      "id": "REVIEW-004",
+      "resolution": "Status-only review: 2 business days; cash-dispensing reconciliation: 10 business days; both after complete evidence."
+    }
+  ],
+  "knowledge_quality_clarifications": [
+    {
+      "id": "KQ-001",
+      "date": "2026-10-14",
+      "resolution": "Additional refunds <= remaining original principal; aggregate refunds <= original principal."
+    },
+    {
+      "id": "KQ-002",
+      "date": "2026-10-14",
+      "resolution": "Generated delivery cutoff explicitly handles non-business-day acceptance."
+    },
+    {
+      "id": "KQ-003",
+      "date": "2026-10-14",
+      "resolution": "Reconsideration intake starts on secure-app/registered-channel notification of final identity decision."
     }
   ]
 }

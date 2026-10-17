@@ -126,7 +126,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 
 - Ordinary debit-card purchases have a NovaBank purchase fee of SGD 0. Where NovaBank converts currency, the conversion fee is 0.50% with a SGD 0.50 minimum equivalent, separately shown from the purchase amount.
 - Merchant surcharges and merchant dynamic currency conversion are not NovaBank purchase fees. A same-currency purchase paid from sufficient same-currency balance has no NovaBank conversion fee.
-- Compare the fee entry, transaction reference, purchase currency, balance used and receipt. Submit an alleged fee error within 60 calendar days of settlement.
+- Compare the fee entry, transaction reference, purchase currency, balance used and receipt. Submit an alleged fee error within 60 calendar days of the disputed fee posting to the NovaBank ledger, not purchase settlement if the dates differ.
 - Staff acknowledge within 1 business day and complete an internal fee review within 5 business days after complete evidence. A confirmed NovaBank fee error is credited within 2 business days after approval; no blanket fee waiver is promised.
 
 **Verification and required evidence:** Authenticate before accessing purchase records. Provide transaction references, merchant descriptor, settlement status/date, amount/currency and masked purchase receipt; duplicates require both references, and rate cases require the original-currency receipt. No fresh ID is required unless account verification needs updating.
@@ -138,7 +138,7 @@ NovaBank is the sole fictional policy entity. Version 1.1 adds operational condi
 **Operational exceptions and status checks:**
 
 - Ordinary purchase fee is SGD 0. Separately posted NovaBank conversion costs 0.50%, minimum SGD-equivalent 0.50, only when NovaBank actually converts. Do not label a merchant surcharge or DCC margin as a NovaBank fee, or introduce an overseas administrative fee from another bank.
-- Request the fee reference, principal, source/charged currencies, conversion record and settlement date. A fee-only complaint is free to review within 5 business days after complete evidence, with approved correction within 2 business days; submit within 60 calendar days of posting. A correct original FX fee is not automatically refunded when the purchase principal is later refunded.
+- Request the fee reference, principal, source/charged currencies, conversion record and settlement date. A fee-only complaint is free to review within 5 business days after complete evidence, with approved correction within 2 business days; submit within 60 calendar days of the disputed fee posting to the NovaBank ledger, not purchase settlement if the dates differ. A correct original FX fee is not automatically refunded when the purchase principal is later refunded.
 
 ### pending_card_payment — Explain a merchant card authorisation not yet submitted as a settled purchase
 

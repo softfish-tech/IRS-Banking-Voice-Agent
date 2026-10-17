@@ -49,7 +49,7 @@
       "effective_date_updated": true,
       "only_h2_h3_headers": true,
       "all_intents_enriched": true,
-      "bytes": 32172
+      "bytes": 32339
     },
     {
       "business_category": "cash_withdrawals",
@@ -60,7 +60,7 @@
       "effective_date_updated": true,
       "only_h2_h3_headers": true,
       "all_intents_enriched": true,
-      "bytes": 30832
+      "bytes": 31451
     },
     {
       "business_category": "card_top_ups",
@@ -71,7 +71,7 @@
       "effective_date_updated": true,
       "only_h2_h3_headers": true,
       "all_intents_enriched": true,
-      "bytes": 36314
+      "bytes": 36775
     },
     {
       "business_category": "security_and_unrecognised_transactions",
@@ -137,7 +137,7 @@
       "effective_date_updated": true,
       "only_h2_h3_headers": true,
       "all_intents_enriched": true,
-      "bytes": 22413
+      "bytes": 22770
     },
     {
       "business_category": "refunds",
@@ -148,8 +148,20 @@
       "effective_date_updated": true,
       "only_h2_h3_headers": true,
       "all_intents_enriched": true,
-      "bytes": 16664
+      "bytes": 16910
     }
   ],
-  "validation_scope": "Structural/coverage/hash checks. Cross-category rules manually reviewed; no model retrieval accuracy or real-bank legal certification is claimed."
+  "validation_scope": "Structural/coverage/hash checks. Cross-category rules manually reviewed; no model retrieval accuracy or real-bank legal certification is claimed.",
+  "clarification_date": "2026-10-14",
+  "clarified_source_issues": [
+    "REVIEW-001",
+    "REVIEW-002",
+    "REVIEW-003",
+    "REVIEW-004"
+  ],
+  "knowledge_quality_clarifications": [
+    "KQ-001",
+    "KQ-002",
+    "KQ-003"
+  ]
 }

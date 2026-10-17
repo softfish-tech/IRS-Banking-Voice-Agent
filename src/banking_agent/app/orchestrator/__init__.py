@@ -1,1 +1,4 @@
-"""Workflow coordination and final-response assembly."""
+"""Application-level module orchestration."""
+from .orchestrator import Orchestrator
+
+__all__ = ["Orchestrator"]

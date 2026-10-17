@@ -40,3 +40,13 @@ NovaBank为虚构银行；公开资料仅提供运营主题参考，不决定Nov
 [官方参考登记](references/REFERENCE_REGISTER.md)记录27个URL，其中24个用于本轮其余12类、3个来自上一轮生命周期增强。没有分发整站抓取文本，也没有声称保存了网页快照。来源包含不同地区，差异在每份报告中说明。
 
 [校验报告](validation_report.json)核对13政策、77标签覆盖、70个新增intent块、frontmatter、标题、版本、旧文件未改及card_lifecycle保留。[变更登记](reports/enrichment_change_register.json)逐intent记录合成新增规则和参考主题来源。[跨类审阅](reports/CROSS_CATEGORY_REVIEW.md)记录共同约束及本轮校正。上述检查不等于已测得召回率或法律合规认证。
+
+### FAQ retrieval-expression preparation
+
+[`../build_knowledge_chunks.py`](../build_knowledge_chunks.py) parses primary questions and all alternative questions, checks FAQ source/category/version metadata, and emits these preparation artifacts:
+
+- `../chunks/NovaBank_knowledge_chunks_v1_1.jsonl`: policy-authoritative content with compact retrieval hints.
+- `../chunks/NovaBank_faq_chunk_mapping_v1_1.jsonl`: one row per FAQ, preserving every expression under one `faq_id`, and ranked intent-scoped candidate chunks.
+- `../chunks/validation_report_v1_1.json`: expression coverage, unmatched FAQs, output hashes and policy clarification trace.
+
+Candidate links require the same policy ID, version and category plus explicit primary/related intent applicability. Lexical scores rank candidates; they do not certify sufficient evidence or permission to answer. The mapping is a separate query-matching input, not policy evidence. A future retriever should index expressions, group hits by `faq_id`, retrieve candidate policy chunks and verify evidence; scoring multiple alternative questions must not fill top_k with duplicates of one FAQ. FAQ answers, this README and validation JSON remain outside the policy-evidence index. This builder does not implement live retrieval or measure Recall@5.

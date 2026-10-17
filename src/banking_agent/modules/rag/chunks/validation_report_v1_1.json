@@ -1,0 +1,5776 @@
+{
+  "status": "PASS",
+  "scope": {
+    "policy_count": 13,
+    "source_version": "1.1",
+    "source_effective_date": "2026-10-11",
+    "synthetic": true,
+    "meaning_of_active": "Active within the fictional NovaBank corpus; not real banking approval.",
+    "faq_count_used_for_phrasing_only": 231
+  },
+  "counts": {
+    "active_chunks": 151,
+    "primary_intents": 77,
+    "all_target_intents": 77,
+    "by_category": {
+      "card_lifecycle": 20,
+      "card_usage_and_access": 13,
+      "currency_exchange": 7,
+      "card_payments": 12,
+      "cash_withdrawals": 12,
+      "card_top_ups": 17,
+      "security_and_unrecognised_transactions": 13,
+      "account_management": 11,
+      "bank_transfers": 23,
+      "virtual_cards": 6,
+      "cash_and_cheque_deposits": 3,
+      "identity_verification": 8,
+      "refunds": 6
+    },
+    "by_knowledge_type": {
+      "policy": 51,
+      "procedure": 82,
+      "definition": 13,
+      "warning": 5
+    },
+    "by_primary_intent": {
+      "card_delivery_estimate": 2,
+      "get_physical_card": 2,
+      "order_physical_card": 6,
+      "card_arrival": 3,
+      "getting_spare_card": 1,
+      "activate_my_card": 3,
+      "card_about_to_expire": 3,
+      "card_linking": 2,
+      "card_not_working": 2,
+      "pin_blocked": 1,
+      "contactless_not_working": 2,
+      "card_acceptance": 2,
+      "visa_or_mastercard": 1,
+      "change_pin": 1,
+      "apple_pay_or_google_pay": 2,
+      "exchange_rate": 2,
+      "fiat_currency_support": 1,
+      "exchange_via_app": 2,
+      "exchange_charge": 2,
+      "card_payment_wrong_exchange_rate": 1,
+      "extra_charge_on_statement": 2,
+      "card_payment_fee_charged": 2,
+      "pending_card_payment": 2,
+      "declined_card_payment": 2,
+      "transaction_charged_twice": 2,
+      "reverted_card_payment?": 1,
+      "atm_support": 2,
+      "pending_cash_withdrawal": 2,
+      "wrong_amount_of_cash_received": 2,
+      "declined_cash_withdrawal": 2,
+      "card_swallowed": 2,
+      "wrong_exchange_rate_for_cash_withdrawal": 1,
+      "cash_withdrawal_charge": 1,
+      "supported_cards_and_currencies": 2,
+      "top_up_limits": 2,
+      "automatic_top_up": 2,
+      "topping_up_by_card": 2,
+      "pending_top_up": 2,
+      "top_up_failed": 2,
+      "top_up_reverted": 2,
+      "verify_top_up": 1,
+      "top_up_by_card_charge": 2,
+      "lost_or_stolen_card": 2,
+      "compromised_card": 2,
+      "card_payment_not_recognised": 2,
+      "direct_debit_payment_not_recognised": 2,
+      "lost_or_stolen_phone": 3,
+      "cash_withdrawal_not_recognised": 2,
+      "age_limit": 2,
+      "edit_personal_details": 3,
+      "passcode_forgotten": 2,
+      "terminate_account": 2,
+      "country_support": 2,
+      "top_up_by_bank_transfer_charge": 2,
+      "cancel_transfer": 2,
+      "transfer_not_received_by_recipient": 2,
+      "declined_transfer": 2,
+      "pending_transfer": 2,
+      "transfer_timing": 1,
+      "beneficiary_not_allowed": 2,
+      "transfer_fee_charged": 2,
+      "receiving_money": 3,
+      "transfer_into_account": 1,
+      "failed_transfer": 2,
+      "balance_not_updated_after_bank_transfer": 2,
+      "getting_virtual_card": 2,
+      "get_disposable_virtual_card": 1,
+      "disposable_card_limits": 2,
+      "virtual_card_not_working": 1,
+      "top_up_by_cash_or_cheque": 2,
+      "balance_not_updated_after_cheque_or_cash_deposit": 1,
+      "why_verify_identity": 1,
+      "verify_my_identity": 2,
+      "unable_to_verify_identity": 2,
+      "verify_source_of_funds": 3,
+      "request_refund": 4,
+      "Refund_not_showing_up": 2
+    }
+  },
+  "checks": {
+    "valid_jsonl": true,
+    "exact_required_fields": true,
+    "unique_chunk_ids": true,
+    "exact_duplicate_content": 0,
+    "all_77_intents_have_primary_chunks": true,
+    "all_related_labels_valid": true,
+    "source_metadata_read_from_frontmatter": true,
+    "all_sources_active_v1_1": true,
+    "source_hashes_match_manifest": true,
+    "faq_answers_not_used_as_authority": true,
+    "semantic_support_method": "Editorial policy-based summaries with source-section references and source-local context. Numeric/source checks are mechanical; not a proof of every semantic claim.",
+    "numeric_literals_needing_review": [],
+    "near_duplicate_candidates": [],
+    "source_type_matches_policy_metadata": true,
+    "source_document_paths_resolve": true,
+    "clarified_deadlines_restored_to_active_chunks": true,
+    "all_chunks_name_novabank": true,
+    "near_duplicate_detection_scope": "Token Jaccard >= 0.58 within a business category; candidates only, not a semantic duplicate guarantee."
+  },
+  "word_lengths": {
+    "guideline": [
+      50,
+      150
+    ],
+    "minimum": 73,
+    "maximum": 159,
+    "outside_guideline": [
+      {
+        "chunk_id": "NB-v1_1-card_arrival-001",
+        "words": 156,
+        "reason": "Preserve complete conditions and source-local context; length is advisory."
+      },
+      {
+        "chunk_id": "NB-v1_1-compromised_card-002",
+        "words": 159,
+        "reason": "Preserve complete conditions and source-local context; length is advisory."
+      }
+    ]
+  },
+  "source_issues_requiring_review": [],
+  "resolved_source_issues": [
+    {
+      "review_id": "REVIEW-001",
+      "status": "RESOLVED",
+      "clarification_date": "2026-10-14",
+      "source_policy_id": "DOC-CAT-CARDTOPUP-001",
+      "source_policy_version": "1.1",
+      "source_document": "novabank_category_master_policies_enriched_v1_1/policies/NovaBank_card_top_ups_master_policy.md",
+      "canonical_source_passage": {
+        "quote": "pending may last at most 72 hours from issuer authorisation, not NovaBank acceptance or request initiation.",
+        "line": 125
+      },
+      "resolution": "72-hour finalisation starts at recorded issuer authorisation; final FAILED and release instruction remain separate clocks.",
+      "affected_active_chunk_ids": [
+        "NB-v1_1-automatic_top_up-001",
+        "NB-v1_1-automatic_top_up-002",
+        "NB-v1_1-topping_up_by_card-001",
+        "NB-v1_1-topping_up_by_card-002",
+        "NB-v1_1-pending_top_up-001",
+        "NB-v1_1-pending_top_up-002",
+        "NB-v1_1-top_up_failed-001",
+        "NB-v1_1-top_up_failed-002"
+      ]
+    },
+    {
+      "review_id": "REVIEW-002",
+      "status": "RESOLVED",
+      "clarification_date": "2026-10-14",
+      "source_policy_id": "DOC-CAT-CARDPAY-001",
+      "source_policy_version": "1.1",
+      "source_document": "novabank_category_master_policies_enriched_v1_1/policies/NovaBank_card_payments_master_policy.md",
+      "canonical_source_passage": {
+        "quote": "Submit an alleged fee error within 60 calendar days of the disputed fee posting to the NovaBank ledger, not purchase settlement if the dates differ.",
+        "line": 129
+      },
+      "resolution": "Purchase-fee intake starts at disputed fee ledger posting, not underlying purchase settlement.",
+      "affected_active_chunk_ids": [
+        "NB-v1_1-card_payment_fee_charged-001",
+        "NB-v1_1-card_payment_fee_charged-002"
+      ]
+    },
+    {
+      "review_id": "REVIEW-003",
+      "status": "RESOLVED",
+      "clarification_date": "2026-10-14",
+      "source_policy_id": "DOC-CAT-ATM-001",
+      "source_policy_version": "1.1",
+      "source_document": "novabank_category_master_policies_enriched_v1_1/policies/NovaBank_cash_withdrawals_master_policy.md",
+      "canonical_source_passage": {
+        "quote": "Submit an alleged rate-calculation error within 60 calendar days of the disputed withdrawal posting to the NovaBank ledger, not settlement if the dates differ.",
+        "line": 199
+      },
+      "resolution": "ATM rate-error intake starts at withdrawal ledger posting.",
+      "affected_active_chunk_ids": [
+        "NB-v1_1-wrong_exchange_rate_for_cash_withdrawal-001"
+      ]
+    },
+    {
+      "review_id": "REVIEW-004",
+      "status": "RESOLVED",
+      "clarification_date": "2026-10-14",
+      "source_policy_id": "DOC-CAT-ATM-001",
+      "source_policy_version": "1.1",
+      "source_document": "novabank_category_master_policies_enriched_v1_1/policies/NovaBank_cash_withdrawals_master_policy.md",
+      "canonical_source_passage": {
+        "quote": "A status-only enquiry is reviewed within 2 business days after complete evidence.",
+        "line": 88
+      },
+      "resolution": "Status-only review is 2 business days; cash-dispensing reconciliation is 10 business days, both after complete evidence, with immediate reporting of cash problems.",
+      "affected_active_chunk_ids": [
+        "NB-v1_1-pending_cash_withdrawal-001",
+        "NB-v1_1-pending_cash_withdrawal-002"
+      ]
+    }
+  ],
+  "coverage_notes": [
+    "Policy rules are consolidated by knowledge topic; this is not a paragraph-by-paragraph reproduction. Related labels are assigned only to shared applicable rules.",
+    "FAQ answers and external reference materials are excluded as factual authorities. FAQ questions and keywords are used only for retrieval phrasing.",
+    "Repeated fees, authentication and clock context are retained where needed to make a different rule self-contained; duplicate standalone FAQ copies are not emitted.",
+    "Source instructions for implementation, external-source registries, historical-version narratives and duplicated intent summary tables are not customer knowledge chunks.",
+    "All four previously flagged timing issues are explicitly clarified in current policies and represented in the active chunks; see resolved_source_issues."
+  ],
+  "chunk_provenance": [
+    {
+      "chunk_id": "NB-v1_1-card_delivery_estimate-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "get_physical_card — Eligibility and First-Card Access",
+          "line": 84
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        },
+        {
+          "heading": "card_delivery_estimate — Prospective and In-Window Delivery Enquiries",
+          "line": 108
+        },
+        {
+          "heading": "card_arrival — Nonreceipt, Delivery Exceptions and Unsafe Packaging",
+          "line": 118
+        },
+        {
+          "heading": "getting_spare_card — Additional Card for the Same Account Holder",
+          "line": 132
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-001",
+        "FAQ-get_physical_card-001",
+        "FAQ-order_physical_card-003",
+        "FAQ-card_delivery_estimate-001",
+        "FAQ-order_physical_card-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-get_physical_card-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "get_physical_card — Eligibility and First-Card Access",
+          "line": 84
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-get_physical_card-001",
+        "FAQ-get_physical_card-002",
+        "FAQ-get_physical_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-get_physical_card-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "get_physical_card — Eligibility and First-Card Access",
+          "line": 84
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-get_physical_card-001",
+        "FAQ-get_physical_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-001",
+        "FAQ-order_physical_card-002",
+        "FAQ-order_physical_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "get_physical_card — Eligibility and First-Card Access",
+          "line": 84
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        },
+        {
+          "heading": "card_arrival — Nonreceipt, Delivery Exceptions and Unsafe Packaging",
+          "line": 118
+        },
+        {
+          "heading": "getting_spare_card — Additional Card for the Same Account Holder",
+          "line": 132
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-get_physical_card-001",
+        "FAQ-order_physical_card-001",
+        "FAQ-order_physical_card-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-003",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-002",
+        "FAQ-order_physical_card-001",
+        "FAQ-order_physical_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-004",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-005",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        },
+        {
+          "heading": "getting_spare_card — Additional Card for the Same Account Holder",
+          "line": 132
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-001",
+        "FAQ-order_physical_card-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-order_physical_card-006",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "order_physical_card — Order Acceptance, Changes and Replacement Submission",
+          "line": 94
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-order_physical_card-001",
+        "FAQ-order_physical_card-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_delivery_estimate-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_delivery_estimate — Prospective and In-Window Delivery Enquiries",
+          "line": 108
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_arrival-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_arrival — Nonreceipt, Delivery Exceptions and Unsafe Packaging",
+          "line": 118
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_arrival-001",
+        "FAQ-card_arrival-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_arrival-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_arrival — Nonreceipt, Delivery Exceptions and Unsafe Packaging",
+          "line": 118
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_arrival-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_arrival-003",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_arrival — Nonreceipt, Delivery Exceptions and Unsafe Packaging",
+          "line": 118
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-getting_spare_card-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "getting_spare_card — Additional Card for the Same Account Holder",
+          "line": 132
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-getting_spare_card-002",
+        "FAQ-getting_spare_card-001",
+        "FAQ-getting_spare_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-activate_my_card-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "activate_my_card — Possession Verification and First Use",
+          "line": 142
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-activate_my_card-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-activate_my_card-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "activate_my_card — Possession Verification and First Use",
+          "line": 142
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-activate_my_card-003",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "activate_my_card — Possession Verification and First Use",
+          "line": 142
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-activate_my_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_about_to_expire-001",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_about_to_expire-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_about_to_expire-002",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_about_to_expire-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_about_to_expire-003",
+      "source_sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "source_sections_to_review": [
+        {
+          "heading": "Calendar, Cutoff and Service Start Events",
+          "line": 33
+        },
+        {
+          "heading": "Fees and Delivery Service Matrix",
+          "line": 41
+        },
+        {
+          "heading": "Card Counts, Renewal Overlap and Order States",
+          "line": 58
+        },
+        {
+          "heading": "Authentication, Evidence and Secure Channels",
+          "line": 66
+        },
+        {
+          "heading": "Security, Payment Continuity and Liability Boundaries",
+          "line": 74
+        },
+        {
+          "heading": "card_about_to_expire — Scheduled Renewal, Travel and Nonrenewal",
+          "line": 156
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_linking-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_linking — Associate an existing NovaBank physical debit card with its own verified NovaBank app account",
+          "line": 78
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-card_linking-001",
+        "FAQ-card_linking-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_linking-002",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_linking — Associate an existing NovaBank physical debit card with its own verified NovaBank app account",
+          "line": 78
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_linking-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_not_working-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_not_working — Troubleshoot a general physical debit-card failure when no single transaction outcome is identified",
+          "line": 100
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_not_working-001",
+        "FAQ-card_not_working-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_not_working-002",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_not_working — Troubleshoot a general physical debit-card failure when no single transaction outcome is identified",
+          "line": 100
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_not_working-002",
+        "FAQ-card_not_working-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pin_blocked-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "pin_blocked — Unblock a physical-card PIN after consecutive incorrect card-PIN attempts",
+          "line": 122
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-pin_blocked-002",
+        "FAQ-pin_blocked-001",
+        "FAQ-pin_blocked-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-contactless_not_working-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "contactless_not_working — Troubleshoot tap-to-pay failure on an otherwise usable physical debit card",
+          "line": 144
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-contactless_not_working-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-contactless_not_working-002",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "contactless_not_working — Troubleshoot tap-to-pay failure on an otherwise usable physical debit card",
+          "line": 144
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_acceptance-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_acceptance — Explain where an active NovaBank-issued debit card may be used",
+          "line": 166
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_acceptance-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_acceptance-002",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "card_not_working — Troubleshoot a general physical debit-card failure when no single transaction outcome is identified",
+          "line": 100
+        },
+        {
+          "heading": "card_acceptance — Explain where an active NovaBank-issued debit card may be used",
+          "line": 166
+        },
+        {
+          "heading": "apple_pay_or_google_pay — Enrol a supported NovaBank debit card in Apple Pay or Google Pay and troubleshoot wallet-specific use",
+          "line": 232
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-card_not_working-003",
+        "FAQ-card_acceptance-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-visa_or_mastercard-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "visa_or_mastercard — Explain the network of NovaBank-issued cards and distinguish eligible external funding networks",
+          "line": 188
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-visa_or_mastercard-001",
+        "FAQ-visa_or_mastercard-003",
+        "FAQ-visa_or_mastercard-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-change_pin-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "change_pin — Change the 4-digit PIN of an eligible physical NovaBank debit card",
+          "line": 210
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-change_pin-001",
+        "FAQ-change_pin-003",
+        "FAQ-change_pin-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-apple_pay_or_google_pay-001",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "apple_pay_or_google_pay — Enrol a supported NovaBank debit card in Apple Pay or Google Pay and troubleshoot wallet-specific use",
+          "line": 232
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-apple_pay_or_google_pay-002",
+        "FAQ-apple_pay_or_google_pay-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-apple_pay_or_google_pay-002",
+      "source_sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 42
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 52
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 60
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 64
+        },
+        {
+          "heading": "apple_pay_or_google_pay — Enrol a supported NovaBank debit card in Apple Pay or Google Pay and troubleshoot wallet-specific use",
+          "line": 232
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_rate-001",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "exchange_rate — Explain the displayed NovaBank currency conversion quote before an exchange or debit-card purchase",
+          "line": 68
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-exchange_rate-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_rate-002",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "exchange_rate — Explain the displayed NovaBank currency conversion quote before an exchange or debit-card purchase",
+          "line": 68
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-card_payment_wrong_exchange_rate-002",
+        "FAQ-exchange_rate-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-fiat_currency_support-001",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "fiat_currency_support — Identify the fiat currencies NovaBank can hold and exchange in its personal account",
+          "line": 92
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_via_app-001",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "fiat_currency_support — Identify the fiat currencies NovaBank can hold and exchange in its personal account",
+          "line": 92
+        },
+        {
+          "heading": "exchange_via_app — Execute an explicitly confirmed exchange between NovaBank's five supported account currencies",
+          "line": 115
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-exchange_via_app-001",
+        "FAQ-exchange_via_app-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_via_app-002",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "exchange_via_app — Execute an explicitly confirmed exchange between NovaBank's five supported account currencies",
+          "line": 115
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_charge-001",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "exchange_charge — Explain NovaBank's separately disclosed currency-conversion fee",
+          "line": 137
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-exchange_charge-002",
+      "source_sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 54
+        },
+        {
+          "heading": "exchange_charge — Explain NovaBank's separately disclosed currency-conversion fee",
+          "line": 137
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_payment_wrong_exchange_rate-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "card_payment_wrong_exchange_rate — Investigate the exchange rate applied to a settled debit-card purchase",
+          "line": 76
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_payment_wrong_exchange_rate-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-extra_charge_on_statement-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "extra_charge_on_statement — Explain an additional settled debit-card statement amount that is not yet identified as a fee or duplicate",
+          "line": 99
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-extra_charge_on_statement-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-extra_charge_on_statement-002",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "extra_charge_on_statement — Explain an additional settled debit-card statement amount that is not yet identified as a fee or duplicate",
+          "line": 99
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-extra_charge_on_statement-003",
+        "FAQ-extra_charge_on_statement-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_payment_fee_charged-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "card_payment_fee_charged — Explain or challenge an explicitly identified NovaBank fee on a debit-card purchase",
+          "line": 121
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_payment_fee_charged-002",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "card_payment_fee_charged — Explain or challenge an explicitly identified NovaBank fee on a debit-card purchase",
+          "line": 121
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_card_payment-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "pending_card_payment — Explain a merchant card authorisation not yet submitted as a settled purchase",
+          "line": 143
+        },
+        {
+          "heading": "reverted_card_payment? — Explain a purchase authorisation or settled card purchase marked reversed",
+          "line": 210
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-reverted_card_payment?-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_card_payment-002",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "pending_card_payment — Explain a merchant card authorisation not yet submitted as a settled purchase",
+          "line": 143
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-pending_card_payment-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_card_payment-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "declined_card_payment — Explain an actual card-purchase authorisation decline",
+          "line": 166
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-declined_card_payment-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_card_payment-002",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "declined_card_payment — Explain an actual card-purchase authorisation decline",
+          "line": 166
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-declined_card_payment-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transaction_charged_twice-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "transaction_charged_twice — Investigate two settled debit-card purchase entries alleged to represent one purchase",
+          "line": 188
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-transaction_charged_twice-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transaction_charged_twice-002",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "transaction_charged_twice — Investigate two settled debit-card purchase entries alleged to represent one purchase",
+          "line": 188
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-transaction_charged_twice-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-reverted_card_payment-001",
+      "source_sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 36
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 40
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 50
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 58
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 62
+        },
+        {
+          "heading": "reverted_card_payment? — Explain a purchase authorisation or settled card purchase marked reversed",
+          "line": 210
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-reverted_card_payment?-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-atm_support-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "atm_support — Explain supported ATM use for a physical NovaBank Visa debit card",
+          "line": 125
+        },
+        {
+          "heading": "cash_withdrawal_charge — Explain fees on a completed recognised ATM withdrawal",
+          "line": 213
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-cash_withdrawal_charge-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-atm_support-002",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "atm_support — Explain supported ATM use for a physical NovaBank Visa debit card",
+          "line": 125
+        },
+        {
+          "heading": "wrong_exchange_rate_for_cash_withdrawal — Investigate the conversion rate applied to a recognised ATM cash withdrawal",
+          "line": 191
+        },
+        {
+          "heading": "cash_withdrawal_charge — Explain fees on a completed recognised ATM withdrawal",
+          "line": 213
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-atm_support-003",
+        "FAQ-wrong_exchange_rate_for_cash_withdrawal-002",
+        "FAQ-wrong_exchange_rate_for_cash_withdrawal-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_cash_withdrawal-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "pending_cash_withdrawal — Explain an ATM debit that remains pending rather than settled or reversed",
+          "line": 81
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-pending_cash_withdrawal-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_cash_withdrawal-002",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "pending_cash_withdrawal — Explain an ATM debit that remains pending rather than settled or reversed",
+          "line": 81
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-pending_cash_withdrawal-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-wrong_amount_of_cash_received-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "wrong_amount_of_cash_received — Investigate a cash shortage or excess from a recognised ATM withdrawal",
+          "line": 103
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-wrong_amount_of_cash_received-002",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "wrong_amount_of_cash_received — Investigate a cash shortage or excess from a recognised ATM withdrawal",
+          "line": 103
+        },
+        {
+          "heading": "declined_cash_withdrawal — Troubleshoot an ATM withdrawal that was refused and dispensed no cash",
+          "line": 147
+        },
+        {
+          "heading": "card_swallowed — Secure a physical debit card retained by an ATM",
+          "line": 169
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-wrong_amount_of_cash_received-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_cash_withdrawal-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "declined_cash_withdrawal — Troubleshoot an ATM withdrawal that was refused and dispensed no cash",
+          "line": 147
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-declined_cash_withdrawal-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_cash_withdrawal-002",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "declined_cash_withdrawal — Troubleshoot an ATM withdrawal that was refused and dispensed no cash",
+          "line": 147
+        },
+        {
+          "heading": "cash_withdrawal_charge — Explain fees on a completed recognised ATM withdrawal",
+          "line": 213
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-declined_cash_withdrawal-001",
+        "FAQ-declined_cash_withdrawal-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_swallowed-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "card_swallowed — Secure a physical debit card retained by an ATM",
+          "line": 169
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-card_swallowed-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_swallowed-002",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "card_swallowed — Secure a physical debit card retained by an ATM",
+          "line": 169
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-card_swallowed-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-wrong_exchange_rate_for_cash_withdrawal-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "wrong_exchange_rate_for_cash_withdrawal — Investigate the conversion rate applied to a recognised ATM cash withdrawal",
+          "line": 191
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-wrong_exchange_rate_for_cash_withdrawal-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-cash_withdrawal_charge-001",
+      "source_sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "Currency Conversion Boundary",
+          "line": 63
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 67
+        },
+        {
+          "heading": "cash_withdrawal_charge — Explain fees on a completed recognised ATM withdrawal",
+          "line": 213
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-supported_cards_and_currencies-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "automatic_top_up — Configure consented automatic SGD funding from an eligible external debit card",
+          "line": 82
+        },
+        {
+          "heading": "supported_cards_and_currencies — Identify eligible external funding cards and currency for NovaBank card top-ups",
+          "line": 149
+        },
+        {
+          "heading": "topping_up_by_card — Fund the NovaBank SGD balance using an eligible external debit card",
+          "line": 193
+        },
+        {
+          "heading": "verify_top_up — Verify ownership of an external debit card used for NovaBank funding",
+          "line": 215
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-verify_top_up-001",
+        "FAQ-supported_cards_and_currencies-001",
+        "FAQ-topping_up_by_card-001",
+        "FAQ-supported_cards_and_currencies-003",
+        "FAQ-topping_up_by_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-supported_cards_and_currencies-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "supported_cards_and_currencies — Identify eligible external funding cards and currency for NovaBank card top-ups",
+          "line": 149
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_limits-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "automatic_top_up — Configure consented automatic SGD funding from an eligible external debit card",
+          "line": 82
+        },
+        {
+          "heading": "top_up_limits — State the shared limits for manual and automatic debit-card funding",
+          "line": 127
+        },
+        {
+          "heading": "supported_cards_and_currencies — Identify eligible external funding cards and currency for NovaBank card top-ups",
+          "line": 149
+        },
+        {
+          "heading": "topping_up_by_card — Fund the NovaBank SGD balance using an eligible external debit card",
+          "line": 193
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_limits-003",
+        "FAQ-topping_up_by_card-002",
+        "FAQ-top_up_limits-001",
+        "FAQ-supported_cards_and_currencies-003",
+        "FAQ-automatic_top_up-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_limits-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "pending_top_up — Explain a card-funded top-up authorisation awaiting confirmation or release",
+          "line": 104
+        },
+        {
+          "heading": "top_up_limits — State the shared limits for manual and automatic debit-card funding",
+          "line": 127
+        },
+        {
+          "heading": "top_up_reverted — Explain a card-funded top-up that was reversed after initiation or credit",
+          "line": 171
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-automatic_top_up-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "automatic_top_up — Configure consented automatic SGD funding from an eligible external debit card",
+          "line": 82
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-automatic_top_up-001",
+        "FAQ-automatic_top_up-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-automatic_top_up-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "automatic_top_up — Configure consented automatic SGD funding from an eligible external debit card",
+          "line": 82
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-topping_up_by_card-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "topping_up_by_card — Fund the NovaBank SGD balance using an eligible external debit card",
+          "line": 193
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-topping_up_by_card-001",
+        "FAQ-topping_up_by_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-topping_up_by_card-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "topping_up_by_card — Fund the NovaBank SGD balance using an eligible external debit card",
+          "line": 193
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_top_up-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "pending_top_up — Explain a card-funded top-up authorisation awaiting confirmation or release",
+          "line": 104
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-pending_top_up-001",
+        "FAQ-pending_top_up-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_top_up-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "automatic_top_up — Configure consented automatic SGD funding from an eligible external debit card",
+          "line": 82
+        },
+        {
+          "heading": "pending_top_up — Explain a card-funded top-up authorisation awaiting confirmation or release",
+          "line": 104
+        },
+        {
+          "heading": "topping_up_by_card — Fund the NovaBank SGD balance using an eligible external debit card",
+          "line": 193
+        },
+        {
+          "heading": "verify_top_up — Verify ownership of an external debit card used for NovaBank funding",
+          "line": 215
+        },
+        {
+          "heading": "top_up_failed — Handle a debit-card top-up marked failed or rejected before successful completion",
+          "line": 237
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_failed-003",
+        "FAQ-pending_top_up-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_failed-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "top_up_failed — Handle a debit-card top-up marked failed or rejected before successful completion",
+          "line": 237
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_failed-001",
+        "FAQ-top_up_failed-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_failed-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "pending_top_up — Explain a card-funded top-up authorisation awaiting confirmation or release",
+          "line": 104
+        },
+        {
+          "heading": "top_up_failed — Handle a debit-card top-up marked failed or rejected before successful completion",
+          "line": 237
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_failed-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_reverted-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "top_up_reverted — Explain a card-funded top-up that was reversed after initiation or credit",
+          "line": 171
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_reverted-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_reverted-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "top_up_reverted — Explain a card-funded top-up that was reversed after initiation or credit",
+          "line": 171
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_reverted-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_top_up-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "verify_top_up — Verify ownership of an external debit card used for NovaBank funding",
+          "line": 215
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-verify_top_up-001",
+        "FAQ-verify_top_up-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_card_charge-001",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "top_up_by_card_charge — Explain NovaBank and external issuer charges for debit-card funding",
+          "line": 259
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_by_card_charge-001",
+        "FAQ-top_up_by_card_charge-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_card_charge-002",
+      "source_sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 38
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 46
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 56
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 64
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 68
+        },
+        {
+          "heading": "top_up_by_card_charge — Explain NovaBank and external issuer charges for debit-card funding",
+          "line": 259
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-lost_or_stolen_card-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "lost_or_stolen_card — Immediately protect a physical debit card reported lost or stolen",
+          "line": 73
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-lost_or_stolen_card-002",
+        "FAQ-lost_or_stolen_card-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-lost_or_stolen_card-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "lost_or_stolen_card — Immediately protect a physical debit card reported lost or stolen",
+          "line": 73
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-lost_or_stolen_card-003",
+        "FAQ-lost_or_stolen_card-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-compromised_card-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "compromised_card — Respond to suspected exposure of debit-card credentials whether or not a fraudulent charge exists",
+          "line": 118
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-compromised_card-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "compromised_card — Respond to suspected exposure of debit-card credentials whether or not a fraudulent charge exists",
+          "line": 118
+        }
+      ],
+      "context_included": [
+        "Physical-card processing acceptance/cutoff convention in the source policy",
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_payment_not_recognised-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "card_payment_not_recognised — Protect and investigate an unrecognised debit-card purchase",
+          "line": 95
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-card_payment_not_recognised-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-card_payment_not_recognised-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "card_payment_not_recognised — Protect and investigate an unrecognised debit-card purchase",
+          "line": 95
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-direct_debit_payment_not_recognised-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "direct_debit_payment_not_recognised — Respond to an alleged unrecognised direct debit when NovaBank does not offer direct-debit mandates",
+          "line": 140
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-direct_debit_payment_not_recognised-001",
+        "FAQ-direct_debit_payment_not_recognised-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-direct_debit_payment_not_recognised-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "direct_debit_payment_not_recognised — Respond to an alleged unrecognised direct debit when NovaBank does not offer direct-debit mandates",
+          "line": 140
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-lost_or_stolen_phone-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "lost_or_stolen_phone — Secure NovaBank access and wallet tokens after a phone is lost or stolen",
+          "line": 163
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-lost_or_stolen_phone-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-lost_or_stolen_phone-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "lost_or_stolen_phone — Secure NovaBank access and wallet tokens after a phone is lost or stolen",
+          "line": 163
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-cash_withdrawal_not_recognised-001",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "cash_withdrawal_not_recognised — Secure and investigate an alleged unauthorised ATM withdrawal",
+          "line": 186
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-cash_withdrawal_not_recognised-002",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "cash_withdrawal_not_recognised — Secure and investigate an alleged unauthorised ATM withdrawal",
+          "line": 186
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-age_limit-001",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "age_limit — Apply NovaBank's minimum age rule for personal-account eligibility",
+          "line": 71
+        },
+        {
+          "heading": "country_support — Define countries of residence, delivery and transfer service supported by NovaBank",
+          "line": 160
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-age_limit-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-age_limit-002",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "age_limit — Apply NovaBank's minimum age rule for personal-account eligibility",
+          "line": 71
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-age_limit-003",
+        "FAQ-age_limit-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-edit_personal_details-001",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "edit_personal_details — Update a verified customer's personal contact or residential details",
+          "line": 93
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-edit_personal_details-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-edit_personal_details-002",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "edit_personal_details — Update a verified customer's personal contact or residential details",
+          "line": 93
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-edit_personal_details-003",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "edit_personal_details — Update a verified customer's personal contact or residential details",
+          "line": 93
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-passcode_forgotten-001",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "passcode_forgotten — Restore app access when a customer forgets the NovaBank login passcode",
+          "line": 116
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-passcode_forgotten-001",
+        "FAQ-passcode_forgotten-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-passcode_forgotten-002",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "passcode_forgotten — Restore app access when a customer forgets the NovaBank login passcode",
+          "line": 116
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-passcode_forgotten-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-terminate_account-001",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "terminate_account — Close a verified personal NovaBank account after required reconciliation",
+          "line": 138
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-terminate_account-001",
+        "FAQ-terminate_account-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-terminate_account-002",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "terminate_account — Close a verified personal NovaBank account after required reconciliation",
+          "line": 138
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-country_support-001",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "country_support — Define countries of residence, delivery and transfer service supported by NovaBank",
+          "line": 160
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-country_support-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-country_support-002",
+      "source_sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 35
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 39
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 49
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 57
+        },
+        {
+          "heading": "country_support — Define countries of residence, delivery and transfer service supported by NovaBank",
+          "line": 160
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-country_support-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_bank_transfer_charge-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "top_up_by_bank_transfer_charge — Explain NovaBank fees for funding the SGD account by a domestic bank transfer",
+          "line": 80
+        },
+        {
+          "heading": "receiving_money — Explain how a customer can receive a supported domestic SGD electronic bank transfer",
+          "line": 256
+        },
+        {
+          "heading": "transfer_into_account — Fund the customer's own NovaBank SGD account from an external domestic bank account",
+          "line": 300
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_by_bank_transfer_charge-003",
+        "FAQ-transfer_into_account-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_bank_transfer_charge-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "top_up_by_bank_transfer_charge — Explain NovaBank fees for funding the SGD account by a domestic bank transfer",
+          "line": 80
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-cancel_transfer-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "cancel_transfer — Request cancellation of a domestic SGD transfer that has not completed",
+          "line": 102
+        },
+        {
+          "heading": "pending_transfer — Explain an outgoing domestic SGD transfer accepted but not yet completed or failed",
+          "line": 168
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-cancel_transfer-001",
+        "FAQ-pending_transfer-002",
+        "FAQ-cancel_transfer-002",
+        "FAQ-cancel_transfer-003",
+        "FAQ-pending_transfer-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-cancel_transfer-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "cancel_transfer — Request cancellation of a domestic SGD transfer that has not completed",
+          "line": 102
+        },
+        {
+          "heading": "transfer_not_received_by_recipient — Trace an outgoing transfer shown as completed by NovaBank but missing at the beneficiary bank",
+          "line": 124
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-cancel_transfer-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_not_received_by_recipient-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "transfer_not_received_by_recipient — Trace an outgoing transfer shown as completed by NovaBank but missing at the beneficiary bank",
+          "line": 124
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_not_received_by_recipient-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_not_received_by_recipient-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "transfer_not_received_by_recipient — Trace an outgoing transfer shown as completed by NovaBank but missing at the beneficiary bank",
+          "line": 124
+        },
+        {
+          "heading": "failed_transfer — Handle a domestic SGD transfer that failed for a technical or processing reason",
+          "line": 278
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_not_received_by_recipient-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_transfer-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "declined_transfer — Explain a domestic SGD transfer refused by a business or eligibility control",
+          "line": 146
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-declined_transfer-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "declined_transfer — Explain a domestic SGD transfer refused by a business or eligibility control",
+          "line": 146
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_transfer-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "pending_transfer — Explain an outgoing domestic SGD transfer accepted but not yet completed or failed",
+          "line": 168
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-pending_transfer-002",
+        "FAQ-pending_transfer-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-pending_transfer-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "pending_transfer — Explain an outgoing domestic SGD transfer accepted but not yet completed or failed",
+          "line": 168
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-pending_transfer-003",
+        "FAQ-pending_transfer-002",
+        "FAQ-pending_transfer-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_timing-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "transfer_timing — State normal delivery and exception windows for domestic SGD bank transfers",
+          "line": 190
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_timing-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-beneficiary_not_allowed-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "beneficiary_not_allowed — Explain why a proposed domestic transfer beneficiary cannot be used",
+          "line": 212
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-beneficiary_not_allowed-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-beneficiary_not_allowed-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "declined_transfer — Explain a domestic SGD transfer refused by a business or eligibility control",
+          "line": 146
+        },
+        {
+          "heading": "transfer_timing — State normal delivery and exception windows for domestic SGD bank transfers",
+          "line": 190
+        },
+        {
+          "heading": "beneficiary_not_allowed — Explain why a proposed domestic transfer beneficiary cannot be used",
+          "line": 212
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-beneficiary_not_allowed-002",
+        "FAQ-declined_transfer-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_fee_charged-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "cancel_transfer — Request cancellation of a domestic SGD transfer that has not completed",
+          "line": 102
+        },
+        {
+          "heading": "transfer_timing — State normal delivery and exception windows for domestic SGD bank transfers",
+          "line": 190
+        },
+        {
+          "heading": "transfer_fee_charged — Explain a fee associated with an outgoing domestic SGD bank transfer",
+          "line": 234
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_fee_charged-001",
+        "FAQ-transfer_timing-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_fee_charged-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "transfer_fee_charged — Explain a fee associated with an outgoing domestic SGD bank transfer",
+          "line": 234
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_fee_charged-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-receiving_money-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "receiving_money — Explain how a customer can receive a supported domestic SGD electronic bank transfer",
+          "line": 256
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-receiving_money-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-receiving_money-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "receiving_money — Explain how a customer can receive a supported domestic SGD electronic bank transfer",
+          "line": 256
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-receiving_money-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-transfer_into_account-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "transfer_into_account — Fund the customer's own NovaBank SGD account from an external domestic bank account",
+          "line": 300
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-transfer_into_account-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-receiving_money-003",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "receiving_money — Explain how a customer can receive a supported domestic SGD electronic bank transfer",
+          "line": 256
+        },
+        {
+          "heading": "transfer_into_account — Fund the customer's own NovaBank SGD account from an external domestic bank account",
+          "line": 300
+        },
+        {
+          "heading": "balance_not_updated_after_bank_transfer — Trace an incoming domestic SGD bank transfer missing from the NovaBank balance",
+          "line": 322
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-receiving_money-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-failed_transfer-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "failed_transfer — Handle a domestic SGD transfer that failed for a technical or processing reason",
+          "line": 278
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-failed_transfer-001",
+        "FAQ-failed_transfer-003",
+        "FAQ-failed_transfer-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-failed_transfer-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "failed_transfer — Handle a domestic SGD transfer that failed for a technical or processing reason",
+          "line": 278
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-failed_transfer-003",
+        "FAQ-failed_transfer-001",
+        "FAQ-failed_transfer-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-balance_not_updated_after_bank_transfer-001",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "balance_not_updated_after_bank_transfer — Trace an incoming domestic SGD bank transfer missing from the NovaBank balance",
+          "line": 322
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-balance_not_updated_after_bank_transfer-003",
+        "FAQ-balance_not_updated_after_bank_transfer-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-balance_not_updated_after_bank_transfer-002",
+      "source_sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 40
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 44
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 54
+        },
+        {
+          "heading": "Funding-Origin Review Boundary",
+          "line": 62
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 66
+        },
+        {
+          "heading": "balance_not_updated_after_bank_transfer — Trace an incoming domestic SGD bank transfer missing from the NovaBank balance",
+          "line": 322
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-balance_not_updated_after_bank_transfer-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-getting_virtual_card-001",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "getting_virtual_card — Create a reusable virtual debit card for an eligible verified NovaBank customer",
+          "line": 68
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-getting_virtual_card-001",
+        "FAQ-getting_virtual_card-002",
+        "FAQ-getting_virtual_card-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-getting_virtual_card-002",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "getting_virtual_card — Create a reusable virtual debit card for an eligible verified NovaBank customer",
+          "line": 68
+        },
+        {
+          "heading": "virtual_card_not_working — Troubleshoot a reusable virtual debit-card purchase or wallet-use failure",
+          "line": 112
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-getting_virtual_card-001",
+        "FAQ-virtual_card_not_working-003",
+        "FAQ-virtual_card_not_working-001",
+        "FAQ-getting_virtual_card-002",
+        "FAQ-getting_virtual_card-003",
+        "FAQ-virtual_card_not_working-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-get_disposable_virtual_card-001",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "disposable_card_limits — State usage limits of NovaBank's single-use disposable virtual debit card",
+          "line": 90
+        },
+        {
+          "heading": "get_disposable_virtual_card — Generate one-use virtual Visa debit credentials for a single eligible online purchase",
+          "line": 134
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-get_disposable_virtual_card-001",
+        "FAQ-disposable_card_limits-001",
+        "FAQ-get_disposable_virtual_card-003",
+        "FAQ-disposable_card_limits-002",
+        "FAQ-get_disposable_virtual_card-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-disposable_card_limits-001",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "disposable_card_limits — State usage limits of NovaBank's single-use disposable virtual debit card",
+          "line": 90
+        },
+        {
+          "heading": "get_disposable_virtual_card — Generate one-use virtual Visa debit credentials for a single eligible online purchase",
+          "line": 134
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-disposable_card_limits-002",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "disposable_card_limits — State usage limits of NovaBank's single-use disposable virtual debit card",
+          "line": 90
+        },
+        {
+          "heading": "virtual_card_not_working — Troubleshoot a reusable virtual debit-card purchase or wallet-use failure",
+          "line": 112
+        },
+        {
+          "heading": "get_disposable_virtual_card — Generate one-use virtual Visa debit credentials for a single eligible online purchase",
+          "line": 134
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-get_disposable_virtual_card-003",
+        "FAQ-disposable_card_limits-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-virtual_card_not_working-001",
+      "source_sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Counter and Available-Balance Interpretation",
+          "line": 54
+        },
+        {
+          "heading": "virtual_card_not_working — Troubleshoot a reusable virtual debit-card purchase or wallet-use failure",
+          "line": 112
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-virtual_card_not_working-003",
+        "FAQ-virtual_card_not_working-001",
+        "FAQ-virtual_card_not_working-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_cash_or_cheque-001",
+      "source_sha256": "65c78186ac6808ee13a43bf2550604252792a4ec251c73cd32fed3d11527a33b",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 30
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 34
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 44
+        },
+        {
+          "heading": "balance_not_updated_after_cheque_or_cash_deposit — Respond to a claimed cash or cheque deposit where NovaBank offers no such deposit service",
+          "line": 62
+        },
+        {
+          "heading": "top_up_by_cash_or_cheque — State that NovaBank does not accept physical cash or cheque funding",
+          "line": 85
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_by_cash_or_cheque-001"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-top_up_by_cash_or_cheque-002",
+      "source_sha256": "65c78186ac6808ee13a43bf2550604252792a4ec251c73cd32fed3d11527a33b",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 30
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 34
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 44
+        },
+        {
+          "heading": "top_up_by_cash_or_cheque — State that NovaBank does not accept physical cash or cheque funding",
+          "line": 85
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-top_up_by_cash_or_cheque-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-balance_not_updated_after_cheque_or_cash_deposit-001",
+      "source_sha256": "65c78186ac6808ee13a43bf2550604252792a4ec251c73cd32fed3d11527a33b",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 30
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 34
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 44
+        },
+        {
+          "heading": "balance_not_updated_after_cheque_or_cash_deposit — Respond to a claimed cash or cheque deposit where NovaBank offers no such deposit service",
+          "line": 62
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-why_verify_identity-001",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "why_verify_identity — Explain the purpose, prerequisites and boundaries of NovaBank identity verification",
+          "line": 64
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_my_identity-001",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "why_verify_identity — Explain the purpose, prerequisites and boundaries of NovaBank identity verification",
+          "line": 64
+        },
+        {
+          "heading": "verify_my_identity — Submit and complete secure identity verification for NovaBank onboarding",
+          "line": 133
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-verify_my_identity-001",
+        "FAQ-why_verify_identity-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_my_identity-002",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "why_verify_identity — Explain the purpose, prerequisites and boundaries of NovaBank identity verification",
+          "line": 64
+        },
+        {
+          "heading": "unable_to_verify_identity — Resolve a failed or incomplete secure identity-verification attempt",
+          "line": 86
+        },
+        {
+          "heading": "verify_my_identity — Submit and complete secure identity verification for NovaBank onboarding",
+          "line": 133
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-unable_to_verify_identity-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-unable_to_verify_identity-001",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "unable_to_verify_identity — Resolve a failed or incomplete secure identity-verification attempt",
+          "line": 86
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-unable_to_verify_identity-001",
+        "FAQ-unable_to_verify_identity-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-unable_to_verify_identity-002",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "unable_to_verify_identity — Resolve a failed or incomplete secure identity-verification attempt",
+          "line": 86
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_source_of_funds-001",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "verify_source_of_funds — Review the origin of funding under NovaBank's synthetic source-of-funds control",
+          "line": 108
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_source_of_funds-002",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "verify_source_of_funds — Review the origin of funding under NovaBank's synthetic source-of-funds control",
+          "line": 108
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-verify_source_of_funds-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-verify_source_of_funds-003",
+      "source_sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "verify_source_of_funds — Review the origin of funding under NovaBank's synthetic source-of-funds control",
+          "line": 108
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-request_refund-001",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "request_refund — Request a refund or dispute for a recognised, settled debit-card purchase",
+          "line": 64
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-request_refund-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-request_refund-002",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "request_refund — Request a refund or dispute for a recognised, settled debit-card purchase",
+          "line": 64
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start",
+        "Shared account-specific authentication boundary"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-request_refund-002",
+        "FAQ-request_refund-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-Refund_not_showing_up-001",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "request_refund — Request a refund or dispute for a recognised, settled debit-card purchase",
+          "line": 64
+        },
+        {
+          "heading": "Refund_not_showing_up — Trace a merchant-confirmed refund that has not appeared on the originating NovaBank account",
+          "line": 89
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [
+        "FAQ-Refund_not_showing_up-001",
+        "FAQ-request_refund-002"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-Refund_not_showing_up-002",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "Refund_not_showing_up — Trace a merchant-confirmed refund that has not appeared on the originating NovaBank account",
+          "line": 89
+        }
+      ],
+      "context_included": [
+        "Shared business-day calendar and complete-evidence review start"
+      ],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-request_refund-003",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "request_refund — Request a refund or dispute for a recognised, settled debit-card purchase",
+          "line": 64
+        },
+        {
+          "heading": "Refund_not_showing_up — Trace a merchant-confirmed refund that has not appeared on the originating NovaBank account",
+          "line": 89
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [
+        "FAQ-Refund_not_showing_up-003"
+      ],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-request_refund-004",
+      "source_sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 32
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 36
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 46
+        },
+        {
+          "heading": "request_refund — Request a refund or dispute for a recognised, settled debit-card purchase",
+          "line": 64
+        },
+        {
+          "heading": "Refund_not_showing_up — Trace a merchant-confirmed refund that has not appeared on the originating NovaBank account",
+          "line": 89
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    },
+    {
+      "chunk_id": "NB-v1_1-lost_or_stolen_phone-003",
+      "source_sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "source_sections_to_review": [
+        {
+          "heading": "Common Fees, Limits and Service Conditions",
+          "line": 37
+        },
+        {
+          "heading": "Common Calendar, Authentication and Evidence Rules",
+          "line": 41
+        },
+        {
+          "heading": "Academic Scope and Safety",
+          "line": 51
+        },
+        {
+          "heading": "Physical-Card Delivery Reference",
+          "line": 59
+        },
+        {
+          "heading": "lost_or_stolen_phone — Secure NovaBank access and wallet tokens after a phone is lost or stolen",
+          "line": 163
+        }
+      ],
+      "context_included": [],
+      "faq_phrasing_ids": [],
+      "source_authority": "Policy text only; FAQ questions/keywords supply retrieval phrasing, never answer facts."
+    }
+  ],
+  "knowledge_quality_clarifications": [
+    {
+      "id": "KQ-001",
+      "date": "2026-10-14",
+      "resolution": "Additional refunds <= remaining original principal; aggregate refunds <= original principal."
+    },
+    {
+      "id": "KQ-002",
+      "date": "2026-10-14",
+      "resolution": "Generated delivery cutoff explicitly handles non-business-day acceptance."
+    },
+    {
+      "id": "KQ-003",
+      "date": "2026-10-14",
+      "resolution": "Reconsideration intake starts on secure-app/registered-channel notification of final identity decision."
+    }
+  ],
+  "faq_expression_coverage": {
+    "faqs": 231,
+    "primary_questions": 231,
+    "alternative_questions": 693,
+    "expressions_preserved": 924,
+    "faqs_with_candidate_chunks": 231,
+    "unmatched_faq_ids": [],
+    "chunks_with_question_hints": 110,
+    "association_method": "Same source policy/version/category and explicit primary/related intent; lexical ranking of all compatible chunks. Candidates require retrieval evaluation; no semantic confidence claim."
+  },
+  "faq_mapping_file": {
+    "name": "NovaBank_faq_chunk_mapping_v1_1.jsonl",
+    "sha256": "22779d56f4ba3627cc07bdf11a81c2eafc7e77cb3d9fcf1a844f2352d35a5ea9"
+  },
+  "output_file": {
+    "name": "NovaBank_knowledge_chunks_v1_1.jsonl",
+    "sha256": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
+    "format": "UTF-8 JSONL; one complete object per line; no Markdown fences"
+  },
+  "generation": {
+    "script": "src/banking_agent/modules/rag/build_knowledge_chunks.py",
+    "method": "Deterministic packaging of editorially curated policy summaries; no model call, embeddings or live retrieval.",
+    "drafts": "chunk_sources/knowledge_chunk_drafts_v1_1.txt",
+    "drafts_sha256": "66f7c686a010d35e11b1ff4aee6ecf177455ac2bd9beeabd5c60762497b97544",
+    "faq_sha256": "c277cd58519ce78d468adf47f22647f9732b58fb085cd692f96ce2e816d5cd12",
+    "manifest_sha256": "f7eacc26358e1a97f7d5836c4dabb81d91fbbd7b34288b0b5e4354da34a6210b"
+  }
+}
