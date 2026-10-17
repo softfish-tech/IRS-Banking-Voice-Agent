@@ -1,0 +1,75 @@
+{
+  "synthetic": true,
+  "customer_profiles": {
+    "session-001": {
+      "customer_id": "demo-customer-001",
+      "age": 30,
+      "residency": "SG",
+      "available_deposit_cents": 150000,
+      "goal": "savings"
+    },
+    "session-002": {
+      "customer_id": "demo-customer-002",
+      "age": 17,
+      "residency": "SG",
+      "available_deposit_cents": 150000,
+      "goal": "savings"
+    },
+    "session-003": {
+      "customer_id": "demo-customer-003",
+      "age": 45,
+      "residency": "OTHER",
+      "available_deposit_cents": 0,
+      "goal": "savings"
+    },
+    "session-004": {
+      "customer_id": "demo-customer-004",
+      "age": 25,
+      "residency": "SG",
+      "available_deposit_cents": 1000,
+      "goal": "emergency"
+    }
+  },
+  "products": [
+    {
+      "product_id": "savings-flex",
+      "name": "Demo Flexible Savings",
+      "min_age": 18,
+      "eligible_residencies": [
+        "SG"
+      ],
+      "min_deposit_cents": 0,
+      "supported_goals": [
+        "savings",
+        "emergency"
+      ],
+      "demo_priority": 20
+    },
+    {
+      "product_id": "savings-premium",
+      "name": "Demo Premium Savings",
+      "min_age": 21,
+      "eligible_residencies": [
+        "SG"
+      ],
+      "min_deposit_cents": 100000,
+      "supported_goals": [
+        "savings"
+      ],
+      "demo_priority": 10
+    },
+    {
+      "product_id": "emergency-reserve",
+      "name": "Demo Emergency Reserve",
+      "min_age": 18,
+      "eligible_residencies": [
+        "SG"
+      ],
+      "min_deposit_cents": 20000,
+      "supported_goals": [
+        "emergency"
+      ],
+      "demo_priority": 5
+    }
+  ]
+}
