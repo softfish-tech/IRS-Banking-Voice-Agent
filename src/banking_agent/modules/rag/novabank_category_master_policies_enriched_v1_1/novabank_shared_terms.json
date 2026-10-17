@@ -1,0 +1,198 @@
+{
+  "bank_name": "NovaBank",
+  "synthetic": true,
+  "version": "1.1",
+  "effective_date": "2026-10-11",
+  "timezone": "Asia/Singapore",
+  "account_currencies": [
+    "SGD",
+    "USD",
+    "EUR",
+    "GBP",
+    "AUD"
+  ],
+  "residence": "Singapore",
+  "minimum_age": 18,
+  "issued_network": "Visa",
+  "physical_cards": {
+    "active_maximum": 2,
+    "first_fee_sgd": 0,
+    "spare_fee_sgd": 15,
+    "loss_damage_security_replacement_fee_sgd": 15,
+    "expiry_renewal_fee_sgd": 0,
+    "carrier_confirmed_lost_shipment_replacement_fee_sgd": 0,
+    "shipping_fee_sgd": 0,
+    "order_cutoff": "14:00",
+    "dispatch_on_business_day_after_acceptance": 2,
+    "standard_arrival_business_day": 5,
+    "express_fee_sgd": 10,
+    "express_dispatch_business_day": 1,
+    "express_arrival_business_day": 2,
+    "maximum_unfulfilled_orders": 1,
+    "renewal_overlap_non_retired_maximum": 3,
+    "activation_seconds": 60,
+    "activation_submissions_daily_maximum": 3,
+    "initial_spare_activation_calendar_days_from_dispatch": 90,
+    "renewal_activation_calendar_days_after_predecessor_expiry": 60,
+    "maximum_non_retired": 2,
+    "maximum_usable_including_renewal_overlap": 2,
+    "renewal_overlap_only": true,
+    "early_renewal_eligibility_days_before_expiry": 90,
+    "early_renewal_review_business_days": 2,
+    "replacement_predecessor_retired_before_acceptance": true
+  },
+  "purchases": {
+    "transaction_max_sgd_equivalent": 5000,
+    "daily_max_sgd_equivalent": 10000,
+    "ordinary_fee_sgd": 0,
+    "normal_hold_calendar_days_max": 7,
+    "deposit_hold_calendar_days_max": 30,
+    "physical_contactless_transaction_max_sgd_equivalent": 100,
+    "physical_contactless_cumulative_max_sgd_equivalent": 300
+  },
+  "card_top_ups": {
+    "currency": "SGD",
+    "minimum_sgd": 20,
+    "transaction_max_sgd": 2000,
+    "daily_max_sgd": 5000,
+    "monthly_max_sgd": 20000,
+    "fee_sgd": 0,
+    "normal_credit_seconds": 60,
+    "pending_hours_max": 72,
+    "issuer_release_business_days_max": 5,
+    "eligible": "Same-owner Singapore-issued Visa/Mastercard debit; excludes prepaid, virtual, credit and corporate",
+    "automatic_trigger_below_sgd": 100,
+    "automatic_amount_sgd": 200,
+    "automatic_attempts_daily_max": 1,
+    "failed_final_status_to_release_instruction_business_days": 1,
+    "issuer_release_clock_start": "NovaBank release instruction, not original attempt"
+  },
+  "transfers": {
+    "type": "Domestic SGD only",
+    "outgoing_transaction_max_sgd": 10000,
+    "outgoing_daily_max_sgd": 20000,
+    "bank_fee_sgd": 0,
+    "normal_seconds": 60,
+    "trace_after_hours": 24,
+    "initial_trace_business_days_max": 2,
+    "new_beneficiary_wait_hours": 24,
+    "failed_or_cancelled_release_business_days_max": 1,
+    "incoming_limit": "No separate NovaBank numeric incoming cap; source/security review and sender limits apply"
+  },
+  "atm": {
+    "physical_only": true,
+    "transaction_max_sgd_equivalent": 500,
+    "daily_max_sgd_equivalent": 1000,
+    "bank_fee_sgd": 2,
+    "pending_calendar_days_max": 3,
+    "report_calendar_days": 30,
+    "reconciliation_business_days_max": 10
+  },
+  "fx": {
+    "fee_percent": 0.5,
+    "minimum_fee_sgd_equivalent": 0.5,
+    "quote_valid_seconds": 30,
+    "reference_refresh_seconds": 60,
+    "exchange_minimum_sgd_equivalent": 10,
+    "exchange_transaction_max_sgd_equivalent": 5000,
+    "exchange_daily_max_sgd_equivalent": 10000,
+    "foreign_atm_funding": "SGD; sufficient foreign wallet balance is not used for ATM funding",
+    "weekend_surcharge_percent": 0,
+    "additional_bank_spread_percent": 0,
+    "fee_rounding": "round-half-up to 2 minor-unit decimal places",
+    "dynamic_currency_conversion": "No NovaBank FX fee if provider converts transaction into SGD"
+  },
+  "disposable": {
+    "unused_active_max": 1,
+    "generations_daily_max": 5,
+    "transaction_max_sgd_equivalent": 500,
+    "unused_expiry_hours": 24,
+    "approved_purchases_max": 1,
+    "fee_sgd": 0
+  },
+  "reviews": {
+    "acknowledge_business_days_max": 1,
+    "routine_technical_business_days_max": 2,
+    "internal_fee_posting_calculation_business_days_max": 5,
+    "card_dispute_intake_calendar_days": 60,
+    "card_dispute_decision_calendar_days_max": 30,
+    "approved_correction_business_days_max": 2,
+    "merchant_refund_business_days_max": 5
+  },
+  "unsupported_services": [
+    "Cash deposits",
+    "Cheque deposits",
+    "Direct debit mandates",
+    "International bank transfers",
+    "Credit products",
+    "Crypto services",
+    "Business accounts",
+    "Joint accounts"
+  ],
+  "authentication": {
+    "otp_valid_minutes": 5,
+    "otp_attempts": 3,
+    "otp_lockout_minutes": 30,
+    "app_passcode_digits": 6,
+    "app_passcode_failed_attempts": 5,
+    "app_passcode_lockout_minutes": 30,
+    "physical_pin_digits": 4
+  },
+  "source_of_funds": {
+    "single_incoming_bank_transfer_trigger_sgd": 10000,
+    "rolling_30_day_gross_credited_bank_and_card_funding_trigger_sgd": 20000,
+    "risk_concern_trigger": true,
+    "review_business_days": 5,
+    "review_fee_sgd": 0
+  },
+  "refunds": {
+    "request_fee_sgd": 0,
+    "merchant_issuance_to_credit_business_days": 5,
+    "approved_bank_dispute_to_credit_business_days": 2,
+    "principal_total_maximum": "original settled principal less earlier refunds",
+    "fx_principal_rate": "original settlement rate, not current rate",
+    "original_correct_fx_fee": "retained unless an approved bank-error correction refunds it"
+  },
+  "wallets": {
+    "active_tokens_maximum": 3,
+    "provision_fee_sgd": 0,
+    "provision_minutes": 5,
+    "retirement_suspension_minutes": 5,
+    "atm_supported": false,
+    "disposable_eligible": false
+  },
+  "virtual_cards": {
+    "reusable_active_maximum": 1,
+    "generation_fee_sgd": 0,
+    "generation_seconds": 60,
+    "atm_supported": false,
+    "retired_original_transaction_refund_match": true
+  },
+  "account_management": {
+    "contact_update_minutes": 5,
+    "manual_details_review_business_days": 2,
+    "phone_changes_rolling_24_hours_maximum": 1,
+    "post_phone_change_sensitive_restriction_hours": 24,
+    "passcode_recovery_minutes": 10,
+    "manual_recovery_business_days": 2,
+    "eligible_closure_business_days": 5
+  },
+  "identity_verification": {
+    "automated_minutes": 10,
+    "manual_business_days": 2,
+    "automated_submissions_rolling_24_hours_maximum": 3,
+    "address_document_calendar_days_maximum": 90,
+    "reconsideration_requests_per_final_decision_maximum": 1,
+    "reconsideration_request_calendar_days": 30,
+    "reconsideration_business_days": 5
+  },
+  "security": {
+    "urgent_intake": "24/7",
+    "authenticated_freeze_seconds": 60,
+    "verified_device_and_wallet_revocation_minutes": 5,
+    "fee_sgd": 0,
+    "automatic_48_hour_liability_forfeiture": false,
+    "automatic_reimbursement": false
+  },
+  "reference_authority": "Public FAQ operational topics only; all NovaBank terms synthetic"
+}

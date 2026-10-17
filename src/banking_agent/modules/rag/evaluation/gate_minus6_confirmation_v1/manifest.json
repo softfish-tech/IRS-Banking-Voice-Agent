@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "created_on": "2026-10-16",
+  "purpose": "Fresh-wording fixed-rule confirmation; not external blind/new-intent validation",
+  "threshold": -6.0,
+  "gate_rule": "Return empty only when max top5 CE raw logit < -6; equality retains full original top5; errors unchanged",
+  "candidate_k": 20,
+  "top_k": 5,
+  "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+  "questions": 32,
+  "strata": {
+    "missing_fee": 8,
+    "clock_distinction": 8,
+    "applicability": 8,
+    "fee_control": 8
+  },
+  "human_review_status": "pending",
+  "reviewed_by": null,
+  "reviewed_on": null,
+  "dataset_sha256": "0a5361fd297633af5dcd0be3e29dc0186d3c2afbffe3a6cb15bc148cee20122c",
+  "frozen_source_sha256": {
+    "real_retriever.py": "f5e0951ec1202400eddae2fc377e748d2cb10a8e78c89ca7cbd029e7ed1ff92d",
+    "bm25_retriever.py": "603adc0ff215dbe2ad818fa2241652fe685d9eb364c11914130d490cf060625e",
+    "cross_encoder_reranker.py": "455bb1d193e30cb05f8cb9b32ddd6ee6c7724fd5dd73f1cc3674e8298984a5cd",
+    "retriever.py": "a3056f00d48ba29d84cfdeb83f9f056996be21952f885531269cde7c2107d3ad",
+    "chunks/NovaBank_knowledge_chunks_v1_1.jsonl": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
+    "chunks/NovaBank_faq_chunk_mapping_v1_1.jsonl": "22779d56f4ba3627cc07bdf11a81c2eafc7e77cb3d9fcf1a844f2352d35a5ea9",
+    "evaluate_retrieval.py": "87457dafafc624644f2c88c7fcf0e03a376cd8e4a08ed612c6017e102e5b6ca6"
+  },
+  "predefined_reporting": [
+    "false return rate by stratum",
+    "answerable empty rate",
+    "Recall@5",
+    "multi-gold coverage where applicable",
+    "unsupported gold loss",
+    "technical errors"
+  ],
+  "tuning_policy": "No model/grid/rule adjustment based on this set. Changes reclassify it as development; preserve existing frozen test.",
+  "multi_chunk_questions": 2
+}

@@ -1,0 +1,167 @@
+{
+  "status": "PASS",
+  "policy_count": 13,
+  "mapped_unique_intents": 77,
+  "newly_enriched_intents": 70,
+  "source_registry_entries": 27,
+  "original_v1_0_files_unchanged": true,
+  "previous_lifecycle_v1_1_preserved": true,
+  "per_category": [
+    {
+      "business_category": "card_lifecycle",
+      "intent_count": 7,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 27434
+    },
+    {
+      "business_category": "card_usage_and_access",
+      "intent_count": 8,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 32916
+    },
+    {
+      "business_category": "currency_exchange",
+      "intent_count": 4,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 22209
+    },
+    {
+      "business_category": "card_payments",
+      "intent_count": 7,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 32339
+    },
+    {
+      "business_category": "cash_withdrawals",
+      "intent_count": 7,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 31451
+    },
+    {
+      "business_category": "card_top_ups",
+      "intent_count": 9,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 36775
+    },
+    {
+      "business_category": "security_and_unrecognised_transactions",
+      "intent_count": 6,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 29580
+    },
+    {
+      "business_category": "account_management",
+      "intent_count": 5,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 24467
+    },
+    {
+      "business_category": "bank_transfers",
+      "intent_count": 12,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 46899
+    },
+    {
+      "business_category": "virtual_cards",
+      "intent_count": 4,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 21482
+    },
+    {
+      "business_category": "cash_and_cheque_deposits",
+      "intent_count": 2,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 14871
+    },
+    {
+      "business_category": "identity_verification",
+      "intent_count": 4,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 22770
+    },
+    {
+      "business_category": "refunds",
+      "intent_count": 2,
+      "intent_sections_match_mapping": true,
+      "frontmatter_present": true,
+      "version_1_1": true,
+      "effective_date_updated": true,
+      "only_h2_h3_headers": true,
+      "all_intents_enriched": true,
+      "bytes": 16910
+    }
+  ],
+  "validation_scope": "Structural/coverage/hash checks. Cross-category rules manually reviewed; no model retrieval accuracy or real-bank legal certification is claimed.",
+  "clarification_date": "2026-10-14",
+  "clarified_source_issues": [
+    "REVIEW-001",
+    "REVIEW-002",
+    "REVIEW-003",
+    "REVIEW-004"
+  ],
+  "knowledge_quality_clarifications": [
+    "KQ-001",
+    "KQ-002",
+    "KQ-003"
+  ]
+}

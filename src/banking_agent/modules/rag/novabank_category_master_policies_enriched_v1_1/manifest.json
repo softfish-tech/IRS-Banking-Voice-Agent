@@ -1,0 +1,368 @@
+{
+  "synthetic": true,
+  "version": "1.1",
+  "effective_date": "2026-10-11",
+  "policy_count": 13,
+  "intent_count": 77,
+  "newly_enriched_category_count": 12,
+  "newly_enriched_intent_count": 70,
+  "index_include": [
+    "policies/*.md"
+  ],
+  "index_exclude": [
+    "reports/**",
+    "references/**",
+    "README.md",
+    "**/*.json"
+  ],
+  "policies": [
+    {
+      "policy_id": "DOC-CAT-CARDLIFE-001",
+      "business_category": "card_lifecycle",
+      "included_intents": [
+        "card_arrival",
+        "card_delivery_estimate",
+        "get_physical_card",
+        "getting_spare_card",
+        "order_physical_card",
+        "activate_my_card",
+        "card_about_to_expire"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_card_lifecycle_master_policy.md",
+      "sha256": "872ac45ce52f172a82b8f541061bac1b80a631341bf8d4a9e026ece1de82d36c",
+      "analysis_path": "reports/card_lifecycle_analysis.md",
+      "reference_ids": [
+        "REF-25",
+        "REF-26",
+        "REF-27"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-CARDUSE-001",
+      "business_category": "card_usage_and_access",
+      "included_intents": [
+        "card_linking",
+        "card_not_working",
+        "pin_blocked",
+        "contactless_not_working",
+        "card_acceptance",
+        "visa_or_mastercard",
+        "change_pin",
+        "apple_pay_or_google_pay"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_card_usage_and_access_master_policy.md",
+      "sha256": "b5c6e80a610b60a388854a37bacc820ee6820af7b3755bf5436c9f5bb5213cc1",
+      "analysis_path": "reports/card_usage_and_access_analysis.md",
+      "reference_ids": [
+        "REF-01",
+        "REF-02",
+        "REF-03",
+        "REF-18"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-FX-001",
+      "business_category": "currency_exchange",
+      "included_intents": [
+        "exchange_rate",
+        "fiat_currency_support",
+        "exchange_via_app",
+        "exchange_charge"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_currency_exchange_master_policy.md",
+      "sha256": "cad0372a82ac5bdd07b4fc5191ef234517053ee90abdf5524fe9927189cb370c",
+      "analysis_path": "reports/currency_exchange_analysis.md",
+      "reference_ids": [
+        "REF-04",
+        "REF-05"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-CARDPAY-001",
+      "business_category": "card_payments",
+      "included_intents": [
+        "card_payment_wrong_exchange_rate",
+        "extra_charge_on_statement",
+        "card_payment_fee_charged",
+        "pending_card_payment",
+        "declined_card_payment",
+        "transaction_charged_twice",
+        "reverted_card_payment?"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_card_payments_master_policy.md",
+      "sha256": "98a6e7d63f60821ad1283153a8ff90a3a65422ea6fac0bed605a4df958f5292c",
+      "analysis_path": "reports/card_payments_analysis.md",
+      "reference_ids": [
+        "REF-04",
+        "REF-06",
+        "REF-03"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-ATM-001",
+      "business_category": "cash_withdrawals",
+      "included_intents": [
+        "pending_cash_withdrawal",
+        "wrong_amount_of_cash_received",
+        "atm_support",
+        "declined_cash_withdrawal",
+        "card_swallowed",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "cash_withdrawal_charge"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_cash_withdrawals_master_policy.md",
+      "sha256": "5f95986bf80f45a6174a33e354472251dc7ceb20831c636606176e0f74315f8f",
+      "analysis_path": "reports/cash_withdrawals_analysis.md",
+      "reference_ids": [
+        "REF-07",
+        "REF-08",
+        "REF-05",
+        "REF-04"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-CARDTOPUP-001",
+      "business_category": "card_top_ups",
+      "included_intents": [
+        "automatic_top_up",
+        "pending_top_up",
+        "top_up_limits",
+        "supported_cards_and_currencies",
+        "top_up_reverted",
+        "topping_up_by_card",
+        "verify_top_up",
+        "top_up_failed",
+        "top_up_by_card_charge"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_card_top_ups_master_policy.md",
+      "sha256": "aa42082c76c0c313a2af044363e17eb976bfa795426cd3897956706ed0a09f99",
+      "analysis_path": "reports/card_top_ups_analysis.md",
+      "reference_ids": [
+        "REF-09",
+        "REF-10",
+        "REF-11"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-SECURITY-001",
+      "business_category": "security_and_unrecognised_transactions",
+      "included_intents": [
+        "lost_or_stolen_card",
+        "card_payment_not_recognised",
+        "compromised_card",
+        "direct_debit_payment_not_recognised",
+        "lost_or_stolen_phone",
+        "cash_withdrawal_not_recognised"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_security_and_unrecognised_transactions_master_policy.md",
+      "sha256": "fd371dd57bdfc561e5305932b6ec528080e3c940b02cf29b7bd4358137bcccaf",
+      "analysis_path": "reports/security_and_unrecognised_transactions_analysis.md",
+      "reference_ids": [
+        "REF-12",
+        "REF-13",
+        "REF-03",
+        "REF-08",
+        "REF-06"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-ACCOUNT-001",
+      "business_category": "account_management",
+      "included_intents": [
+        "age_limit",
+        "edit_personal_details",
+        "passcode_forgotten",
+        "terminate_account",
+        "country_support"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_account_management_master_policy.md",
+      "sha256": "b30cf94ec91fbc0eba8c15b865fb3583c7621526c995bbe79f2f3eb9f2f4b14f",
+      "analysis_path": "reports/account_management_analysis.md",
+      "reference_ids": [
+        "REF-14",
+        "REF-15",
+        "REF-13",
+        "REF-22"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-TRANSFER-001",
+      "business_category": "bank_transfers",
+      "included_intents": [
+        "top_up_by_bank_transfer_charge",
+        "cancel_transfer",
+        "transfer_not_received_by_recipient",
+        "declined_transfer",
+        "pending_transfer",
+        "transfer_timing",
+        "beneficiary_not_allowed",
+        "transfer_fee_charged",
+        "receiving_money",
+        "failed_transfer",
+        "transfer_into_account",
+        "balance_not_updated_after_bank_transfer"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_bank_transfers_master_policy.md",
+      "sha256": "8e3b7bbd1bbceb95039fd4cb8a72e8fdafd7b6bdfa77546bab2082f9eba56141",
+      "analysis_path": "reports/bank_transfers_analysis.md",
+      "reference_ids": [
+        "REF-16",
+        "REF-17"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-VIRTUAL-001",
+      "business_category": "virtual_cards",
+      "included_intents": [
+        "getting_virtual_card",
+        "disposable_card_limits",
+        "virtual_card_not_working",
+        "get_disposable_virtual_card"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_virtual_cards_master_policy.md",
+      "sha256": "51c89700e36219b8b901b8d690b8ff2d57274565fd0f2a7b4c193bbec9e6f299",
+      "analysis_path": "reports/virtual_cards_analysis.md",
+      "reference_ids": [
+        "REF-18",
+        "REF-19"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-CASHCHEQUE-001",
+      "business_category": "cash_and_cheque_deposits",
+      "included_intents": [
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "top_up_by_cash_or_cheque"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_cash_and_cheque_deposits_master_policy.md",
+      "sha256": "65c78186ac6808ee13a43bf2550604252792a4ec251c73cd32fed3d11527a33b",
+      "analysis_path": "reports/cash_and_cheque_deposits_analysis.md",
+      "reference_ids": [
+        "REF-20",
+        "REF-21"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-IDVERIFY-001",
+      "business_category": "identity_verification",
+      "included_intents": [
+        "why_verify_identity",
+        "unable_to_verify_identity",
+        "verify_source_of_funds",
+        "verify_my_identity"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_identity_verification_master_policy.md",
+      "sha256": "c4555da706e92ff985e03a772ea888867bfde24e463f5c40362c233b083e7d0d",
+      "analysis_path": "reports/identity_verification_analysis.md",
+      "reference_ids": [
+        "REF-22",
+        "REF-23"
+      ]
+    },
+    {
+      "policy_id": "DOC-CAT-REFUND-001",
+      "business_category": "refunds",
+      "included_intents": [
+        "request_refund",
+        "Refund_not_showing_up"
+      ],
+      "version": "1.1",
+      "effective_date": "2026-10-11",
+      "source_type": "Category Master Policy",
+      "synthetic": true,
+      "path": "policies/NovaBank_refunds_master_policy.md",
+      "sha256": "e85d78c0a8ef2e5c5ec1c948944c802ddf32502f800edbed3d8ee7cf5f0a0334",
+      "analysis_path": "reports/refunds_analysis.md",
+      "reference_ids": [
+        "REF-24",
+        "REF-06",
+        "REF-18",
+        "REF-04"
+      ]
+    }
+  ],
+  "clarification_date": "2026-10-14",
+  "clarifications": [
+    {
+      "id": "REVIEW-001",
+      "resolution": "72 hours from recorded issuer authorisation; acceptance/initiation are not the start event."
+    },
+    {
+      "id": "REVIEW-002",
+      "resolution": "60 calendar days from disputed fee ledger posting."
+    },
+    {
+      "id": "REVIEW-003",
+      "resolution": "60 calendar days from disputed ATM withdrawal ledger posting."
+    },
+    {
+      "id": "REVIEW-004",
+      "resolution": "Status-only review: 2 business days; cash-dispensing reconciliation: 10 business days; both after complete evidence."
+    }
+  ],
+  "knowledge_quality_clarifications": [
+    {
+      "id": "KQ-001",
+      "date": "2026-10-14",
+      "resolution": "Additional refunds <= remaining original principal; aggregate refunds <= original principal."
+    },
+    {
+      "id": "KQ-002",
+      "date": "2026-10-14",
+      "resolution": "Generated delivery cutoff explicitly handles non-business-day acceptance."
+    },
+    {
+      "id": "KQ-003",
+      "date": "2026-10-14",
+      "resolution": "Reconsideration intake starts on secure-app/registered-channel notification of final identity decision."
+    }
+  ]
+}

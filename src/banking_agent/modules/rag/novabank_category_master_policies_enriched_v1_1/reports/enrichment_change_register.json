@@ -1,0 +1,993 @@
+[
+  {
+    "category": "card_usage_and_access",
+    "intent": "card_linking",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Link only the customer-owned card selected in the authenticated account. If the last four digits match more than one historical card, also match expiry and issuance reference; do not reveal another account holder or merge card records. A cancelled, retired or expired card remains historical and cannot become usable through linking.",
+      "An accepted request has one linking reference. If the card is still absent after 60 seconds, refresh once and inspect that reference before resubmitting; a matching-record issue is reviewed within 2 business days at SGD 0. Linking does not reset the activation deadline or create an additional physical-card entitlement."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "card_not_working",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Record whether chip-and-PIN, physical tap, online purchase or wallet use failed. One recorded payment refusal routes to declined_card_payment; two-terminal tap-only failure routes to contactless_not_working. Do not diagnose damage from one merchant refusal.",
+      "Temporary customer freeze may be removed within 60 seconds after secure verification at SGD 0; permanent retirement and security-team restrictions require their separate route. A replacement retires the damaged predecessor before order acceptance and costs SGD 15 plus selected delivery: standard SGD 0, arrival Day 5; express SGD 10, arrival Day 2."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "pin_blocked",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Stop further PIN attempts after the third consecutive wrong entry. Wallet biometric success does not prove the physical-card PIN is unblocked. The SGD 0 self-service unblock takes up to 5 minutes and is limited to one in a rolling 24 hours, not one per midnight reset.",
+      "After an eligible unblock, make the next purchase by chip-and-PIN. If the customer has forgotten the PIN, use the secure PIN-change flow after removing an eligible PIN block; chat cannot disclose the previous PIN. Do not repeat an unblock to bypass a security restriction."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "contactless_not_working",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "A purchase of exactly SGD-equivalent 100 is within the single-tap ceiling only if it does not take cumulative tap principal above 300. A successful chip-and-PIN purchase resets that cumulative counter; app toggles, wallet purchases and calendar midnight do not.",
+      "A terminal may demand chip-and-PIN below NovaBank ceilings. Use one card at a time and remove competing cards from the tap area; do not promise a terminal override. The contactless control changes within 60 seconds at SGD 0. After failures at two compatible terminals with successful chip use, submit dates and masked references for the 2-business-day review."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "card_acceptance",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Visa acceptance signage does not guarantee a particular debit card, online transaction or deposit is accepted. A merchant may require the physical cardholder, local billing details or a deposit; disposable cards reject deposit and recurring workflows even at otherwise compatible merchants.",
+      "For a public acceptance question, collect no customer documents and answer immediately at SGD 0. For a specific refusal, securely check merchant, country, charged currency and reference, then use declined_card_payment. Supported foreign-currency spending does not create a foreign local account or international-transfer service."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "visa_or_mastercard",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "NovaBank issues Visa debit credentials only: physical, reusable virtual and disposable. Network-selection enquiries cost SGD 0 and can be answered immediately without authentication. An external Mastercard may qualify for card funding but is not a NovaBank-issued Mastercard.",
+      "A merchant that accepts only Mastercard is not made eligible by ordering another NovaBank card. Do not submit a replacement, alter account settings or promise a future network migration in response to a network preference."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "change_pin",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Enter and confirm the four-digit new PIN only in the secure PIN screen. Reject four repeated digits or ascending/descending sequences; never ask the customer to state the proposed PIN in chat. No unchanged customer identity document is required.",
+      "An approved change costs SGD 0, applies within 5 minutes and allows two changes per rolling 24 hours. Test through a chip-and-PIN purchase; an app-passcode change neither changes nor unblocks this PIN. A cancelled card is ineligible, and a PIN block must follow pin_blocked first."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_usage_and_access",
+    "intent": "apple_pay_or_google_pay",
+    "reference_ids": [
+      "REF-01",
+      "REF-02",
+      "REF-03",
+      "REF-18"
+    ],
+    "novabank_added_clauses": [
+      "Each enrolled device token counts towards the account maximum of three active wallet tokens. A replacement handset requires fresh secure provisioning; device ownership does not establish account ownership. Provisioning is SGD 0 within 5 minutes, and all wallet purchases share the account purchase counters.",
+      "Reusable virtual credentials may be enrolled; disposable credentials and wallet ATM cash withdrawal are unsupported. Card retirement suspends associated tokens within 5 minutes. Unfreezing a card does not recreate a revoked token; re-provision securely. Merchant subscriptions and existing authorisations are not cancelled merely by removing a wallet token."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "currency_exchange",
+    "intent": "exchange_rate",
+    "reference_ids": [
+      "REF-04",
+      "REF-05"
+    ],
+    "novabank_added_clauses": [
+      "The displayed rate is destination units for one source unit. For illustration only, a quote of 1 SGD = 0.75 USD makes SGD 100 principal yield USD 75 before any separately charged source-currency fee. The illustrative rate is not a live offer; retrieve the actual quote reference and timestamp.",
+      "The reference refreshes every 60 seconds and a confirmed quote expires after 30 seconds. Obtain a fresh quote and explicit confirmation after expiry; do not substitute an inverse rate, internet estimate or purchase-day rate for the recorded settlement rate. Public rate-method enquiries are SGD 0 and immediate."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "currency_exchange",
+    "intent": "fiat_currency_support",
+    "reference_ids": [
+      "REF-04",
+      "REF-05"
+    ],
+    "novabank_added_clauses": [
+      "Holding support is exactly SGD, USD, EUR, GBP and AUD. Optional balances belong to the same personal account and do not provide foreign local bank details. Eligibility information costs SGD 0 and is immediate; adding a supported balance in the authenticated app takes up to 60 seconds at SGD 0.",
+      "A sufficient same-currency balance can fund a supported purchase. If it is insufficient, convert the entire purchase from SGD; do not combine several balances. ATM withdrawals always debit SGD, and incoming bank transfers remain domestic SGD even when the customer holds a foreign balance."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "currency_exchange",
+    "intent": "exchange_via_app",
+    "reference_ids": [
+      "REF-04",
+      "REF-05"
+    ],
+    "novabank_added_clauses": [
+      "Verify source/destination balances, quote expiry, principal and separately disclosed fee before confirming. One quote reference permits one exchange; a timeout after confirmation is an unknown status requiring lookup, not permission for an automatic second exchange.",
+      "Execution costs the stated 0.50% fee, minimum SGD-equivalent 0.50, and completes within 60 seconds. If the result remains absent after 5 minutes, submit the reference for a 2-business-day technical review. Principal of SGD-equivalent 10–5,000 per exchange and 10,000 daily is unchanged; fees must additionally be covered by available funds."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "currency_exchange",
+    "intent": "exchange_charge",
+    "reference_ids": [
+      "REF-04",
+      "REF-05"
+    ],
+    "novabank_added_clauses": [
+      "Fee = the greater of 0.005 times source principal and the quote-time source-currency equivalent of SGD 0.50, rounded half-up to two decimal places. An SGD 20 exchange therefore costs SGD 0.50 and an SGD 200 exchange costs SGD 1.00. Destination principal is calculated from the full source principal; the fee is charged separately.",
+      "There is no weekend surcharge or additional NovaBank bank spread. Merchant or ATM DCC into SGD is not NovaBank conversion and attracts no NovaBank FX fee; the completed ATM fee of SGD 2 still applies. A fee-error claim within 60 calendar days of posting is reviewed within 5 business days; approved corrections credit within 2 business days, at SGD 0 review cost."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "card_payment_wrong_exchange_rate",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "Collect original receipt currency, DCC selection if shown, authorised amount, final settlement amount/date and masked reference. If a merchant converted to SGD, its rate cannot be compared as a NovaBank rate. A sufficient same-currency purchase has no NovaBank conversion; insufficient matching funds route the entire purchase through SGD.",
+      "The settled calculation, rather than an earlier authorisation or public rate, governs the check. Intake is within 60 calendar days of settlement at SGD 0; internal calculation review is 5 business days and an approved correction credits within 2 business days. A merchant conversion disagreement follows the 30-calendar-day recognised-dispute review instead of an automatic bank fee refund."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "extra_charge_on_statement",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "Check whether the extra line is a hold, settlement, disclosed FX fee, merchant adjustment or another merchant descriptor before calling it an extra settled charge. A merchant trading name may differ from its legal descriptor; recognition checking must not delay a customer who denies authorising it.",
+      "Submit receipts, both masked ledger references and amounts for an SGD 0 review within 60 calendar days of settlement. Internal posting/fee errors use 5 business days and approved correction 2 business days; recognised merchant amount disputes target 30 calendar days from complete evidence. Unrecognised lines route immediately to security."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "card_payment_fee_charged",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "Ordinary purchase fee is SGD 0. Separately posted NovaBank conversion costs 0.50%, minimum SGD-equivalent 0.50, only when NovaBank actually converts. Do not label a merchant surcharge or DCC margin as a NovaBank fee, or introduce an overseas administrative fee from another bank.",
+      "Request the fee reference, principal, source/charged currencies, conversion record and settlement date. A fee-only complaint is free to review within 5 business days after complete evidence, with approved correction within 2 business days; submit within 60 calendar days of posting. A correct original FX fee is not automatically refunded when the purchase principal is later refunded."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "pending_card_payment",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "An approved authorisation reduces available funds without proving settlement. A normal hold expires after at most 7 calendar days; labelled hotel/rental deposit holds on physical or reusable cards allow at most 30 calendar days. Disposable deposit/preauthorisation attempts are unsupported.",
+      "Customer freeze, replacement or merchant cancellation confirmation does not itself cancel an approved hold. Check for a matching settlement before treating a hold plus posting as duplication. Report a hold beyond its applicable deadline immediately for an SGD 0 technical review within 2 business days; do not wait out an alleged fraudulent authorisation."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "declined_card_payment",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "An issuer DECLINED record is a refusal, not a settled debit. Check available principal plus fees, account-shared limits, card controls and secure merchant authentication. A merchant error or app timeout without a final issuer record is unknown status; look up the original reference before retrying.",
+      "A declined attempt costs SGD 0 in NovaBank purchase fees. An approved hold associated with another reference follows pending_card_payment rather than a refund promise. Staff investigate an unexplained persistent refusal within 2 business days after masked evidence; never ask the customer to defeat a security control or generate multiple retries."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "transaction_charged_twice",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "Two SETTLED debits for one underlying purchase can be a duplicate; one PENDING hold and one SETTLED debit are not two settled debits. Two intentional orders, split shipment captures totalling the approved principal, and recurring payments on separate dates are not assumed to be duplicates.",
+      "Provide both references, dates, amounts and the one-order receipt. Intake within 60 calendar days of settlement is SGD 0; internal duplicate posting review takes 5 business days and approved correction 2 business days. If separate merchant submissions need a dispute, target 30 calendar days after complete evidence. Deduct any merchant refund already received from the outstanding claim."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_payments",
+    "intent": "reverted_card_payment?",
+    "reference_ids": [
+      "REF-04",
+      "REF-06",
+      "REF-03"
+    ],
+    "novabank_added_clauses": [
+      "An authorisation release removes a hold under its original 7-calendar-day or eligible 30-calendar-day deadline; it is not a merchant-issued refund. A settled network reversal credits within 2 business days after the accepted reversal instruction. Use the reversal reference, not an email promising cancellation, as evidence of that start event.",
+      "A later valid settlement can still be investigated after a hold release; do not promise that a released authorisation makes collection impossible. Trace the original and later references at SGD 0, applying the 60-calendar-day settled-dispute intake and the relevant 5-business-day posting or 30-calendar-day merchant review. Do not pay both a reversal and a refund for the same principal."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "pending_cash_withdrawal",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Record requested amount, actual cash received, ATM operator/location/ID, local time with timezone and masked reference. No cash or short cash must be reported immediately even if the ledger is PENDING; the customer is not required to wait three days before reporting.",
+      "The pending hold ceiling is 3 calendar days. An internal overdue-status case is reviewed within 2 business days at SGD 0; a cash-dispensing discrepancy uses the 30-calendar-day intake, acknowledgement within 1 business day and 10-business-day reconciliation after complete evidence. A failed no-cash attempt has no NovaBank withdrawal fee; assess any operator charge separately."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "wrong_amount_of_cash_received",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Treat both shortages and excess cash as discrepancies. Retain the receipt if safely available and note denomination counts; do not retry to compensate, tamper with the machine or hand cash to an unverified caller. Actual cash figures, not only the requested amount, are required for reconciliation.",
+      "Report within 30 calendar days, at SGD 0 investigation cost. Acknowledge within 1 business day, target a decision within 10 business days after complete evidence and credit an approved shortage within 2 business days. Excess cash is referred for an authorised reconciliation instruction; the assistant cannot invent a repayment recipient or outcome."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "atm_support",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Use only an active physical Visa card at a Visa/PLUS ATM dispensing SGD, USD, EUR, GBP or AUD. Acceptance, available denominations, terminal cash stock and operator limits may further constrain a request; a network logo is not an approval guarantee.",
+      "Public compatibility advice is immediate at SGD 0. Each completed withdrawal costs SGD 2 plus applicable NovaBank FX and disclosed operator charges, with principal caps of SGD-equivalent 500 each and 1,000 daily. Virtual cards, wallet tokens, unsupported currencies and deposit transactions are not permitted at an ATM under this policy."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "declined_cash_withdrawal",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Check activation, expiry, eligible physical card, PIN-block state, enabled card controls, SGD available funds including fees and ATM/operator limits. A foreign balance cannot replace insufficient SGD withdrawal funds. Stop guessing the PIN after three consecutive wrong attempts.",
+      "A refused no-cash withdrawal has NovaBank fee SGD 0 and must not be described as completed. If a debit or hold is present, route also to pending_cash_withdrawal or wrong_amount_of_cash_received. An unexplained terminal refusal is reviewed within 2 business days at SGD 0; do not advise multiple rapid withdrawals."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "card_swallowed",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Securely freeze the retained card within 60 seconds at SGD 0 and notify urgent security staff immediately if the ATM seems altered. Note ATM ID/operator and time without touching the machine. Staff cannot guarantee operator retrieval; even an operator-returned card remains blocked until a security decision.",
+      "Permanent retirement is irreversible and suspends linked wallet tokens within 5 minutes. An accepted replacement costs SGD 15, with standard arrival Day 5 for SGD 0 shipping or express Day 2 for SGD 10 shipping to a verified Singapore address. No overseas emergency delivery or agent pickup is offered; a related no-cash debit gets a separate linked reconciliation."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "wrong_exchange_rate_for_cash_withdrawal",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "The receipt must identify local cash currency/amount and whether the operator converted into SGD. NovaBank converts supported foreign cash from SGD; holding enough foreign currency does not change this. Operator DCC rates are distinct from NovaBank settlement-rate calculations.",
+      "Fee-free rate review intake is 60 calendar days after posting; internal calculation review takes 5 business days with approved correction within 2 business days. Separate the SGD 2 withdrawal fee, 0.50% FX fee with minimum equivalent 0.50 and operator surcharge. A cash shortage instead uses the 30-calendar-day ATM reconciliation window."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_withdrawals",
+    "intent": "cash_withdrawal_charge",
+    "reference_ids": [
+      "REF-07",
+      "REF-08",
+      "REF-05",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "The completed principal counts against the withdrawal limits; available SGD must additionally cover NovaBank fee SGD 2, the applicable 0.50% FX fee with minimum equivalent 0.50, and any accepted operator surcharge. Operator fees are determined by that operator and cannot be quoted as a fixed NovaBank charge.",
+      "A failed no-cash attempt has NovaBank withdrawal fee SGD 0. Submit receipt, fee lines and reference within 60 calendar days of a disputed bank-fee posting for a 5-business-day free review; approved correction credits within 2 business days. Disputes about actual cash use the 10-business-day cash reconciliation route instead."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "automatic_top_up",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "The customer must consent in the secure app to a same-owner eligible funding card, a trigger below SGD 100 and a fixed SGD 200 amount, at SGD 0 fee. One automated attempt per Singapore calendar day shares manual daily/month counters. Do not queue additional automated attempts while the original is pending.",
+      "Enabling or disabling the feature takes up to 60 seconds at SGD 0. Disabling stops future triggers but cannot cancel an already authorised attempt. A 24-hour phone-change restriction, expiry, issuer authentication challenge or insufficient limit capacity prevents the trigger; no substitute card may be selected without new customer consent."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "pending_top_up",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Compare the NovaBank attempt reference with the issuer authorisation, amount and currency; statement booking dates can differ. An external debit or hold alone does not prove a NovaBank credit. No duplicate retry or cancellation is offered for a pending authorised attempt.",
+      "Normal accepted credit is within 60 seconds; pending may last at most 72 hours from acceptance. If it ends FAILED, NovaBank sends a release instruction within 1 business day of that final status; the external issuer release target is 5 business days from that instruction, not from the attempt. Escalate status overdue beyond 72 hours at SGD 0 for a 2-business-day technical review."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "top_up_limits",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Manual and automatic funding, regardless of eligible funding card count, share SGD 20 minimum, 2,000 per attempt, 5,000 per Singapore calendar day and 20,000 per calendar month. NovaBank does not import another bank's rolling seven-day, new-user or adaptive numeric caps.",
+      "Accepted pending principal reserves capacity in its acceptance period. Failed uncredited attempts release reservations only if that period is still current; reversing a completed credit does not erase historical usage. Public limit enquiries are immediate at SGD 0; bank-transfer funding is a separate counter and may still trigger source-of-funds review."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "supported_cards_and_currencies",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Accept only same-owner Singapore-issued Visa or Mastercard debit cards in SGD; reject credit, prepaid, corporate, virtual, third-party and non-Singapore-issued cards. NovaBank-issued cards cannot circularly fund the same account. Wallet-token top-up is not a supported funding method.",
+      "Public compatibility checking is immediate at SGD 0. If secure issuer/card-type metadata is inconsistent, staff review masked last four digits and an ownership statement issued within 90 calendar days within 2 business days. Do not infer ownership from possession of a card or disclose a full card number in support chat."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "top_up_reverted",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Distinguish an uncompleted technical attempt returned to the issuer from a previously credited amount later reversed. Retain both credit and reversal references. A reversal of completed funding does not reset the original daily/monthly usage or itself certify that the external issuer has restored funds.",
+      "NovaBank sends a routine reversal instruction within 1 business day; issuer return target is 5 business days after that instruction, with NovaBank fee SGD 0. An issuer-disputed top-up is separately investigated: acknowledge within 1 business day and provide an initial update within 5 business days of complete evidence. No external dispute outcome or final deadline is guaranteed; a funding restriction cannot be bypassed."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "topping_up_by_card",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Confirm the eligible card, SGD amount, disclosed zero NovaBank fee and issuer authentication in the secure payment form. A customer-abandoned challenge is not successful funding. Never request OTP, CVV or full credentials in chat, and never convert a manual instruction into automatic-top-up consent.",
+      "A successfully accepted top-up normally credits within 60 seconds and uses the existing SGD 20–2,000 each, 5,000 daily and 20,000 monthly limits. If a confirmation screen times out, inspect the original reference before another attempt. Once authorised, it cannot be cancelled by support; any later outgoing domestic transfer follows its own controls."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "verify_top_up",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Card-ownership evidence must match the NovaBank legal account holder and the funding card's last four digits. Upload an issuer statement issued within 90 calendar days in the secure app; show name, issuer, issue date and masked card identifier, while hiding unrelated transactions.",
+      "Ownership review is SGD 0 within 2 business days after complete evidence. A successful match neither guarantees issuer approval nor satisfies a separate source-of-funds request. A third-party owner, unsupported card type or altered statement is rejected; do not accept a family member's consent as ownership."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "top_up_failed",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "Classify failed issuer authentication, issuer refusal, insufficient external funds, NovaBank eligibility restriction and technical failure by the final reference status. A bank statement showing two lines may contain one authorisation and one settlement; compare both issuer references with actual NovaBank credited attempts before claiming duplication.",
+      "A final FAILED attempt costs SGD 0 and creates no successful credit. If funds were authorised, NovaBank issues release within 1 business day of FAILED; issuer release target is 5 business days after that instruction. Retry only when final status and reservation handling are confirmed and the cause is corrected; an unknown or pending status is not a failed result."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "card_top_ups",
+    "intent": "top_up_by_card_charge",
+    "reference_ids": [
+      "REF-09",
+      "REF-10",
+      "REF-11"
+    ],
+    "novabank_added_clauses": [
+      "NovaBank eligible manual and automatic card funding costs SGD 0. An external issuer may post its own fee; retain the issuer statement and masked funding reference and direct an issuer-charge enquiry to that issuer without quoting a waiver or fixed issuer amount.",
+      "If a NovaBank ledger line is labelled as a funding fee, submit its reference within 60 calendar days of posting for an SGD 0 review within 5 business days. An approved correction credits within 2 business days. Do not import premium-plan, foreign-issued-card or commercial-card fees into this zero-fee eligible product."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "lost_or_stolen_card",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "Report immediately from any location. Securely freeze within 60 seconds at SGD 0; if loss/theft is confirmed, permanent retirement cannot be undone even if the card is later found. Linked wallet tokens are suspended within 5 minutes, but previous approved purchases may still settle.",
+      "No police report or complete transaction receipt is a prerequisite for urgent intake. Loss replacement is SGD 15 plus standard SGD 0 shipping by Day 5 or express SGD 10 by Day 2, only to a verified Singapore address. A disputed debit gets a linked investigation, and neither replacement nor late reporting alone determines reimbursement."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "card_payment_not_recognised",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "Record recognition status without forcing the customer to contact a suspected merchant first. A different trading name may explain a descriptor, but a customer denying approval routes immediately to urgent security even when the line is pending. Secure card freeze is SGD 0 within 60 seconds.",
+      "Collect masked reference, amount/currency, date, card last four digits and known device access for the formal case. Standard intake is within 60 calendar days of settlement; late cases require staff assessment rather than automatic rejection. Acknowledge within 1 business day, target decision within 30 calendar days after complete evidence and credit approved reimbursement within 2 business days. OTP/PIN use is not conclusive proof of consent."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "compromised_card",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "Credentials exposed on a fraudulent website or to a caller count as compromise even with zero observed loss. Stop entering credentials, securely freeze within 60 seconds at SGD 0 and escalate urgently. Staff determine permanent retirement and replacement; a freeze cannot erase previous authorisations.",
+      "If the customer deliberately approved a scam payment, record that fact without calling it automatically unauthorised or denying investigation. Protection remains immediate, and staff apply the transaction's correct dispute route. Security replacement is SGD 15 plus standard SGD 0/Day 5 or express SGD 10/Day 2 delivery; reimbursement is not guaranteed."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "direct_debit_payment_not_recognised",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "NovaBank supports zero direct-debit mandates. A reported direct debit may be a recurring card purchase, a transfer, a misleading descriptor or a fraudulent demand. Classify actual ledger references within 2 business days at SGD 0, while treating suspected account compromise immediately.",
+      "Do not create, cancel or claim a refund under a non-existent mandate scheme. An actual unrecognised card debit follows the 60-calendar-day standard intake and 30-calendar-day investigation; an actual transfer needs urgent staff-led assessment because BANKING77 has no exact unauthorised-transfer label. Unsupported terminology is not grounds to dismiss a debit complaint."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "lost_or_stolen_phone",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "Use a trusted device or assisted recovery route; do not send recovery codes to a reported-compromised number. Urgent intake is available 24/7 at SGD 0. After verified ownership, revoke lost-device sessions and associated wallet tokens within 5 minutes and apply necessary card freeze within 60 seconds.",
+      "Self-service identity-backed passcode recovery normally takes up to 10 minutes; unavailable credentials or failed identity checks require manual review within 2 business days of complete evidence. Holding a physical card is not sufficient recovery proof. A subsequent approved phone-number change imposes the existing 24-hour restriction on beneficiary addition and card top-ups."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "security_and_unrecognised_transactions",
+    "intent": "cash_withdrawal_not_recognised",
+    "reference_ids": [
+      "REF-12",
+      "REF-13",
+      "REF-03",
+      "REF-08",
+      "REF-06"
+    ],
+    "novabank_added_clauses": [
+      "Unrecognised ATM debits require immediate security escalation and secure physical-card freeze within 60 seconds at SGD 0, even if the customer still has the card. ATM PIN use does not by itself determine authorisation. Record location, timestamp/timezone, amount, reference and who had card/device access.",
+      "Standard reporting window is 30 calendar days; staff assess late reports without automatic forfeiture. Acknowledge within 1 business day and target ATM reconciliation within 10 business days after complete evidence; approved credit takes 2 business days. A recognised withdrawal with missing cash instead routes to wrong_amount_of_cash_received, with security protection retained if equipment was suspicious."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "account_management",
+    "intent": "age_limit",
+    "reference_ids": [
+      "REF-14",
+      "REF-15",
+      "REF-13",
+      "REF-22"
+    ],
+    "novabank_added_clauses": [
+      "Assess age from the verified date of birth on the application date, not the year of birth alone. The minimum is exactly 18; parent consent, possession of a card or a future eighteenth birthday does not permit early onboarding.",
+      "Public eligibility advice is immediate at SGD 0. A birth-date mismatch requires a valid government-issued photo ID and manual identity review within 2 business days. Do not promise a youth, guardian, joint or student exception, or treat identity-document submission as approval."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "account_management",
+    "intent": "edit_personal_details",
+    "reference_ids": [
+      "REF-14",
+      "REF-15",
+      "REF-13",
+      "REF-22"
+    ],
+    "novabank_added_clauses": [
+      "Secure phone/email updates take up to 5 minutes at SGD 0; legal-name/address/identity updates require manual review within 2 business days. Legal-name changes require valid ID plus an official name-change or marriage document linking old and new names. Address proof must show legal name and Singapore residence and be issued within 90 calendar days.",
+      "When the old number is unavailable or compromised, use identity-backed assisted recovery rather than an OTP to that number. Allow one successful phone change per rolling 24 hours; after approval restrict beneficiary addition and card top-ups for 24 hours. Updating an address does not redirect an already dispatched card or expand Singapore residence eligibility."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "account_management",
+    "intent": "passcode_forgotten",
+    "reference_ids": [
+      "REF-14",
+      "REF-15",
+      "REF-13",
+      "REF-22"
+    ],
+    "novabank_added_clauses": [
+      "The app passcode is six digits and differs from the four-digit card PIN. Five failed passcode attempts cause a 30-minute app lock; repeated guessing, app reinstalls or new-device registration must not bypass that lock or a security restriction.",
+      "Recovery requires secure ownership confirmation and live identity checking, costs SGD 0 and normally completes within 10 minutes. If the registered number is unavailable or the live match fails, use manual identity review within 2 business days of complete documents. A lost-device case also needs session/token revocation; passcode recovery alone does not secure a stolen handset."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "account_management",
+    "intent": "terminate_account",
+    "reference_ids": [
+      "REF-14",
+      "REF-15",
+      "REF-13",
+      "REF-22"
+    ],
+    "novabank_added_clauses": [
+      "Before accepting closure, require zero balances in every supported currency, no authorisation holds, outstanding funding reversals, expected refunds, unresolved disputes/complaints, security restrictions or amounts owed. Disable future automatic funding and ask customers to cancel merchant subscriptions; closure is not proof that a merchant contract ended.",
+      "Eligible closure is SGD 0 within 5 business days from complete acceptance. Staff retire all cards and revoke remaining sessions/wallet tokens by completion; final closure is permanent and is not an account-freeze toggle. Customers may save statements before closure, but cannot demand deletion of all retained records. A late incoming refund after closure is a staff exception case, not a promised automatic reopening or payout."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "account_management",
+    "intent": "country_support",
+    "reference_ids": [
+      "REF-14",
+      "REF-15",
+      "REF-13",
+      "REF-22"
+    ],
+    "novabank_added_clauses": [
+      "Ordinary residence and the verified residential address must be in Singapore; nationality is not a substitute for residence. Temporary travel does not make an account ineligible or permit overseas card delivery, foreign local account details or overseas transfer services.",
+      "If the customer moves their ordinary residence outside Singapore, refer for an SGD 0 eligibility review within 2 business days of complete updated evidence. Do not record a fictional Singapore address or silently maintain eligibility. Public supported-country information is immediate at SGD 0; a final staff decision may require orderly closure once all closure conditions are met."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "top_up_by_bank_transfer_charge",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Domestic SGD incoming bank funding has NovaBank fee SGD 0. A sending bank's own charge is not reimbursed or quoted as a NovaBank charge. No international transfer, foreign-currency bank receipt or correspondent-fee schedule is introduced.",
+      "If a NovaBank incoming transfer fee appears, obtain the ledger/transfer references and sender receipt within 60 calendar days of fee posting. Review costs SGD 0 and takes 5 business days from complete evidence; approved correction credits within 2 business days. If the principal is missing, use balance_not_updated_after_bank_transfer rather than a fee correction."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "cancel_transfer",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Cancellation is permitted only while the authoritative state is PENDING and the secure app displays Cancel. Verify transfer reference, amount and destination, then submit once. A race with completion may reject the request; a button click alone is not evidence of cancellation.",
+      "An accepted cancellation costs SGD 0 and confirms within 60 seconds; reserved funds release within 1 business day of confirmed cancellation. A COMPLETED wrong-recipient transfer instead allows a recovery request within 30 calendar days, with acknowledgement within 1 business day and initial update within 2 business days; receiving-side cooperation and recovery are not guaranteed."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "transfer_not_received_by_recipient",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "A NovaBank COMPLETED transfer missing at the beneficiary bank requires the original reference, actual completion timestamp, amount, receiving bank and masked recipient evidence. Correct spelling of a saved nickname does not establish the account number was correct. The sender, rather than an unrelated third party, submits the trace.",
+      "Normal supported completion is within 60 seconds; if still missing after 24 hours, open one SGD 0 trace per reference. Acknowledge within 1 business day and provide an initial result within 2 business days after complete evidence. A returned payment credits within 1 business day after NovaBank actually receives the returned funds; it cannot be fabricated from a recipient statement."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "declined_transfer",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "DECLINED means a business, eligibility, limit or security refusal; it differs from a technical FAILED status. Check enabled destination, the 24-hour new-beneficiary wait, any phone-change restriction, available funds and outgoing SGD 10,000 each/20,000 daily limits.",
+      "A declined transfer has NovaBank fee SGD 0 and no completed transfer principal. If a restriction is unexplained, staff review within 2 business days after masked evidence; source-of-funds evidence uses its separate 5-business-day review. Changing spelling, splitting amounts or repeatedly adding the destination cannot bypass a block."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "pending_transfer",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "PENDING means accepted without a final outcome, not completed or failed. A timeout after confirmation must be reconciled against the original reference; do not send a duplicate. Source-of-funds or security notices may explain why funds are unavailable.",
+      "The ordinary target is 60 seconds at SGD 0; investigate an unresolved transfer after 24 hours, acknowledge within 1 business day and update within 2 business days after complete evidence. Only a visible eligible Cancel action permits cancellation; no automatic cancellation or duplicate reimbursement follows from a delay."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "transfer_timing",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Supported domestic SGD transfers normally complete within 60 seconds after sending-bank acceptance. This is a continuous-time target, not a business-day promise; a queued external bank instruction has not started the NovaBank receipt clock. New beneficiaries cannot be used until their 24-hour wait expires.",
+      "A missing or unresolved transfer is traceable after 24 hours at SGD 0, with acknowledgement within 1 business day and initial update within 2 business days of complete evidence. Source-of-funds review takes up to 5 business days after complete evidence. Do not apply card-top-up 72-hour pending or five-business-day issuer-release clocks to bank transfers."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "beneficiary_not_allowed",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Validate the receiving bank selection, account identifier, domestic SGD route and active/eligible destination. A bank-name mismatch, closed account or security-blocked destination is not fixed by editing the recipient nickname. New-beneficiary eligibility starts only after the 24-hour waiting period.",
+      "A public eligibility enquiry is immediate at SGD 0; masked destination errors receive a 2-business-day staff review. Beneficiary addition remains restricted for 24 hours after an approved phone-number change. Do not expose security decision criteria, instruct evasion or create an overseas beneficiary under this domestic product."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "transfer_fee_charged",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "NovaBank outgoing domestic SGD transfer, cancellation and routine trace fees are all SGD 0. Distinguish a third-party bank charge, unrelated FX exchange fee and actual NovaBank transfer-fee line before reviewing it; a foreign currency balance does not create a foreign-transfer product.",
+      "Collect transfer and fee references within 60 calendar days of fee posting. The SGD 0 internal fee review target is 5 business days after complete evidence, with approved correction within 2 business days. Recovering a fee is separate from recalling principal and never certifies that a completed payment was cancelled."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "receiving_money",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Receive supported domestic SGD transfers using the authenticated account details. Third-party bank transfers are permitted, whereas third-party card top-ups are prohibited. There is no separate NovaBank numeric incoming cap; sender-bank caps and funding-origin/security controls still apply.",
+      "Ordinary receipt is within 60 seconds after sender-bank acceptance, at SGD 0. An unexpected stranger's credit or alleged mistaken transfer must be referred to staff; do not spend it or return money to a different account supplied by a caller. Staff acknowledge within 1 business day and provide an initial review within 2 business days of complete evidence; no legal or recovery outcome is promised."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "failed_transfer",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "FAILED is a final technical or processing failure, including confirmed invalid or closed destination returns; a business refusal stays DECLINED. A debit followed by a return is not two transfers. Confirm the final reference and validate destination details before a customer-authorised retry.",
+      "NovaBank failure fee is SGD 0. Failed-transfer reservations release within 1 business day of the final failure; returned principal credits within 1 business day of NovaBank's actual receipt. Investigate an overdue release within 2 business days of complete evidence. A confirmation-screen error with an unknown result must not be labelled FAILED."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "transfer_into_account",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Use the verified NovaBank account number and supported receiving-bank details for an external domestic SGD transfer from the customer's own bank. A transfer from another person is handled under receiving_money; cash or cheque accepted by another bank is not a NovaBank cash/cheque deposit.",
+      "NovaBank fee is SGD 0 and normal receipt is within 60 seconds after sending-bank acceptance. Preserve the sending-bank reference and check actual sending status before retrying. No separate numeric incoming cap exists, but a single incoming transfer of SGD 10,000 or qualifying rolling gross funding of SGD 20,000 triggers the source-of-funds review defined in identity_verification."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "bank_transfers",
+    "intent": "balance_not_updated_after_bank_transfer",
+    "reference_ids": [
+      "REF-16",
+      "REF-17"
+    ],
+    "novabank_added_clauses": [
+      "Compare ledger balance with available balance and check whether the transfer is merely scheduled externally, actually accepted by the sender, received by NovaBank or restricted for review. An external screenshot, recipient nickname or deposit receipt alone does not permit manual credit.",
+      "After 24 hours from sender acceptance without a matched credit, submit reference, timestamp/timezone, SGD amount, correct recipient details and a masked sender receipt. One free trace is allowed per reference, acknowledged within 1 business day and initially updated within 2 business days after complete evidence. A source-of-funds restriction has its own 5-business-day decision target."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "virtual_cards",
+    "intent": "getting_virtual_card",
+    "reference_ids": [
+      "REF-18",
+      "REF-19"
+    ],
+    "novabank_added_clauses": [
+      "Generation requires an active verified personal account and secure authentication, costs SGD 0 and takes up to 60 seconds. Only one reusable virtual card may be active; replacing it retires old credentials first and does not create a second simultaneous entitlement.",
+      "Reveal full credentials only in the secure card-details screen after fresh authentication, never in support chat. A replacement number is not automatically migrated to merchant subscriptions or all wallet tokens; the customer must update permitted recurring arrangements securely. Purchase caps remain account-shared SGD-equivalent 5,000 each/10,000 daily, and ATM/PIN-terminal use is unsupported."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "virtual_cards",
+    "intent": "disposable_card_limits",
+    "reference_ids": [
+      "REF-18",
+      "REF-19"
+    ],
+    "novabank_added_clauses": [
+      "Exactly one unused disposable credential may exist, with at most five successful generations per Singapore calendar day, one approved online purchase and SGD-equivalent 500 principal per purchase. Generations count even if later deleted or expired; a rejected generation request does not count as successful creation.",
+      "Unused credentials expire after 24 hours. An approved purchase consumes the card even before settlement; a failed authorisation does not. A merchant workflow involving multiple independent authorisations, recurring billing, zero-value verification or deposit security is unsupported rather than exempt from the one-purchase rule. Public limit guidance is immediate and SGD 0."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "virtual_cards",
+    "intent": "virtual_card_not_working",
+    "reference_ids": [
+      "REF-18",
+      "REF-19"
+    ],
+    "novabank_added_clauses": [
+      "First identify reusable versus disposable, expiry/retirement, available balance, shared limits, merchant authentication and whether the merchant requires card-present PIN, repeat collection or a saved credential. Reusable-card troubleshooting stays here; disposable incompatibility retrieves disposable_card_limits. Virtual credentials cannot be used at ATMs; disposable cards additionally reject wallet enrolment and subscriptions/deposits.",
+      "A retired disposable card may still receive a matched original-transaction refund; it cannot make a second purchase. Troubleshooting is SGD 0 with a 2-business-day technical review after masked references. A single recorded payment DECLINED routes to declined_card_payment; generating another card must not bypass a merchant incompatibility or security restriction."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "virtual_cards",
+    "intent": "get_disposable_virtual_card",
+    "reference_ids": [
+      "REF-18",
+      "REF-19"
+    ],
+    "novabank_added_clauses": [
+      "Before SGD 0 generation within 60 seconds, confirm the one-unused-card slot, the five-generation daily cap and eligibility of the intended one-time online purchase. If an unused card exists, reuse or securely retire it before generating another; retirement does not restore a used generation.",
+      "State the SGD-equivalent 500 purchase cap and 24-hour unused expiry before showing details securely. Merchants that need test charges, independent split authorisations, deposits or repeat billing are incompatible. Retirement preserves the mapping for original settlement, network reversals and refunds, with the refunds policy's five-business-day clock from merchant issuance."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_and_cheque_deposits",
+    "intent": "balance_not_updated_after_cheque_or_cash_deposit",
+    "reference_ids": [
+      "REF-20",
+      "REF-21"
+    ],
+    "novabank_added_clauses": [
+      "Ask which institution actually accepted the cash or cheque and whether a separate domestic SGD electronic transfer was sent to NovaBank. A third-party clearing receipt does not demonstrate receipt by NovaBank. NovaBank accepts principal SGD 0 for both services and has no deposit clearing clock.",
+      "Routine clarification is SGD 0 within 2 business days. If a supported electronic transfer exists, switch to balance_not_updated_after_bank_transfer: normal receipt 60 seconds and trace after 24 hours. An alleged NovaBank collection-agent receipt triggers immediate security escalation; do not promise a fabricated cash/cheque credit or advise a second deposit."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "cash_and_cheque_deposits",
+    "intent": "top_up_by_cash_or_cheque",
+    "reference_ids": [
+      "REF-20",
+      "REF-21"
+    ],
+    "novabank_added_clauses": [
+      "Reject a physical cash or cheque funding request immediately, at SGD 0 fee, because accepted cash and cheque limits are both SGD 0. There are zero authorised NovaBank collection agents, deposit ATMs, counters, mail-in channels or cheque-image deposit services.",
+      "The payer may independently use another institution's permitted services and then send a supported domestic SGD bank transfer, but NovaBank cannot quote that institution's fees or clearing date. Such electronic receipt normally takes 60 seconds after sender acceptance, with NovaBank fee SGD 0. Do not instruct customers to mail cash, endorse cheques to an agent or provide credentials to a collector."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "identity_verification",
+    "intent": "why_verify_identity",
+    "reference_ids": [
+      "REF-22",
+      "REF-23"
+    ],
+    "novabank_added_clauses": [
+      "Identity review establishes the applicant's legal identity, age and Singapore residence; funding-origin review separately checks where a transaction's money came from. A successful card ownership check or OTP does not replace either review, and review is not a statement of statutory certification.",
+      "Public explanations are immediate at SGD 0. Actual verification requires valid government photo ID, live selfie and name-matched Singapore address evidence issued within 90 calendar days. Automated review takes up to 10 minutes, manual review up to 2 business days after complete evidence. Customers unable to supply evidence receive an explicit deficiency notice; staff cannot approve anonymous access."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "identity_verification",
+    "intent": "unable_to_verify_identity",
+    "reference_ids": [
+      "REF-22",
+      "REF-23"
+    ],
+    "novabank_added_clauses": [
+      "Identify whether failure concerns expired ID, missing document side, glare/cropping, mismatched legal name/date of birth, address freshness or live-selfie quality. Enable camera permissions and submit clear original evidence securely; a static selfie, altered image or another person's document is unacceptable.",
+      "Allow at most three automated submissions per rolling 24 hours at SGD 0; after the third unsuccessful submission move to manual review, targeted within 2 business days of complete evidence. A documented final decision may receive one staff reconsideration requested within 30 calendar days, targeted within 5 business days. Retrying incomplete or identical files does not restart eligibility or bypass controls."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "identity_verification",
+    "intent": "verify_source_of_funds",
+    "reference_ids": [
+      "REF-22",
+      "REF-23"
+    ],
+    "novabank_added_clauses": [
+      "Match a bank statement issued within 90 calendar days to the actual credited amount, payer, date and source explanation. Salary requires a payslip issued within 90 calendar days and matching salary credit; asset sale requires a signed sale contract and matching proceeds; inheritance requires an official estate/probate distribution record and matching credit; a gift requires donor identity/relationship declaration and transfer evidence. Document upload alone is not approval.",
+      "Trigger review on a single incoming bank transfer of at least SGD 10,000, gross credited bank-plus-card funding of at least SGD 20,000 over rolling 30 calendar days, or a risk flag. Exclude failed attempts, internal exchanges, refunds and error corrections; a subsequent reversal does not erase prior gross credit. These are fictional controls, not statutory reporting thresholds.",
+      "Acknowledge within 1 business day and review within 5 business days after complete evidence at SGD 0. A missing source link requires a deficiency notice and the target cannot be measured from an incomplete upload. Restrictions remain until authorised staff action; do not split funding, invent documents or promise release solely because the review target has passed."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "identity_verification",
+    "intent": "verify_my_identity",
+    "reference_ids": [
+      "REF-22",
+      "REF-23"
+    ],
+    "novabank_added_clauses": [
+      "Use the secure onboarding screen to capture valid government-issued photo ID, live selfie and utility bill or bank statement showing legal name and Singapore residence, issued within 90 calendar days. Show all required edges/sides and readable details; changed names require an official linking document, and unsupported evidence must be escalated rather than guessed acceptable.",
+      "Complete automated review targets 10 minutes and manual review 2 business days, both SGD 0, with three automated submissions per rolling 24 hours before manual handling. The app must show submitted, additional-evidence-needed, under-review or approved status; a successful upload is not an approval and must not enable protected actions."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "refunds",
+    "intent": "request_refund",
+    "reference_ids": [
+      "REF-24",
+      "REF-06",
+      "REF-18",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "For a recognised settled purchase, retain the original receipt, merchant communications and reason: cancellation, goods not received, wrong goods or agreed partial refund. The merchant's promise is not issuance. A pending original purchase instead uses hold/reversal handling; an unrecognised purchase goes immediately to security.",
+      "Intake and trace cost SGD 0. Submit a recognised dispute within 60 calendar days of settlement, with acknowledgement within 1 business day and target decision within 30 calendar days after complete evidence. Merchant-issued credits target 5 business days from issuance; bank-approved compensation targets 2 business days from approval. Aggregate principal recovery cannot exceed the original settled principal less prior credits.",
+      "A matched refund can reach the original account after a physical replacement or virtual/disposable retirement. For a converted purchase, refund principal uses the original settlement rate with no new NovaBank conversion fee; the correct original FX fee remains unless an authorised error correction refunds it. Inform staff if a merchant pays during an open dispute to prevent double compensation."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  },
+  {
+    "category": "refunds",
+    "intent": "Refund_not_showing_up",
+    "reference_ids": [
+      "REF-24",
+      "REF-06",
+      "REF-18",
+      "REF-04"
+    ],
+    "novabank_added_clauses": [
+      "Obtain the original purchase reference, refund amount/currency, merchant issuance date and refund reference or acquirer reference if available. Search both a new refund credit and an update to the original authorisation/reversal; merchant and issuer descriptors or dates may differ. An unused promise does not start the five-business-day issuance clock.",
+      "After 5 business days from confirmed merchant issuance without credit, open an SGD 0 trace with an initial update within 2 business days of complete evidence. A declined/reverted merchant refund needs confirmation and reissue by the merchant; do not claim it already credited. A bank-approved missing credit instead uses the 2-business-day approval clock.",
+      "Refund matching uses the original transaction, including inactive, replaced and one-use cards; no new disposable card or unrelated recipient account is required. Partial credits leave only the unrecovered principal eligible for investigation. An already closed account requires staff exception handling; do not promise reopening or invent a new payout route."
+    ],
+    "authority": "Synthetic NovaBank design; references inform topics only"
+  }
+]
