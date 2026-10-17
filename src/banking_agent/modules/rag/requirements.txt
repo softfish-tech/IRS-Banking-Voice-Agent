@@ -1,0 +1,17 @@
+# B-RAG reference environment: Python 3.12.x, validated on macOS ARM64.
+# Install from the repository root:
+#   python -m pip install -r src/banking_agent/modules/rag/requirements.txt
+#   python -m pip install -e . --no-deps
+# Explicit pins reproduce the versions used for the recorded retrieval runs.
+# This is a reference dependency set, not a complete transitive/platform lockfile.
+# PyTorch GPU-specific installation is outside this CPU reference setup.
+rank_bm25==0.2.2
+numpy==2.5.4
+pydantic==2.13.5
+sentence-transformers==5.7.0
+torch==2.14.1
+transformers==5.19.0
+huggingface-hub==2.2.0
+tokenizers==0.23.3
+scipy==1.18.1
+scikit-learn==1.9.1
