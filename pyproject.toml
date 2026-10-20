@@ -15,3 +15,11 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"banking_agent.modules.intent" = [
+  "model_artifacts/*.json",
+  "model_artifacts/*.md",
+  "model_artifacts/*.npz",
+  "model_artifacts/*.txt",
+]

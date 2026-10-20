@@ -25,7 +25,9 @@ A 的职责边界是“理解”，不是“决策”：
 | Entity extraction | `taxonomy.py`、`mock.py` | 完成 |
 | `classify(text)` 接口 | `mock.py`、`adapter.py` | 完成 |
 | Macro-F1 实验 | `scripts/train_intent_baseline.py` | 完成 |
-| 单元测试与契约测试 | `tests/unit/test_intent_module.py`、`tests/integration/test_intent_adapter.py` | 完成 |
+| 0.9307 模型组合交付 | `model_artifacts/`、`encoder_classifier.py` | 完成 |
+| 模型导出与校验 | `scripts/export_encoder_classifier.py`、`manifest.json` | 完成 |
+| 单元测试与契约测试 | `tests/unit/test_intent_module.py`、`tests/unit/test_encoder_classifier.py`、`tests/integration/test_intent_adapter.py` | 完成 |
 | 模块文档 | `docs/intent_module.md`、`docs/results_intent_baseline.md` | 完成 |
 | E 的异步集成接口 | `IntentModuleAdapter` | 完成 |
 
@@ -33,10 +35,11 @@ A 的职责边界是“理解”，不是“决策”：
 
 ### 3.1 Intent classification
 
-模块提供两条实现路径，共用同一个 `UnderstandingResult` 输出：
+模块提供三条实现路径，共用同一个 `UnderstandingResult` 输出：
 
 - Phase-one 确定性路径：`classify(text)` 直接实现契约。S01–S08 的 `intent / confidence / risk_level` 使用场景表约定的固定值；其他文本走加权关键词规则，保证 mock 阶段可重复、可测试。
-- Phase-two 训练路径：`TrainedIntentClassifier` 加载 BANKING77 77 类模型，把细粒度标签映射为运营意图，并以“预测标签所属路由的概率质量”作为置信度。
+- Phase-two 通用训练路径：`TrainedIntentClassifier` 加载 joblib 序列化的 BANKING77 77 类模型，把细粒度标签映射为运营意图，并以“预测标签所属路由的概率质量”作为置信度。
+- 已发布编码器路径：`EncoderIntentClassifier` 加载本次交付的冻结 MiniLM + LogisticRegression 组合，使用 NumPy softmax 推理，不要求运行时安装 scikit-learn。
 
 运营意图共 6 个，另加 `UNKNOWN`：
 
@@ -52,6 +55,7 @@ A 的职责边界是“理解”，不是“决策”：
 | `analyze(payload)` | 同步契约适配器，输入 `{session_id, user_text}` |
 | `IntentModuleAdapter().analyze(session_id, user_text)` | E 使用的异步适配器 |
 | `TrainedIntentClassifier.load(path).classify(text)` | 可选的训练模型入口 |
+| `EncoderIntentClassifier.from_pretrained().classify(text)` | 已发布的 0.9307 模型入口 |
 
 规则层置信度使用 `0.50 + 0.09 × 规则得分`，上限 0.95；无匹配时返回 `UNKNOWN` 和 0.31。该置信度是启发式分数，不是校准概率；训练路径使用校准后的路由概率质量。
 
@@ -124,6 +128,15 @@ adapter = IntentModuleAdapter(
 )
 ```
 
+已发布模型使用同一注入方式：
+
+```python
+from banking_agent.modules.intent import EncoderIntentClassifier
+
+classifier = EncoderIntentClassifier.from_pretrained()
+adapter = IntentModuleAdapter(classifier=classifier.classify)
+```
+
 `session_id` 只为协议兼容而接收，A 不读取也不写入会话状态。
 
 ## 4. Macro-F1 实验
@@ -166,14 +179,38 @@ adapter = IntentModuleAdapter(
 
 测试集上最弱的意图包括 `transfer_not_received_by_recipient`（0.7952）、`balance_not_updated_after_bank_transfer`（0.8000）、`pending_transfer`（0.8169）。常见混淆如 `card_arrival → card_delivery_estimate`、`card_payment_not_recognised → compromised_card`。后者虽然细粒度错误，但仍落在高风险路由上，不会降低安全等级。
 
+### 4.5 已发布模型组合（0.9307）
+
+本次把实验中胜出的完整推理组合提交到
+`src/banking_agent/modules/intent/model_artifacts/`，不是只提交一个准确率数字：
+
+| 组成 | 冻结内容 |
+| --- | --- |
+| 编码器 | `sentence-transformers/all-MiniLM-L6-v2`，revision `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`，Apache-2.0 |
+| 分类器参数 | `logreg_params.npz`：`coef` 77×384、`intercept` 77、sklearn 类别顺序 |
+| 分类器配置 | `C=10.0`、`class_weight="balanced"`、`max_iter=2000`、`random_state=42` |
+| 标签顺序 | `label_order.json`：BANKING77 官方发布顺序 77 类 |
+| 路由映射 | `route_mapping.json`：77 个 label → 6 个运营意图，19 条显式 + 58 条默认 |
+| 文本预处理 | `preprocessing.json`：原始文本直通、tokenizer 大小写/截断、batch 64、L2 归一化 |
+| 推理包装 | `encoder_classifier.py`：校验 checksum/标签/路由后用 NumPy softmax 推理 |
+| Manifest | `manifest.json`：revision、编码器快照逐文件 SHA-256、指标、依赖版本、入口 |
+
+编码器权重约 90 MB，没有直接提交到 Git。`manifest.json` 固定不可变 revision，
+并记录 snapshots 中每个文件的字节数与 SHA-256；`from_pretrained()` 会校验四个本地
+参数/配置文件。NumPy 推理与 sklearn `predict` 在测试集上 **0 mismatch**，softmax
+概率最大绝对差为 `2.915e-06`。精确依赖记录在 `requirements-inference.txt`；
+复现导出使用 `scripts/export_encoder_classifier.py`。
+
 ## 5. 测试与验证
 
-- A 专项单元测试：39 个，覆盖 S01–S08 固定值、规则泛化、风险优先级、实体抽取、契约封装、77 类映射、训练分类器和异步适配器。
-- A 契约集成测试：2 个，使用 E 的 `assert_intent_adapter_contract` 校验真实适配器。
-- 全仓库回归：94 个 unit、28 个 integration、1 个 e2e，全部通过。
+- A 专项单元测试：49 个，新增覆盖 manifest/revision、artifact SHA-256、77 类标签顺序、完整路由映射、预处理配置、NumPy 概率与路由概率质量、批量/单条一致性。
+- A 契约集成测试：3 个，使用 E 的 `assert_intent_adapter_contract` 校验规则适配器和已发布模型适配器。
+- 全仓库回归：104 个 unit、29 个 integration、1 个 e2e，全部通过。
 - GitHub Actions：`Python 3.11 tests` 在 PR 和合并后的 `main` 上均为 success。
 - Lint：`ruff`（E4/E7/E9/F/I/W，行宽 100）全部通过。
 - 映射校验：77 labels、19 条显式路由、58 条默认 `policy_enquiry`。
+- 模型导出：dev Macro-F1 0.921297；test Macro-F1 0.930748；test accuracy 0.931169；NumPy/sklearn 0 mismatch。
+- 真实编码器 smoke test：成功加载固定 revision，S03 返回合法 `UnderstandingResult` 与 HIGH risk。
 
 核心场景固定值：
 
@@ -190,8 +227,9 @@ adapter = IntentModuleAdapter(
 
 ## 6. 已知限制
 
-- Phase-one 默认使用确定性规则层；训练分类器是 opt-in，尚未替换默认 `classify()`。
-- `scikit-learn`、`joblib`、`sentence-transformers` 是实验可选依赖，不是默认运行时依赖；默认安装只需要 `pydantic`。
+- Phase-one 默认使用确定性规则层；`TrainedIntentClassifier` 和 `EncoderIntentClassifier` 都是 opt-in，尚未替换默认 `classify()`。
+- `scikit-learn`、`joblib`、`sentence-transformers` 是可选依赖，不是默认运行时依赖；默认安装只需要 `pydantic`。
+- 编码器权重未放入 Git，首次使用需要从 Hugging Face 获取固定 revision；本地已有对应缓存时可直接离线加载。
 - 训练路径不会主动 abstain，低置信度交由 C 的阈值规则处理；`UNKNOWN` 是 mock 路径的输出。
 - BANKING77 不包含欺诈、投诉和推荐的原生意图，这三类主要依赖规则层和场景文本。
 - 规则层置信度是启发式分数，不是校准概率；训练路径使用路由概率质量。
@@ -217,9 +255,13 @@ python -m unittest discover -s tests/e2e
 
 # Macro-F1 实验（可选依赖：scikit-learn、joblib、sentence-transformers）
 .venv\Scripts\python.exe scripts\train_intent_baseline.py --encoder
+
+# 导出并验证已发布的 0.9307 组合
+.venv\Scripts\python.exe scripts\export_encoder_classifier.py
+python -m unittest discover -s tests/unit -p "test_encoder_classifier.py" -v
 ```
 
-原始 CSV 放在 `data/raw/banking77/`，模型和生成物写入 `models/`、`data/processed/`，均被 `.gitignore` 排除。
+原始 CSV 放在 `data/raw/banking77/`，实验生成物写入 `data/processed/`，均被 `.gitignore` 排除。已发布的小型参数/配置 artifact 位于 `model_artifacts/` 并纳入版本控制；90 MB 编码器权重通过 HF revision 固定。
 
 ## 8. 文件索引
 
@@ -229,21 +271,36 @@ python -m unittest discover -s tests/e2e
 | `src/banking_agent/modules/intent/mock.py` | 规则分类、风险检测、实体抽取、同步契约适配器 |
 | `src/banking_agent/modules/intent/banking77.py` | 77 类标签空间与运营意图映射 |
 | `src/banking_agent/modules/intent/classifier.py` | 可选训练分类器与路由概率质量置信度 |
+| `src/banking_agent/modules/intent/encoder_classifier.py` | 已发布 MiniLM + LogisticRegression 的 NumPy 推理包装与完整性校验 |
+| `src/banking_agent/modules/intent/model_artifacts/` | 0.9307 参数、77 标签、路由、预处理、manifest、依赖与 README |
 | `src/banking_agent/modules/intent/adapter.py` | E 使用的异步 `IntentModuleAdapter` |
 | `src/banking_agent/modules/intent/__init__.py` | 模块导出 |
 | `scripts/train_intent_baseline.py` | Macro-F1 基线阶梯、编码器档、模型保存 |
+| `scripts/export_encoder_classifier.py` | 固定 revision 重训并导出可发布模型组合 |
 | `scripts/validate_intent_mapping.py` | 标签/路由/与 B 注册表一致性校验 |
 | `tests/unit/test_intent_module.py` | A 专项单元测试 |
+| `tests/unit/test_encoder_classifier.py` | 模型 artifact、checksum、标签/路由和推理测试 |
 | `tests/integration/test_intent_adapter.py` | 基于 E 契约 harness 的适配器测试 |
 | `docs/intent_module.md` | 模块接口、风险、实体、BANKING77、限制说明 |
 | `docs/results_intent_baseline.md` | 自动生成的实验报告 |
 
 ## 9. 交付记录
 
+### 基础模块
+
 - 功能提交：`307e286 feat(a): add intent, risk, and entity module`
 - Pull Request：#5
 - 合并提交：`66f6b1e Merge pull request #5 from softfish-tech/feature/a-intent-mock`
 - 合并后 CI：success
 - 分支状态：`feature/a-intent-mock` 已删除
+
+### 0.9307 模型组合（2026-10-20）
+
+- 功能提交：`7205911 feat(a): package MiniLM intent classifier`
+- 换行兼容修复：`503b278 fix(a): verify artifact sizes after newline normalization`
+- Pull Request：#7（模型组合）、#8（Windows CRLF 校验修复）
+- 合并提交：`04b8c4d`、`d8cc0b9`
+- 合并后 CI：PR 与 `main` 均为 success
+- 分支状态：`feature/a-minilm-logreg-artifacts`、`fix/a-artifact-line-endings` 均已删除
 
 A 部分已完成交付并通过全量回归，代码位于 `main`，可直接供 E 的 `ModuleBundle` 注入使用。
