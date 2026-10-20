@@ -29,6 +29,15 @@ The table specifies expected workflow behavior, not exact final-response wording
 | S07 | **Low confidence** — “I need help with that thing from before.” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `UNKNOWN`, `0.31`, `UNKNOWN` | `CLARIFY`, `LOW_INTENT_CONFIDENCE` | B and D are not called | Response asks a targeted clarification; no unsupported assumption |
 | S08 | **No reliable evidence** — “What is the bank policy for crypto wallet recovery?” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `policy_enquiry`, `0.88`, `LOW`; B: `status=empty`, `docs=[]` | `ABSTAIN`, `INSUFFICIENT_EVIDENCE` | C pre-check allows retrieval; E calls B; C post-check returns `ABSTAIN`; D is not called | No unsupported policy answer; response states reliable information is unavailable and offers further assistance |
 
+S01 assumes the retrieved excerpt actually states a generic replacement fee.
+The maintained B corpus currently states a *lost-card* replacement fee of
+SGD 15, while E's S01 mock states a generic SGD 10. If the generic S01 question
+receives only that reason-specific B excerpt, the final C decision is
+`CLARIFY / REPLACEMENT_REASON_REQUIRED`; E should ask which replacement reason
+applies. A specific lost-card question may use the B excerpt after evidence
+checking. The team should align the S01 fixture and policy wording before
+claiming a real-backend S01 answer.
+
 ## Rule-precedence case
 
 The low-confidence route must not suppress a high-risk route. C must apply this order:
@@ -51,6 +60,22 @@ These scenarios are valuable but are not required for the first text-mock demons
 | S09 | Resolved complaint without consent | `BLOCK`, `CONSENT_REQUIRED`; D not called | C + E |
 | S10 | No eligible product after C permits Recommendation | D returns `allowed=false`, `NO_ELIGIBLE_PRODUCT` | D + E |
 | S11 | Complaint lifecycle | `OPEN → UNDER_REVIEW → RESOLVED` | C |
+
+## C safety extensions for joint acceptance
+
+These cases supplement S01–S11 without changing the shared State or action
+enums. C unit tests and a local C/E composition preview cover them; E should
+carry them into its maintained integration/E2E suite when the branches join.
+
+| ID | Input condition | Expected C decision | E acceptance |
+| --- | --- | --- | --- |
+| C-S12 | A labels “I lost my card” as a low-confidence policy enquiry | `ESCALATE / CARD_SECURITY_RISK`; request `OPEN` and `ESCALATED` patches | Do not call B or D; keep any existing unresolved case open. |
+| C-S13 | A labels “Can you recommend a savings product?” as a policy enquiry while complaint is OPEN | `BLOCK / UNRESOLVED_COMPLAINT` | Do not call D or render a product offer. |
+| C-S14 | B returns a high-scoring card-fee excerpt for an unrelated or missing-detail question | `ABSTAIN / INSUFFICIENT_EVIDENCE` | Do not render the excerpt as an answer. |
+| C-S15 | User requests their balance or asks the text mock to execute a transfer, even if A labels it policy enquiry | `BLOCK / AUTHENTICATION_REQUIRED` or `BLOCK / OPERATION_NOT_SUPPORTED` | No account read or transaction is executed. |
+| C-S16 | An OPEN complaint is repeated; a human reviews and resolves with evidence | `HANDLE_COMPLAINT / COMPLAINT_ALREADY_OPEN`; state machine permits `OPEN → UNDER_REVIEW → RESOLVED` only with authenticated human events and a resolution reference | E persists case revision, event IDs, evidence and human-role provenance before applying resolution. |
+| C-S17 | A replacement-fee question retrieves a delivery time or an express-shipping price but no replacement-fee amount, even when joined to a pending-fee statement | `ABSTAIN / INSUFFICIENT_EVIDENCE` | Do not render the unrelated value as the fee. |
+| C-S18 | A misclassified first-person report says the account was hacked or credentials leaked | `ESCALATE / ACCOUNT_SECURITY_RISK` or `ESCALATE / CREDENTIAL_SECURITY_RISK` | Open a case, escalate handoff and keep the reason aligned with the affected asset. |
 
 ## Future E2E fixture mapping
 

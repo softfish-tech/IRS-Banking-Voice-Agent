@@ -159,6 +159,13 @@ C receives the business-decision view of `AgentState`, not UI, API, or logging d
 - `next_state` is a state-patch object, not an unstructured message.
 - C does not return a final UI response.
 
+The current E implementation calls C through `async decide(state: AgentState)`.
+E clears request-local `decision` and `retrieved_docs` before the first call.
+After an initial `ANSWER`, E stores B's documents and calls C again while the
+first `ANSWER` remains in `state.decision`. C uses that state to distinguish
+the pre-retrieval permission check from the final evidence decision. A change
+to this sequencing needs a coordinated C/E interface update.
+
 ## D — Recommendation / Synthetic Data
 
 **Owner:** D
@@ -215,7 +222,7 @@ D owns product-level eligibility filtering and ranking. It does not bypass C's c
 1. E creates or restores `AgentState`, calls A, and records its result.
 2. E calls C and applies a valid `next_state` patch; E does not create or override a business decision.
 3. The initial `ANSWER` route permits E to call B. E records the retrieval result and calls C again before a final evidence-based answer is rendered.
-4. The final C decision is `ANSWER` when evidence is sufficient, or `ABSTAIN` when it is not. `RECOMMEND` permits E to call D. Other actions follow the safe path directly.
+4. The final C decision is `ANSWER` when evidence is sufficient, `ABSTAIN` when the understood question lacks reliable evidence, or `CLARIFY` when a required fact from the user is missing (for example, the reason for a card replacement). `RECOMMEND` permits E to call D. Other actions follow the safe path directly.
 5. E returns the unified API/UI response and records the decision trace.
 
 ## Empty results and failures
