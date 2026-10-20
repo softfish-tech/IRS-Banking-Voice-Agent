@@ -36,11 +36,15 @@ def _read_json(name: str) -> dict:
     return json.loads((ARTIFACT_DIR / name).read_text(encoding="utf-8"))
 
 
-def _artifact_hash(path: Path) -> str:
+def _artifact_bytes(path: Path) -> bytes:
     data = path.read_bytes()
     if path.suffix in {".json", ".txt", ".md"}:
         data = data.replace(b"\r\n", b"\n")
-    return hashlib.sha256(data).hexdigest()
+    return data
+
+
+def _artifact_hash(path: Path) -> str:
+    return hashlib.sha256(_artifact_bytes(path)).hexdigest()
 
 
 class EncoderArtifactMetadataTests(unittest.TestCase):
@@ -73,7 +77,7 @@ class EncoderArtifactMetadataTests(unittest.TestCase):
         self.assertEqual(set(manifest["artifacts"]), expected_names)
         for name, info in manifest["artifacts"].items():
             path = ARTIFACT_DIR / name
-            self.assertEqual(path.stat().st_size, info["bytes"])
+            self.assertEqual(len(_artifact_bytes(path)), info["bytes"])
             self.assertEqual(_artifact_hash(path), info["sha256"])
 
     def test_label_order_is_the_complete_published_space(self) -> None:
