@@ -11,6 +11,7 @@ Project contracts, scenarios, module ownership, and architecture materials live 
 | `engineering_conventions.md` | Team workflow, configuration, logging, testing, and completion standards. |
 | `intent_module.md` | Part A module: interface, risk rules, entity types, BANKING77 mapping. |
 | `results_intent_baseline.md` | Generated BANKING77 Macro-F1 results for intent classification. |
+| `part_a_deliverables.md` | Part A completion report: scope, deliverables, results, tests, and limitations. |
 | `architecture/system_architecture_draft.png` | Current integration architecture draft. |
 | `../src/banking_agent/schemas/state.py` | Canonical executable `AgentState` schema. |
 
