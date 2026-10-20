@@ -43,12 +43,16 @@ class EncoderArtifactError(RuntimeError):
     """Raised when the published artifact is missing, corrupt, or inconsistent."""
 
 
-def _sha256_artifact(path: Path) -> str:
-    """Hash a file independently of the checkout's line endings."""
+def _artifact_bytes(path: Path) -> bytes:
+    """Return canonical artifact bytes, independent of checkout line endings."""
     data = path.read_bytes()
     if path.suffix in {".json", ".txt", ".md"}:
         data = data.replace(b"\r\n", b"\n")
-    return hashlib.sha256(data).hexdigest()
+    return data
+
+
+def _sha256_artifact(path: Path) -> str:
+    return hashlib.sha256(_artifact_bytes(path)).hexdigest()
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -72,7 +76,7 @@ def _verify_checksums(artifact_dir: Path, manifest: dict[str, Any]) -> None:
             raise EncoderArtifactError(f"manifest has no checksum for {name}")
         if not path.is_file():
             raise EncoderArtifactError(f"missing artifact: {path}")
-        actual_size = path.stat().st_size
+        actual_size = len(_artifact_bytes(path))
         if actual_size != expected.get("bytes"):
             raise EncoderArtifactError(
                 f"{name} byte size mismatch: {actual_size} != {expected.get('bytes')}"
