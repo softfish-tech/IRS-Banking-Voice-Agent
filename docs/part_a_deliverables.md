@@ -286,10 +286,21 @@ python -m unittest discover -s tests/unit -p "test_encoder_classifier.py" -v
 
 ## 9. 交付记录
 
+### 基础模块
+
 - 功能提交：`307e286 feat(a): add intent, risk, and entity module`
 - Pull Request：#5
 - 合并提交：`66f6b1e Merge pull request #5 from softfish-tech/feature/a-intent-mock`
 - 合并后 CI：success
 - 分支状态：`feature/a-intent-mock` 已删除
+
+### 0.9307 模型组合（2026-10-20）
+
+- 功能提交：`7205911 feat(a): package MiniLM intent classifier`
+- 换行兼容修复：`503b278 fix(a): verify artifact sizes after newline normalization`
+- Pull Request：#7（模型组合）、#8（Windows CRLF 校验修复）
+- 合并提交：`04b8c4d`、`d8cc0b9`
+- 合并后 CI：PR 与 `main` 均为 success
+- 分支状态：`feature/a-minilm-logreg-artifacts`、`fix/a-artifact-line-endings` 均已删除
 
 A 部分已完成交付并通过全量回归，代码位于 `main`，可直接供 E 的 `ModuleBundle` 注入使用。
