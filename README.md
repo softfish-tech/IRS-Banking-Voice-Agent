@@ -12,7 +12,8 @@ The project is currently in Phase 1: text-first integration design and mock read
 
 - The repository skeleton, module boundaries, shared State schema, API contract, scenario acceptance table, and engineering conventions are in place.
 - The current architecture covers UI/API/voice integration, orchestration, A/B/C/D module boundaries, and safe routing.
-- Production intent models, RAG infrastructure, rules implementation, recommendation logic, API/UI, and ASR/TTS are not yet implemented.
+- Part A publishes a frozen `all-MiniLM-L6-v2` + logistic-regression BANKING77 artifact (test Macro-F1 0.9307) behind the opt-in `EncoderIntentClassifier`; the default path remains deterministic rules.
+- RAG infrastructure, rules implementation, recommendation logic, API/UI, and ASR/TTS are not yet implemented.
 
 For a local, fixture-backed browser application with synthetic account
 registration/login and persisted conversation history, run:
@@ -75,6 +76,7 @@ scripts/                 repeatable development and validation scripts
 - [Scenario Table](docs/scenario_table.md)
 - [Engineering conventions](docs/engineering_conventions.md)
 - [Canonical AgentState](src/banking_agent/schemas/state.py)
+- [Intent model artifact](src/banking_agent/modules/intent/model_artifacts/README.md)
 - [Development guide for coding agents](AGENTS.md)
 
 The executable State and enum definitions in `src/banking_agent/schemas/` are the source of truth for shared field names and allowed values.

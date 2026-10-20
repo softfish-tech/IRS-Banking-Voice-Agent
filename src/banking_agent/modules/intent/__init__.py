@@ -14,12 +14,17 @@ permitted.
 :class:`TrainedIntentClassifier` is the opt-in Phase-two implementation of the
 same ``classify(text)`` shape; see ``docs/intent_module.md``.
 
+:class:`EncoderIntentClassifier` is the published frozen MiniLM +
+logistic-regression implementation of that same shape. Its NumPy/torch
+dependencies are loaded lazily, so importing this package stays lightweight.
+
 :class:`IntentModuleAdapter` is the async E-facing adapter:
 ``await IntentModuleAdapter().analyze(session_id, user_text)``.
 """
 
 from .adapter import IntentModuleAdapter
 from .classifier import TrainedIntentClassifier
+from .encoder_classifier import EncoderArtifactError, EncoderIntentClassifier
 from .mock import (
     analyze,
     classify,
@@ -31,6 +36,8 @@ from .mock import (
 
 __all__ = [
     "IntentModuleAdapter",
+    "EncoderArtifactError",
+    "EncoderIntentClassifier",
     "TrainedIntentClassifier",
     "analyze",
     "classify",
