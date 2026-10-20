@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "text": {
+    "normalization": "none",
+    "lowercase": false,
+    "strip": false,
+    "steps": [],
+    "note": "Raw user text is passed to the frozen sentence encoder."
+  },
+  "tokenizer": {
+    "class": "BertTokenizer",
+    "do_lower_case": true,
+    "model_max_length": 256,
+    "padding_side": "right",
+    "truncation_side": "right"
+  },
+  "embedding": {
+    "method": "SentenceTransformer.encode",
+    "batch_size": 64,
+    "show_progress_bar": false,
+    "convert_to_numpy": true,
+    "normalize_embeddings": true,
+    "output_value": "sentence_embedding",
+    "precision": "float32",
+    "device": "cpu",
+    "max_seq_length": 256,
+    "embedding_dimension": 384
+  }
+}

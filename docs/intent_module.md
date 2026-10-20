@@ -17,6 +17,7 @@ reads business state such as the complaint status or consent.
 | `IntentModuleAdapter().analyze(session_id, user_text)` | Async adapter for E's `IntentModule` protocol. |
 | `score_intent(text)` / `detect_risk(text, intent)` / `extract_entities(text)` | Testable building blocks. |
 | `TrainedIntentClassifier.load(path).classify(text)` | Opt-in Phase-two entry point with the same result shape. |
+| `EncoderIntentClassifier.from_pretrained().classify(text)` | Published 0.9307 MiniLM + logistic-regression artifact; same result shape. |
 
 `docs/module_api_contract.md` remains the authority for the payload shape;
 `src/banking_agent/schemas/state.py` remains the authority for field names.
@@ -39,6 +40,15 @@ inject it without changing E's call site:
 adapter = IntentModuleAdapter(
     classifier=TrainedIntentClassifier.load(path).classify
 )
+```
+
+The published encoder artifact needs no joblib path:
+
+```python
+from banking_agent.modules.intent import EncoderIntentClassifier, IntentModuleAdapter
+
+classifier = EncoderIntentClassifier.from_pretrained()
+adapter = IntentModuleAdapter(classifier=classifier.classify)
 ```
 
 ### Phase-one behaviour
@@ -176,9 +186,64 @@ https://raw.githubusercontent.com/PolyAI-LDN/task-specific-datasets/master/banki
 https://raw.githubusercontent.com/PolyAI-LDN/task-specific-datasets/master/banking_data/test.csv
 ```
 
+## Published encoder classifier (0.9307)
+
+The selected BANKING77 model is packaged in
+`src/banking_agent/modules/intent/model_artifacts/`. It is the exact
+`all-MiniLM-L6-v2` + `LogisticRegression` combination from the experiment:
+
+- encoder `sentence-transformers/all-MiniLM-L6-v2`, pinned at Hugging Face
+  revision `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`;
+- 384-dimensional L2-normalized embeddings with raw text input, batch size 64,
+  and maximum sequence length 256;
+- multinomial logistic regression with `C=10.0`,
+  `class_weight="balanced"`, `max_iter=2000`, and `random_state=42`;
+- BANKING77 test Macro-F1 **0.9307**, accuracy **0.9312**; mapped route
+  Macro-F1 **0.9604**, accuracy **0.9838**.
+
+The artifact contains the complete inference combination:
+
+| File | Contents |
+| --- | --- |
+| `logreg_params.npz` | `coef` (77 x 384), `intercept` (77), sklearn class order |
+| `label_order.json` | 77 BANKING77 labels in published label-id order |
+| `route_mapping.json` | All 77 label-to-route entries, default and per-route groups |
+| `preprocessing.json` | Raw-text, tokenizer, embedding, batch, and normalization config |
+| `manifest.json` | Pinned revision, per-file encoder SHA-256, metrics, versions, entry point |
+| `requirements-inference.txt` | Exact inference runtime versions |
+| `requirements-export.txt` | Additional dependency needed to re-export |
+
+The 90 MB encoder weights are intentionally **not vendored in Git**. The
+manifest fixes the immutable Hugging Face revision and records byte size plus
+SHA-256 for every file in that encoder snapshot. `from_pretrained()` verifies
+the four local parameter/config checksums, the 77-label order, and the complete
+route mapping before inference. It uses NumPy softmax rather than requiring
+scikit-learn at runtime; the manifest records zero NumPy/sklearn prediction
+mismatches on the test split.
+
+```powershell
+.venv\Scripts\python.exe -m pip install -r `
+  src\banking_agent\modules\intent\model_artifacts\requirements-inference.txt
+
+$env:PYTHONPATH = "src"
+.venv\Scripts\python.exe -c @"
+from banking_agent.modules.intent import EncoderIntentClassifier
+c = EncoderIntentClassifier.from_pretrained()
+r = c.classify("Why was I charged this fee?")
+print(r.intent, r.confidence, r.risk_level)
+print(c.predict_labels(["I lost my card."]))
+"@
+```
+
+`predict_proba()` returns the 77 class probabilities in `classes` order;
+`predict_route_proba()` aggregates them into the six operational routes.
+Confidence in `classify()` remains the probability mass of the predicted route,
+not the 77-way arg-max probability. To reproduce the artifact from the raw
+CSVs, run `python scripts/export_encoder_classifier.py`.
+
 ## Trained path: confidence and abstention
 
-`TrainedIntentClassifier` maps the fine-grained label through
+`TrainedIntentClassifier` and `EncoderIntentClassifier` map the fine-grained label through
 `operational_intent_for` and reports the **route probability mass** — the summed
 probability of every label that maps to the chosen route — rather than the
 77-way arg-max probability. On BANKING77 the arg-max probability is frequently
@@ -209,10 +274,12 @@ python -m unittest tests.unit.test_intent_module tests.unit.test_state_schema
 
 - The rule layer is a Phase-one stand-in; Phase two swaps `score_intent` for a
   trained classifier behind the same `classify()` signature.
-- `TrainedIntentClassifier` is opt-in and not wired into `classify()`: the
-  default stays deterministic. Choosing a runtime dependency (scikit-learn, or
-  torch for the encoder rung) is a team decision.
-- The encoder rung is not serialised; loading it would need torch at runtime.
+- `TrainedIntentClassifier` and `EncoderIntentClassifier` are opt-in and not
+  wired into `classify()`: the default stays deterministic. Choosing the model
+  path at runtime is a team decision.
+- The encoder weights are not vendored in Git. They are frozen by the pinned
+  Hugging Face revision and the per-file SHA-256 manifest; first use needs
+  network access unless the snapshot is already cached.
 - Confidence from the rule layer is a heuristic score, not a calibrated
   probability.
 - Intents outside the six operational routes plus `UNKNOWN` are not emitted; a

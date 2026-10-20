@@ -1,0 +1,2 @@
+-r requirements-inference.txt
+scikit-learn==1.9.1

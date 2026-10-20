@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "artifact_name": "banking77-all-MiniLM-L6-v2-logreg",
+  "part": "A",
+  "task": "BANKING77 77-class intent classification",
+  "created_at_utc": "2026-10-20T12:02:28.424866+00:00",
+  "dataset": {
+    "id": "PolyAI/banking77",
+    "license": "CC-BY-4.0",
+    "train_examples": 10003,
+    "test_examples": 3080,
+    "intents": 77
+  },
+  "training_protocol": {
+    "seed": 42,
+    "dev_fraction": 0.12,
+    "fit_examples": 8802,
+    "dev_examples": 1201,
+    "selection": "dev Macro-F1; refit on full train; test scored once",
+    "dev_macro_f1": 0.921297
+  },
+  "metrics": {
+    "test_macro_f1": 0.930748,
+    "test_accuracy": 0.931169,
+    "route_macro_f1": 0.960416,
+    "route_accuracy": 0.983766,
+    "per_route": [
+      {
+        "route": "card_fee_enquiry",
+        "f1": 0.964509,
+        "support": 240
+      },
+      {
+        "route": "fee_complaint",
+        "f1": 0.969369,
+        "support": 280
+      },
+      {
+        "route": "fraud_suspicion",
+        "f1": 0.942623,
+        "support": 120
+      },
+      {
+        "route": "policy_enquiry",
+        "f1": 0.992245,
+        "support": 2320
+      },
+      {
+        "route": "unauthorized_transaction",
+        "f1": 0.933333,
+        "support": 120
+      }
+    ]
+  },
+  "encoder": {
+    "provider": "Hugging Face",
+    "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "license": "Apache-2.0",
+    "embedding_dimension": 384,
+    "max_seq_length": 256,
+    "snapshot_bytes": 91578415,
+    "snapshot_files": [
+      {
+        "path": "1_Pooling/config.json",
+        "bytes": 190,
+        "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+      },
+      {
+        "path": "config.json",
+        "bytes": 612,
+        "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41"
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 116,
+        "sha256": "061ca9d39661d6c6d6de5ba27f79a1cd5770ea247f8d46412a68a498dc5ac9f3"
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 90868376,
+        "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 349,
+        "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf"
+      },
+      {
+        "path": "README.md",
+        "bytes": 10502,
+        "sha256": "dcd602d2fd35c203a247304a06fec6654a12f7941b739f9221a064fe8dc3b7f0"
+      },
+      {
+        "path": "sentence_bert_config.json",
+        "bytes": 53,
+        "sha256": "fc1993fde0a95c24ec6c022539d41cf6e2f7c9721e5415d6fb6897472a9cd4b7"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 112,
+        "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 466247,
+        "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 350,
+        "sha256": "acb92769e8195aabd29b7b2137a9e6d6e25c476a4f15aa4355c233426c61576b"
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 231508,
+        "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+      }
+    ]
+  },
+  "classifier": {
+    "type": "sklearn.linear_model.LogisticRegression",
+    "params_source": "LogisticRegression.get_params()",
+    "params": {
+      "C": 10.0,
+      "class_weight": "balanced",
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 2000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 42,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "parameters_file": "logreg_params.npz",
+    "coefficient_shape": [
+      77,
+      384
+    ],
+    "intercept_shape": [
+      77
+    ],
+    "classes_order": "sklearn sorted class order stored in classes",
+    "decision_rule": "argmax(softmax(embedding @ coef.T + intercept))"
+  },
+  "labels": {
+    "file": "label_order.json",
+    "count": 77,
+    "prediction_column": "classes (sklearn order)",
+    "published_order_file": "labels (BANKING77 order)"
+  },
+  "routes": {
+    "file": "route_mapping.json",
+    "default_route": "policy_enquiry",
+    "explicit_mappings": 19,
+    "default_mappings": 58,
+    "route_values": [
+      "card_fee_enquiry",
+      "fee_complaint",
+      "fraud_suspicion",
+      "policy_enquiry",
+      "product_recommendation",
+      "unauthorized_transaction"
+    ]
+  },
+  "preprocessing": {
+    "file": "preprocessing.json",
+    "text_normalization": "none",
+    "embedding_normalization": "L2",
+    "batch_size": 64
+  },
+  "verification": {
+    "numpy_sklearn_prediction_mismatches": 0,
+    "softmax_max_abs_difference": 2.9147394385864445e-06,
+    "all_labels_covered": true,
+    "all_routes_valid": true,
+    "artifact_checksums_required_at_load": true
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.5.4",
+    "scikit_learn": "1.9.1",
+    "sentence_transformers": "6.1.0",
+    "transformers": "5.19.0",
+    "torch": "2.14.1+cpu",
+    "huggingface_hub": "1.33.0"
+  },
+  "artifacts": {
+    "logreg_params.npz": {
+      "bytes": 131455,
+      "sha256": "e603fba87e3a4b2aba46f6b667af3c0b88ce8970224a849998b9ff708806e612"
+    },
+    "label_order.json": {
+      "bytes": 4836,
+      "sha256": "fdab5e9cf2aa9c3a327e6109bbe47766e672aa43c9da90a979274e96da33f82b"
+    },
+    "route_mapping.json": {
+      "bytes": 6573,
+      "sha256": "779fb1391f17cc9de45890ed4f2bf1bc5e6edd0f05db5b7442fbde3450f28222"
+    },
+    "preprocessing.json": {
+      "bytes": 704,
+      "sha256": "7be678e5c4963178aa091a5b5221db6c24648640e59ddb534ebf1a69ece6c076"
+    }
+  },
+  "inference": {
+    "entry_point": "banking_agent.modules.intent.encoder_classifier:EncoderIntentClassifier",
+    "factory": "EncoderIntentClassifier.from_pretrained()",
+    "requirements": "requirements-inference.txt",
+    "encoder_download": "SentenceTransformer(model_id, revision=revision); weights are not vendored in this repository"
+  }
+}
