@@ -1,0 +1,546 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S06-001",
+      "scenario_id": "S06",
+      "family": "permitted_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-001",
+        "user_text": "The complaint is resolved and I agree to recommendations. Which savings option suits me?"
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": true,
+            "reason_code": "ELIGIBLE_WITH_CONSENT",
+            "items": [
+              {
+                "product_id": "savings-premium",
+                "name": "Demo Premium Savings",
+                "rank": 1,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "savings-flex",
+                "name": "Demo Flexible Savings",
+                "rank": 2,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "emergency-reserve",
+                "name": "Demo Emergency Reserve",
+                "rank": 3,
+                "reason": "Eligible under demo age, residency and deposit conditions; does not match the requested synthetic goal."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 3,
+        "recommendation_product_ids": [
+          "savings-premium",
+          "savings-flex",
+          "emergency-reserve"
+        ]
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": true,
+          "required_product_ids": [
+            "savings-premium",
+            "savings-flex",
+            "emergency-reserve"
+          ]
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "Demo Premium Savings",
+            "Demo Flexible Savings",
+            "Demo Emergency Reserve"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_001",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S06-002",
+      "scenario_id": "S06",
+      "family": "permitted_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-001",
+        "user_text": "My issue is closed. Please suggest a savings product."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": true,
+            "reason_code": "ELIGIBLE_WITH_CONSENT",
+            "items": [
+              {
+                "product_id": "savings-premium",
+                "name": "Demo Premium Savings",
+                "rank": 1,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "savings-flex",
+                "name": "Demo Flexible Savings",
+                "rank": 2,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "emergency-reserve",
+                "name": "Demo Emergency Reserve",
+                "rank": 3,
+                "reason": "Eligible under demo age, residency and deposit conditions; does not match the requested synthetic goal."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 3,
+        "recommendation_product_ids": [
+          "savings-premium",
+          "savings-flex",
+          "emergency-reserve"
+        ]
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": true,
+          "required_product_ids": [
+            "savings-premium",
+            "savings-flex",
+            "emergency-reserve"
+          ]
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "Demo Premium Savings",
+            "Demo Flexible Savings",
+            "Demo Emergency Reserve"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_001",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S06-003",
+      "scenario_id": "S06",
+      "family": "permitted_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-001",
+        "user_text": "I consent to product recommendations after resolution."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": true,
+            "reason_code": "ELIGIBLE_WITH_CONSENT",
+            "items": [
+              {
+                "product_id": "savings-premium",
+                "name": "Demo Premium Savings",
+                "rank": 1,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "savings-flex",
+                "name": "Demo Flexible Savings",
+                "rank": 2,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "emergency-reserve",
+                "name": "Demo Emergency Reserve",
+                "rank": 3,
+                "reason": "Eligible under demo age, residency and deposit conditions; does not match the requested synthetic goal."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 3,
+        "recommendation_product_ids": [
+          "savings-premium",
+          "savings-flex",
+          "emergency-reserve"
+        ]
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": true,
+          "required_product_ids": [
+            "savings-premium",
+            "savings-flex",
+            "emergency-reserve"
+          ]
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "Demo Premium Savings",
+            "Demo Flexible Savings",
+            "Demo Emergency Reserve"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_001",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S06-004",
+      "scenario_id": "S06",
+      "family": "permitted_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-001",
+        "user_text": "Now that the complaint is resolved, recommend an option for my savings goal."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": true,
+            "reason_code": "ELIGIBLE_WITH_CONSENT",
+            "items": [
+              {
+                "product_id": "savings-premium",
+                "name": "Demo Premium Savings",
+                "rank": 1,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "savings-flex",
+                "name": "Demo Flexible Savings",
+                "rank": 2,
+                "reason": "Matches the synthetic 'savings' goal; satisfies demo age, residency and deposit conditions."
+              },
+              {
+                "product_id": "emergency-reserve",
+                "name": "Demo Emergency Reserve",
+                "rank": 3,
+                "reason": "Eligible under demo age, residency and deposit conditions; does not match the requested synthetic goal."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 3,
+        "recommendation_product_ids": [
+          "savings-premium",
+          "savings-flex",
+          "emergency-reserve"
+        ]
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": true,
+          "required_product_ids": [
+            "savings-premium",
+            "savings-flex",
+            "emergency-reserve"
+          ]
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "Demo Premium Savings",
+            "Demo Flexible Savings",
+            "Demo Emergency Reserve"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_001",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

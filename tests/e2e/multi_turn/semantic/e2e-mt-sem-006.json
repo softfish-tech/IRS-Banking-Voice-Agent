@@ -1,0 +1,137 @@
+{
+  "sequence_id": "E2E-MT-SEM-006",
+  "status": "draft_pending_c_approval",
+  "type": "semantic_context",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "not_implemented"
+  },
+  "semantic_oracle": {
+    "relation": "pronoun",
+    "required_resolution": "Can I dispute the replacement-card fee?",
+    "baseline": "context_disabled"
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "What is the replacement-card fee?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "card_fee_enquiry",
+            "confidence": 0.93,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [
+              {
+                "document_id": "policy-card-fees-v1",
+                "title": "Card Fees Policy",
+                "source": "Synthetic Bank Policy",
+                "score": 0.89,
+                "excerpt": "The synthetic replacement card fee is SGD 10."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "answer",
+        "citation_ids": [
+          "policy-card-fees-v1"
+        ]
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "Can I dispute it?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "clarification"
+      }
+    }
+  ]
+}

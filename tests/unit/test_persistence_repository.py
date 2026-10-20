@@ -21,7 +21,7 @@ class PersistenceRepositoryTests(unittest.TestCase):
     def test_turn_commit_increments_version_and_rejects_stale_write_atomically(self) -> None:
         store = InMemoryStore()
         try:
-            user = store.register("alice", "testpw")
+            user = store.register("alice", "testpw", "session-001")
             conversation = store.create_conversation(
                 int(user["id"]), "test", {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}
             )
@@ -41,7 +41,7 @@ class PersistenceRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             path = Path(temporary_directory) / "legacy.sqlite3"
             legacy = SQLiteStore(path)
-            user = legacy.register("alice", "testpw")
+            user = legacy.register("alice", "testpw", "session-001")
             legacy.connection.execute("DROP TABLE conversations")
             legacy.connection.execute(
                 """CREATE TABLE conversations (
@@ -67,3 +67,16 @@ class PersistenceRepositoryTests(unittest.TestCase):
                 self.assertEqual(conversation["version"], 0)
             finally:
                 migrated.close()
+
+    def test_conversation_snapshots_the_account_profile(self) -> None:
+        store = SQLiteStore(":memory:")
+        try:
+            user = store.register("alice", "testpw", "session-001")
+            first = store.create_conversation(int(user["id"]), "one", {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"})
+            store.connection.execute("UPDATE users SET synthetic_profile_key = ? WHERE id = ?", ("session-002", user["id"]))
+            store.connection.commit()
+            second = store.create_conversation(int(user["id"]), "two", {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"})
+            self.assertEqual(store.conversation_profile_key(first["id"]), "session-001")
+            self.assertEqual(store.conversation_profile_key(second["id"]), "session-002")
+        finally:
+            store.close()

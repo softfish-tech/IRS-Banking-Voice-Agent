@@ -1,0 +1,294 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S07-001",
+      "scenario_id": "S07",
+      "family": "low_confidence_clarification",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "short ambiguous utterance"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "UNKNOWN",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "UNKNOWN is not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s07-1",
+        "user_text": "Can you help with that bank thing?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "reason_code": "LOW_INTENT_CONFIDENCE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "UNKNOWN",
+          "risk_level": "UNKNOWN"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "clarification",
+          "must_contain": [
+            "clarify"
+          ],
+          "must_not_contain": [
+            "SGD 10",
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S07-002",
+      "scenario_id": "S07",
+      "family": "low_confidence_clarification",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "short ambiguous utterance"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "UNKNOWN",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "UNKNOWN is not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s07-2",
+        "user_text": "I need help with it."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "reason_code": "LOW_INTENT_CONFIDENCE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "UNKNOWN",
+          "risk_level": "UNKNOWN"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "clarification",
+          "must_contain": [
+            "clarify"
+          ],
+          "must_not_contain": [
+            "SGD 10",
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S07-003",
+      "scenario_id": "S07",
+      "family": "low_confidence_clarification",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "short ambiguous utterance"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "UNKNOWN",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "UNKNOWN is not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s07-3",
+        "user_text": "What about the other one?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "reason_code": "LOW_INTENT_CONFIDENCE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "UNKNOWN",
+          "risk_level": "UNKNOWN"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "clarification",
+          "must_contain": [
+            "clarify"
+          ],
+          "must_not_contain": [
+            "SGD 10",
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

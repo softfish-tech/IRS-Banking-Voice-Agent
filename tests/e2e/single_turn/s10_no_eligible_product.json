@@ -1,0 +1,321 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S10-001",
+      "scenario_id": "S10",
+      "family": "no_eligible_product",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "D eligibility boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-002",
+        "user_text": "My complaint has been resolved and I consent to a savings recommendation."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": false,
+            "reason_code": "NO_ELIGIBLE_PRODUCT",
+            "items": []
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": false,
+          "denial_reason": "NO_ELIGIBLE_PRODUCT"
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "No eligible recommendation is available."
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_002",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S10-002",
+      "scenario_id": "S10",
+      "family": "no_eligible_product",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "D eligibility boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-002",
+        "user_text": "Please recommend a savings option now that my issue is closed."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": false,
+            "reason_code": "NO_ELIGIBLE_PRODUCT",
+            "items": []
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": false,
+          "denial_reason": "NO_ELIGIBLE_PRODUCT"
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "No eligible recommendation is available."
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_002",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S10-003",
+      "scenario_id": "S10",
+      "family": "no_eligible_product",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "D eligibility boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "session-002",
+        "user_text": "I agree to recommendations. What savings product can I have?"
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "GRANTED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "RECOMMEND",
+              "reason_code": "RECOMMENDATION_PERMITTED",
+              "next_state": {}
+            }
+          }
+        ],
+        "D": {
+          "status": "ok",
+          "data": {
+            "allowed": false,
+            "reason_code": "NO_ELIGIBLE_PRODUCT",
+            "items": []
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "RECOMMEND",
+        "reason_code": "RECOMMENDATION_PERMITTED",
+        "module_call_order": [
+          "A",
+          "C",
+          "D"
+        ],
+        "modules_not_called": [
+          "B"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "GRANTED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": true,
+          "expected_allowed": false,
+          "denial_reason": "NO_ELIGIBLE_PRODUCT"
+        },
+        "public_response": {
+          "kind": "recommendation",
+          "must_contain": [
+            "No eligible recommendation is available."
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "real_d_aligned_session_002",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

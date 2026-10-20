@@ -1,0 +1,140 @@
+{
+  "sequence_id": "E2E-MT-SEM-010",
+  "status": "draft_pending_c_approval",
+  "type": "semantic_context",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "not_implemented"
+  },
+  "semantic_oracle": {
+    "relation": "high_risk_interruption",
+    "required_resolution": "Unauthorised transaction must override prior card-fee context.",
+    "baseline": "context_disabled"
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "What is the replacement-card fee?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "card_fee_enquiry",
+            "confidence": 0.93,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [
+              {
+                "document_id": "policy-card-fees-v1",
+                "title": "Card Fees Policy",
+                "source": "Synthetic Bank Policy",
+                "score": 0.89,
+                "excerpt": "The synthetic replacement card fee is SGD 10."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "answer",
+        "citation_ids": [
+          "policy-card-fees-v1"
+        ]
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "Someone used my card without permission.",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.91,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "escalation"
+      }
+    }
+  ]
+}

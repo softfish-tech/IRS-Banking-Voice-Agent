@@ -71,3 +71,10 @@ eligible, ranked recommendations. The existing core fixture is unchanged.
 The same check covers no eligible products, unknown sessions, defensive denial,
 C's complaint patch before D, and rejection of a consent patch.
 This establishes E/D compatibility, not real A/B/C quality or voice completion.
+
+For the local application, E maps each registered synthetic user to one D
+fixture profile and snapshots that association onto each new conversation. When
+D is reached in production composition, E resolves the conversation UUID to the
+snapshot before calling D. A payload cannot select a different profile, and a
+missing legacy snapshot fails closed. This is local fixture configuration, not
+customer authentication.

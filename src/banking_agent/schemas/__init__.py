@@ -6,7 +6,9 @@ from .enums import (
     ConsentStatus,
     HandoffStatus,
     RiskLevel,
+    TranscriptionStatus,
 )
+from .asr import ASRQuality, AudioUpload, TranscriptionResult
 from .state import (
     AgentState,
     Decision,
@@ -19,7 +21,9 @@ from .state import (
 
 __all__ = [
     "Action",
+    "ASRQuality",
     "AgentState",
+    "AudioUpload",
     "ComplaintStatus",
     "ConsentStatus",
     "Decision",
@@ -30,6 +34,8 @@ __all__ = [
     "RiskLevel",
     "RuleStatePatch",
     "UnderstandingResult",
+    "TranscriptionResult",
+    "TranscriptionStatus",
 ]
 
 from .module_results import (

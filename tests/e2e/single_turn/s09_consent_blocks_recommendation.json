@@ -1,0 +1,294 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S09-001",
+      "scenario_id": "S09",
+      "family": "consent_blocks_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "e2e-s09-1",
+        "user_text": "My complaint is closed, but I have not agreed to product recommendations."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "BLOCK",
+              "reason_code": "CONSENT_REQUIRED",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "BLOCK",
+        "reason_code": "CONSENT_REQUIRED",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false,
+          "block_reason": "CONSENT_REQUIRED"
+        },
+        "public_response": {
+          "kind": "blocked",
+          "must_contain": [
+            "recommendation cannot be provided"
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called_by_required_safety_gate",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S09-002",
+      "scenario_id": "S09",
+      "family": "consent_blocks_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "e2e-s09-2",
+        "user_text": "Suggest a savings product; I did not give consent."
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "BLOCK",
+              "reason_code": "CONSENT_REQUIRED",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "BLOCK",
+        "reason_code": "CONSENT_REQUIRED",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false,
+          "block_reason": "CONSENT_REQUIRED"
+        },
+        "public_response": {
+          "kind": "blocked",
+          "must_contain": [
+            "recommendation cannot be provided"
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called_by_required_safety_gate",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S09-003",
+      "scenario_id": "S09",
+      "family": "consent_blocks_recommendation",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "project-specific recommendation flow; no BANKING77 equivalent"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "product_recommendation",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "BANKING77 has no recommendation label."
+      },
+      "input": {
+        "session_id": "e2e-s09-3",
+        "user_text": "I do not consent to recommendations, but what product should I get?"
+      },
+      "initial_state": {
+        "complaint_status": "RESOLVED",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "DENIED"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "product_recommendation",
+            "confidence": 0.9,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "BLOCK",
+              "reason_code": "CONSENT_REQUIRED",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "BLOCK",
+        "reason_code": "CONSENT_REQUIRED",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "RESOLVED",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "DENIED"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "product_recommendation",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false,
+          "block_reason": "CONSENT_REQUIRED"
+        },
+        "public_response": {
+          "kind": "blocked",
+          "must_contain": [
+            "recommendation cannot be provided"
+          ],
+          "must_not_contain": [
+            "Demo Premium Savings"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called_by_required_safety_gate",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

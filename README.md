@@ -12,7 +12,9 @@ The project is currently in Phase 1: text-first integration design and mock read
 
 - The repository skeleton, module boundaries, shared State schema, API contract, scenario acceptance table, and engineering conventions are in place.
 - The current architecture covers UI/API/voice integration, orchestration, A/B/C/D module boundaries, and safe routing.
-- Production intent models, RAG infrastructure, rules implementation, recommendation logic, API/UI, and ASR/TTS are not yet implemented.
+- The browser application, real B/D integration bridges, provider gateway, and
+  terminal-only local ASR boundary are available. A/C production
+  implementations and an audio browser interface remain future work.
 
 For a local, fixture-backed browser application with synthetic account
 registration/login and persisted conversation history, run:
@@ -22,7 +24,9 @@ PYTHONPATH=src python -m banking_agent.app.api.server
 ```
 
 Then open `http://127.0.0.1:8000`. Create a local-only account with a test
-password of at least 6 characters. The SQLite database is stored under
+password of at least 6 characters and select one clearly-labelled synthetic
+demo profile; it is fixed for that account and snapshotted on new conversations
+for D recommendation tests. The SQLite database is stored under
 `data/processed/` and is ignored by Git. The default fixture mode runs synthetic
 S01--S08 fixtures through the real orchestrator; its scenario adapters are not
 A/B/C/D production implementations. When E explicitly injects a complete
@@ -40,6 +44,108 @@ BANKING_AGENT_DEVELOPER_DASHBOARD=1 BANKING_AGENT_DEVELOPER_USERNAME=developer \
 
 This local allow-list is not production authorization; a deployed system must
 use real role-based access control.
+
+## E2E integration data and checks
+
+E owns the frozen, versioned text E2E fixtures and their runner. The current
+hybrid suite contains 42 single-turn cases and 16 multi-turn sequences. It
+uses real public B retrieval and real D recommendation through their public
+interfaces, while A/C remain scripted contract envelopes until their owners
+deliver implementations. The fixture status is explicitly
+`draft_pending_c_approval`: it validates E sequencing, state hand-off,
+citations, and safety integration, not A/C model quality or policy approval.
+
+Run the no-network checks from the repository root:
+
+```bash
+PYTHONPATH=src:tests python -m unittest discover -s tests/unit -v
+PYTHONPATH=src:tests python -m unittest discover -s tests/integration -v
+PYTHONPATH=src:tests python -m unittest discover -s tests/e2e -v
+```
+
+The default E2E retriever uses a deterministic test reranker. In the prepared
+`irs` environment, an optional replacement run uses B's already-cached fixed
+Cross-Encoder and fails closed rather than downloading a model:
+
+```bash
+conda run -n irs env PYTHONPATH=src:tests BANKING_AGENT_E2E_RERANKER=cross_encoder \
+  python -m unittest discover -s tests/e2e -v
+```
+
+## LLM gateway
+
+`banking_agent.app.providers` is E-owned, injectable infrastructure for later
+A/C implementations; it is not an authority for intents, actions, state
+patches, or final banking responses. The default provider is the deterministic
+local `mock`, so neither the browser demo nor CI needs a key or makes a network
+call. The optional server-only OpenAI-compatible transport is enabled with
+`BANKING_AGENT_LLM_PROVIDER=openai_compatible`, an HTTPS
+`BANKING_AGENT_LLM_BASE_URL`, and `BANKING_AGENT_LLM_API_KEY`; never place the
+key in browser code or commit it to the repository.
+
+The gateway validates structured responses, bounds retries/timeouts/concurrency
+and rate, and returns sanitized transport errors. An optional opaque
+idempotency key is passed unchanged across retries, coalesces concurrent
+duplicates, and retains successful process-local results for a configured TTL;
+a key reused with different request content fails with an idempotency conflict.
+Before any provider call, credential-like data such as PINs, OTPs, passwords
+and CVV/CVC is blocked. Recognised card, labelled account, phone, email and
+NRIC-like values are replaced with request-local placeholders. This is baseline
+data minimisation, not a substitute for provider contractual and regional-data
+review.
+
+## Optional local ASR demo
+
+The browser application does not yet accept audio. The ASR slice is a
+terminal-only local demo: it produces a candidate transcript which a later
+voice UI must show and have the user confirm before it enters the banking
+workflow. Audio is never sent to a remote provider or persisted by the ASR
+adapter.
+
+The demo is fixed to the multilingual `large-v3-turbo-q5_0` Whisper model. It
+is not committed to Git and must be installed by a developer or evaluator once;
+the application does not ask end users to select or download a model. Its
+measured ASCEND smoke-evaluation result on this project is 22.26% mixed-token
+error rate (80 generic public clips). This is not a banking-domain quality or
+safety claim.
+
+Clone and build the official `whisper.cpp` source, then download the model into
+the ignored `models/` directory. On Apple Silicon, build the tested Metal
+configuration:
+
+```bash
+git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git /private/tmp/whisper-cpp
+cmake -S /private/tmp/whisper-cpp -B /private/tmp/whisper-cpp/build \
+  -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON
+cmake --build /private/tmp/whisper-cpp/build --config Release -j 4
+/private/tmp/whisper-cpp/models/download-ggml-model.sh large-v3-turbo-q5_0 "$PWD/models"
+shasum -a 256 models/ggml-large-v3-turbo-q5_0.bin
+```
+
+The expected model SHA-256 is
+`394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2`.
+If Metal cannot allocate memory, close memory-intensive applications and retry;
+do not silently fall back to a different model.
+
+For a Linux host with a supported NVIDIA CUDA toolchain, use the same source
+and model but configure with `-DGGML_CUDA=ON`. CPU-only compatibility builds
+omit the acceleration flag. CUDA and CPU are reference configurations, not CI
+or project-machine-validated configurations.
+
+Run a local WAV transcription with the explicit executable path:
+
+```bash
+PYTHONPATH=src python -m banking_agent.modules.voice.cli path/to/input.wav \
+  --backend whisper_cpp \
+  --executable /private/tmp/whisper-cpp/build/bin/whisper-cli \
+  --model "$PWD/models/ggml-large-v3-turbo-q5_0.bin" \
+  --language auto
+```
+
+The initial input contract is PCM WAV, 16 kHz, mono, 16-bit, maximum 60 seconds
+and 10 MiB. The public ASCEND smoke evaluation remains local because its
+reports include public source transcripts and hypotheses; model binaries,
+audio, and reports are ignored by Git.
 
 The server defaults to `BANKING_AGENT_MODULE_MODE=fixture`. Its E-owned module
 composition layer is intentionally separate from the API: future owner-provided

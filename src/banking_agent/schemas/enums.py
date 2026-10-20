@@ -47,3 +47,11 @@ class ConsentStatus(StrEnum):
     UNKNOWN = "UNKNOWN"
     GRANTED = "GRANTED"
     DENIED = "DENIED"
+
+
+class TranscriptionStatus(StrEnum):
+    """Outcome of a local audio-to-text attempt."""
+
+    OK = "OK"
+    EMPTY = "EMPTY"
+    ERROR = "ERROR"

@@ -25,13 +25,14 @@ class StoreError(ValueError):
 class ApplicationStore(Protocol):
     """Persistence boundary used by the E-owned application layer."""
 
-    def register(self, username: str, password: str) -> dict[str, object]: ...
+    def register(self, username: str, password: str, synthetic_profile_key: str) -> dict[str, object]: ...
     def login(self, username: str, password: str) -> tuple[dict[str, object], str]: ...
     def logout(self, token: str | None) -> None: ...
     def current_user(self, token: str | None) -> dict[str, object] | None: ...
     def create_conversation(self, user_id: int, title: str, initial_state: dict[str, str]) -> dict[str, object]: ...
     def list_conversations(self, user_id: int) -> list[dict[str, object]]: ...
     def get_conversation(self, user_id: int, conversation_id: str) -> dict[str, object]: ...
+    def conversation_profile_key(self, conversation_id: str) -> str: ...
     def add_turn(
         self,
         user_id: int,
@@ -59,7 +60,8 @@ class SQLiteStore:
             """
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL,
-                password_hash TEXT NOT NULL, created_at INTEGER NOT NULL
+                password_hash TEXT NOT NULL, synthetic_profile_key TEXT,
+                created_at INTEGER NOT NULL
             );
             CREATE TABLE IF NOT EXISTS login_sessions (
                 token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL,
@@ -69,7 +71,8 @@ class SQLiteStore:
             CREATE TABLE IF NOT EXISTS conversations (
                 id TEXT PRIMARY KEY, user_id INTEGER NOT NULL, title TEXT NOT NULL,
                 complaint_status TEXT NOT NULL, handoff_status TEXT NOT NULL,
-                consent TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0,
+                consent TEXT NOT NULL, synthetic_profile_key TEXT,
+                version INTEGER NOT NULL DEFAULT 0,
                 created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
             );
@@ -94,6 +97,7 @@ class SQLiteStore:
             """
         )
         self._migrate_conversations_version()
+        self._migrate_synthetic_profile_binding()
         self.connection.commit()
 
     def _migrate_conversations_version(self) -> None:
@@ -101,6 +105,15 @@ class SQLiteStore:
         columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(conversations)")}
         if "version" not in columns:
             self.connection.execute("ALTER TABLE conversations ADD COLUMN version INTEGER NOT NULL DEFAULT 0")
+
+    def _migrate_synthetic_profile_binding(self) -> None:
+        """Add nullable bindings without assigning legacy accounts a default profile."""
+        user_columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(users)")}
+        if "synthetic_profile_key" not in user_columns:
+            self.connection.execute("ALTER TABLE users ADD COLUMN synthetic_profile_key TEXT")
+        conversation_columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(conversations)")}
+        if "synthetic_profile_key" not in conversation_columns:
+            self.connection.execute("ALTER TABLE conversations ADD COLUMN synthetic_profile_key TEXT")
 
     @staticmethod
     def _password_hash(password: str, salt: bytes | None = None) -> str:
@@ -123,17 +136,19 @@ class SQLiteStore:
         if len(password) < 6:
             raise StoreError("password_must_be_at_least_6_characters")
 
-    def register(self, username: str, password: str) -> dict[str, object]:
+    def register(self, username: str, password: str, synthetic_profile_key: str) -> dict[str, object]:
         self._validate_credentials(username, password)
+        if not isinstance(synthetic_profile_key, str) or not synthetic_profile_key.strip():
+            raise StoreError("synthetic_profile_key_required")
         try:
             cursor = self.connection.execute(
-                "INSERT INTO users(username, password_hash, created_at) VALUES (?, ?, ?)",
-                (username, self._password_hash(password), int(time.time())),
+                "INSERT INTO users(username, password_hash, synthetic_profile_key, created_at) VALUES (?, ?, ?, ?)",
+                (username, self._password_hash(password), synthetic_profile_key, int(time.time())),
             )
         except sqlite3.IntegrityError as error:
             raise StoreError("username_already_exists") from error
         self.connection.commit()
-        return {"id": cursor.lastrowid, "username": username}
+        return {"id": cursor.lastrowid, "username": username, "synthetic_profile_key": synthetic_profile_key}
 
     def login(self, username: str, password: str) -> tuple[dict[str, object], str]:
         if not isinstance(username, str) or not isinstance(password, str):
@@ -147,7 +162,10 @@ class SQLiteStore:
             (hashlib.sha256(token.encode()).hexdigest(), row["id"], int(time.time()) + SESSION_LIFETIME_SECONDS),
         )
         self.connection.commit()
-        return {"id": row["id"], "username": row["username"]}, token
+        return {
+            "id": row["id"], "username": row["username"],
+            "synthetic_profile_key": row["synthetic_profile_key"],
+        }, token
 
     def logout(self, token: str | None) -> None:
         if token:
@@ -158,7 +176,7 @@ class SQLiteStore:
         if not token:
             return None
         row = self.connection.execute(
-            """SELECT users.id, users.username FROM login_sessions JOIN users ON users.id = login_sessions.user_id
+            """SELECT users.id, users.username, users.synthetic_profile_key FROM login_sessions JOIN users ON users.id = login_sessions.user_id
                WHERE token_hash = ? AND expires_at > ?""",
             (hashlib.sha256(token.encode()).hexdigest(), int(time.time())),
         ).fetchone()
@@ -166,13 +184,29 @@ class SQLiteStore:
 
     def create_conversation(self, user_id: int, title: str, initial_state: dict[str, str]) -> dict[str, object]:
         now, conversation_id = int(time.time()), str(uuid4())
+        user = self.connection.execute(
+            "SELECT synthetic_profile_key FROM users WHERE id = ?", (user_id,)
+        ).fetchone()
+        if user is None:
+            raise StoreError("conversation_not_found")
+        if not user["synthetic_profile_key"]:
+            raise StoreError("synthetic_profile_key_required")
         self.connection.execute(
-            """INSERT INTO conversations(id, user_id, title, complaint_status, handoff_status, consent, version, created_at, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)""",
-            (conversation_id, user_id, title, initial_state["complaint_status"], initial_state["handoff_status"], initial_state["consent"], now, now),
+            """INSERT INTO conversations(id, user_id, title, complaint_status, handoff_status, consent, synthetic_profile_key, version, created_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)""",
+            (conversation_id, user_id, title, initial_state["complaint_status"], initial_state["handoff_status"], initial_state["consent"], user["synthetic_profile_key"], now, now),
         )
         self.connection.commit()
         return self.get_conversation(user_id, conversation_id)
+
+    def conversation_profile_key(self, conversation_id: str) -> str:
+        """Resolve the immutable, synthetic profile snapshot for an application conversation."""
+        row = self.connection.execute(
+            "SELECT synthetic_profile_key FROM conversations WHERE id = ?", (conversation_id,)
+        ).fetchone()
+        if row is None or not row["synthetic_profile_key"]:
+            raise StoreError("synthetic_profile_key_required")
+        return str(row["synthetic_profile_key"])
 
     def list_conversations(self, user_id: int) -> list[dict[str, object]]:
         rows = self.connection.execute(
@@ -198,7 +232,7 @@ class SQLiteStore:
     def _conversation_summary(row: sqlite3.Row) -> dict[str, object]:
         return {
             key: row[key]
-            for key in ("id", "title", "complaint_status", "handoff_status", "consent", "version", "created_at", "updated_at")
+            for key in ("id", "title", "complaint_status", "handoff_status", "consent", "synthetic_profile_key", "version", "created_at", "updated_at")
         }
 
     def add_turn(

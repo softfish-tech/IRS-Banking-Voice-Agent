@@ -239,6 +239,28 @@ E owns system-execution semantics: module invocation, state integration, API/UI/
 
 Each module provides a deterministic mock implementation for the agreed scenarios. This allows the text-only end-to-end workflow to run before production models, retrieval infrastructure, recommendation logic, or voice adapters are introduced.
 
+## E provider gateway
+
+E may provide an injectable asynchronous LLM transport for future A/C owners.
+It accepts provider-neutral messages and returns only Pydantic-validated
+structured data or a sanitized transport error (`configuration`, `timeout`,
+`rate_limited`, `unavailable`, `invalid_response`, or `idempotency_conflict`).
+Callers may provide an opaque, non-sensitive idempotency key: E reuses it for
+all transport retries, coalesces in-flight duplicates, and retains successful
+results in process memory for a short configured TTL. It is server-side only:
+provider keys, prompts, raw outputs, and vendor error bodies must not be stored
+in browser code, persistence, or decision traces. E does not translate LLM
+output into a `Decision`, `RuleStatePatch`, action, reason code, or any other
+business state; A/C remain responsible for their public module contracts.
+
+Before either mock or external-provider generation, E applies a conservative
+outbound privacy guard. PINs, OTPs, passwords, CVV/CVC and comparable supplied
+credentials fail closed with `sensitive_data_blocked`. Recognised full card
+numbers (Luhn-valid), labelled account numbers, Singapore phone numbers, email
+addresses and NRIC-like identifiers are replaced with stable request-local
+placeholders. This is a baseline data-minimisation control, not a substitute
+for provider retention, regional-processing and contractual review.
+
 ## D phase-one implementation and async handoff
 
 D exposes the pure function `recommend(request, *, customer_profiles, products)`
@@ -254,8 +276,12 @@ RecommendationData rejects an empty object even when status is error.
 Business denials always use ok, allowed=false and items=[], never empty.
 
 Synthetic session/profile association is explicit and is not authentication.
-Unknown sessions fail closed; E must associate application session IDs with the
-intended synthetic profile before injecting D. D never supplies a default profile.
+For the local application, a user selects a validated synthetic profile only at
+registration. E snapshots that key onto every new conversation and, only in
+production composition, `ConversationProfileRecommendationAdapter` resolves the
+conversation UUID to that snapshot before calling D. Conversation and message
+requests cannot supply or override the key. Legacy conversations without a
+snapshot and unknown keys fail closed; D never supplies a default profile.
 Demo product eligibility checks age, Singapore residence and integer SGD cents.
 Ranking is goal match, ascending demo_priority, then product_id.
 These three demo products are not authorized NovaBank offerings or interest-rate
@@ -281,6 +307,17 @@ module owners to review; existing business semantics and canonical enums are unc
   `retrieved_docs` on the second call.
 - D: `recommend(session_id, complaint_status, handoff_status, consent)` →
   `RecommendationResult`.
+
+### B synchronous implementation bridge
+
+B's current public `Retriever` implementation is synchronous.  E composes it
+through `app.retrieval_adapter.AsyncRetrievalAdapter`, which runs only the
+public `Retriever.retrieve(query, top_k)` call in a worker thread and exposes
+the existing async B protocol.  It does not inspect, rank, filter, or alter
+evidence.  An unexpected synchronous backend exception becomes the sanitized
+`{"status": "error"}` envelope, so the orchestrator fails closed under its
+normal B error handling.  This preserves a single public adapter contract while
+allowing future B implementations to provide a native async adapter directly.
 
 Adapters may return a validated result model or a mapping conforming to that
 model. Non-error envelopes require typed `data`; `error` may omit data. A normal
@@ -319,14 +356,14 @@ same-origin JSON endpoints:
 
 | Endpoint | Purpose | Request / response |
 | --- | --- | --- |
-| `POST /api/auth/register` | Creates a synthetic local account. | Username and 6+ character test password. |
+| `POST /api/auth/register` | Creates a synthetic local account. | Username, 6+ character test password, and `synthetic_profile_key` selected from `GET /api/config`. The choice is local fixture configuration, not authentication. |
 | `POST /api/auth/login` / `logout` | Starts or clears the local session. | Login returns an HttpOnly cookie. |
 | `GET /api/me` | Returns the current synthetic account. | Requires authentication. |
-| `GET /api/config` | Returns the active application module mode. | `{ "module_mode": "fixture" | "production" }`; used by the local UI to select its input surface. |
+| `GET /api/config` | Returns the active application module mode and valid local synthetic profiles. | `{ "module_mode": "fixture" | "production", "synthetic_profiles": [{"id":"session-001","label":"..."}] }`; used by the UI to select its input surface and registration profile. |
 | `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Fixture mode only; scenario IDs and fixture user text only. |
-| `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Fixture mode creates with `{"scenario_id":"S01"}`. Production mode creates and runs the first turn with `{"user_text":"synthetic test text"}`. |
+| `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Fixture mode creates with `{"scenario_id":"S01"}`. Production mode creates and runs the first turn with `{"user_text":"synthetic test text"}`. The account's profile key is snapshotted server-side; payloads carrying `synthetic_profile_key` are rejected. |
 | `GET /api/conversations/{id}` | Returns one caller-owned conversation and its history. | Other users receive `conversation_not_found`. |
-| `POST /api/conversations/{id}/messages` | Runs one controlled turn through the real orchestrator. | Fixture mode requires `{"scenario_id":"S01","expected_version":0}`; production mode requires `{"user_text":"synthetic test text","expected_version":0}`. It atomically persists the user/assistant turn and a successful C-controlled state update. A stale version returns `409 conversation_version_conflict`. |
+| `POST /api/conversations/{id}/messages` | Runs one controlled turn through the real orchestrator. | Fixture mode requires `{"scenario_id":"S01","expected_version":0}`; production mode requires `{"user_text":"synthetic test text","expected_version":0}`. A profile override is rejected. It atomically persists the user/assistant turn and a successful C-controlled state update. A stale version returns `409 conversation_version_conflict`. |
 | `GET /api/developer/conversations/{id}/traces` | Returns restricted developer trace metadata. | Disabled unless explicit local developer mode is enabled. |
 
 The message endpoint returns this versioned public shape inside its `response`
@@ -367,7 +404,10 @@ database implementation. `SQLiteStore` remains the local synthetic-data default;
 must satisfy the same user, session, conversation, turn, and trace methods, including
 an atomic `expected_version` conversation-turn commit, so changing databases does not
 alter API routes or agent orchestration. `SQLiteStore` migrates local databases created
-before this field by adding a version of zero.
+before this field by adding a version of zero. It also adds nullable profile
+binding columns without assigning legacy users or conversations a default;
+recommendation resolution therefore fails closed until a new bound conversation
+is created.
 
 ## Module composition and migration
 
@@ -379,6 +419,37 @@ mode fails closed until E explicitly supplies a `ModuleBundle` of owner-provided
 adapters implementing the existing public Protocols. Thus, replacing fixtures
 with real implementations changes composition only—not the API, session store,
 frontend, shared schema, or orchestrator.
+
+## Voice / ASR extension (terminal MVP)
+
+`modules/voice/` is an E-owned extension boundary and is deliberately not part
+of the text-agent `ModuleBundle` yet. Its public contract is `ASRService` and
+the `AudioUpload` / `TranscriptionResult` schemas. The first local format is
+only `audio/wav`, PCM, 16 kHz, mono, 16-bit, with a maximum duration of 60
+seconds and a maximum size of 10 MiB. Invalid input is rejected with a stable,
+non-sensitive validation code before any backend is invoked.
+
+`ASRService` writes an accepted payload only to a uniquely named temporary
+directory, passes that path to an `ASRBackend`, and removes the directory on
+both success and failure. Audio bytes, local file paths, and unconfirmed
+transcripts must not be added to `AgentState`, SQLite, decision traces, or
+application logs. `WhisperCppBackend` uses explicit local executable and model
+paths, does not download models, and does not send audio remotely. The terminal
+entry point is `python -m banking_agent.modules.voice.cli`; its default mock
+backend exists for deterministic local verification.
+
+A successful result is only a candidate transcript. A later voice controller
+must display it and obtain an explicit user confirmation before supplying its
+text to the existing A/C/B/D flow. ASR quality fields are diagnostics, not an
+authorization or safety confidence signal; C remains the sole decision gate.
+
+`modules.voice.ascend_eval` is a local evaluation utility, not an application
+path. It deterministically selects 80 clips from the public ASCEND test split
+(60 Mandarin-English mixed, 10 Mandarin, 10 English; evenly distributed among
+the available source speakers within each stratum) and downloads only those clips into an ignored artifact
+directory. Its report remains local because it contains source transcripts and
+model hypotheses. The utility's mixed-token error rate is a smoke metric for
+iteration, not a production-quality claim or an authorization decision.
 
 ## Decision traces
 

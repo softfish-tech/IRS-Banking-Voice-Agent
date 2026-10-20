@@ -1,0 +1,406 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S03-001",
+      "scenario_id": "S03",
+      "family": "unauthorized_transaction",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "card_payment_not_recognised",
+        "canonical_intent": "unauthorized_transaction",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s03-1",
+        "user_text": "A card payment appeared in my account, but I never made it."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "HIGH_RISK_TRANSACTION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "unauthorized_transaction",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S03-002",
+      "scenario_id": "S03",
+      "family": "unauthorized_transaction",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "card_payment_not_recognised",
+        "canonical_intent": "unauthorized_transaction",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s03-2",
+        "user_text": "I do not recognise a purchase on my card."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "HIGH_RISK_TRANSACTION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "unauthorized_transaction",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S03-003",
+      "scenario_id": "S03",
+      "family": "unauthorized_transaction",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "card_payment_not_recognised",
+        "canonical_intent": "unauthorized_transaction",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s03-3",
+        "user_text": "Someone used my card without my permission."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "HIGH_RISK_TRANSACTION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "unauthorized_transaction",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S03-004",
+      "scenario_id": "S03",
+      "family": "unauthorized_transaction",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "card_payment_not_recognised",
+        "canonical_intent": "unauthorized_transaction",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s03-4",
+        "user_text": "That transaction is not mine."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "HIGH_RISK_TRANSACTION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "unauthorized_transaction",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

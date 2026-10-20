@@ -2,14 +2,16 @@ flowchart LR
     Browser[Local browser UI] --> Auth[Auth and session API]
     Browser --> Conversation[Conversation API]
     Developer[Restricted developer dashboard] --> Trace
-    Auth --> Store[ApplicationStore]
+    Auth --> Profile[Validated synthetic profile binding]
+    Profile --> Store[ApplicationStore]
     Conversation --> Store
     Conversation --> Snapshot[Restore AgentState snapshot]
     Snapshot --> Orchestrator[E-owned Orchestrator]
     Orchestrator --> A[A adapter]
     Orchestrator --> C[C adapter]
     Orchestrator --> B[B adapter when permitted]
-    Orchestrator --> D[D adapter when permitted]
+    Orchestrator --> ProfileResolver[Conversation UUID → profile snapshot]
+    ProfileResolver --> D[D adapter when permitted]
     Orchestrator --> Persist[Atomically persist successful state + turn (expected version)]
     Orchestrator --> Trace[Sanitized decision trace]
     Persist --> Store
