@@ -24,6 +24,11 @@ registration/login and persisted conversation history, run:
 PYTHONPATH=src python -m banking_agent.app.api.server
 ```
 
+When this local server starts, it automatically reads a repository-root `.env`
+file if present. The file is Git-ignored; process environment variables take
+precedence over it. This loader is for local development only and is not used
+by tests or library imports.
+
 Then open `http://127.0.0.1:8000`. Create a local-only account with a test
 password of at least 6 characters and select one clearly-labelled synthetic
 demo profile; it is fixed for that account and snapshotted on new conversations
@@ -76,8 +81,9 @@ conda run -n irs env PYTHONPATH=src:tests BANKING_AGENT_E2E_RERANKER=cross_encod
 ## LLM gateway
 
 `banking_agent.app.providers` is E-owned, injectable infrastructure for later
-A/C implementations; it is not an authority for intents, actions, state
-patches, or final banking responses. The default provider is the deterministic
+A/C implementations and optional evidence-grounded response wording; it is not
+an authority for intents, actions, state patches, or final banking decisions.
+The default provider is the deterministic
 local `mock`, so neither the browser demo nor CI needs a key or makes a network
 call. The optional server-only OpenAI-compatible transport is enabled with
 `BANKING_AGENT_LLM_PROVIDER=openai_compatible`, an HTTPS
@@ -94,6 +100,14 @@ and CVV/CVC is blocked. Recognised card, labelled account, phone, email and
 NRIC-like values are replaced with request-local placeholders. This is baseline
 data minimisation, not a substitute for provider contractual and regional-data
 review.
+
+To enable optional LLM wording for C-approved, evidence-backed `ANSWER`
+responses, also set `BANKING_AGENT_RESPONSE_GENERATOR=llm` and
+`BANKING_AGENT_LLM_MODEL` (the model name supported by the chosen
+OpenAI-compatible endpoint). It is off by default. The generator can only cite
+documents C has approved; invalid or unavailable LLM output falls back to the
+deterministic evidence response. It is never invoked for safety, complaint,
+recommendation, clarification, or abstention decisions.
 
 ## Optional local ASR demo
 

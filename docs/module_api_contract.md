@@ -225,6 +225,18 @@ D owns product-level eligibility filtering and ranking. It does not bypass C's c
 4. The final C decision is `ANSWER` when evidence is sufficient, `ABSTAIN` when the understood question lacks reliable evidence, or `CLARIFY` when a required fact from the user is missing (for example, the reason for a card replacement). `RECOMMEND` permits E to call D. Other actions follow the safe path directly.
 5. E returns the unified API/UI response and records the decision trace.
 
+### E — grounded response generation (optional)
+
+After C's second check returns `ANSWER`, E may invoke its server-side response
+generator. It receives only the user question and B documents already approved
+by C, and must return Pydantic-validated `answer` text plus one or more
+`citation_ids` drawn from those documents. E appends the cited source metadata
+itself. Invalid output, an unavailable provider, or an unrecognised citation
+falls back to E's deterministic evidence renderer; it never changes C's
+decision, State patch, citations, or tool sequence. The generator is not run
+for `ABSTAIN`, `CLARIFY`, `ESCALATE`, `BLOCK`, complaint, or recommendation
+routes.
+
 ## Empty results and failures
 
 | Module | Normal empty result | Safe integration behavior |

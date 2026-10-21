@@ -31,6 +31,10 @@ class ComplaintArbitrator:
     _URGENT_TEXT = (
         (re.compile(r"\b(?:someone|somebody)\b.{0,80}\b(?:used|spent|charged)\b.{0,80}\bwithout\b.{0,30}\b(?:permission|authori[sz]ation)\b", re.I), "HIGH_RISK_TRANSACTION"),
         (re.compile(r"\b(?:i|we)\s+(?:think|suspect|believe)\b.{0,80}\b(?:scam|fraud)\b", re.I), "FRAUD_SUSPICION"),
+        # Keep this independent of A's risk classifier: a model may map this
+        # wording to an innocuous BANKING77 label even though it reports an
+        # attempt to induce a payment or transfer.
+        (re.compile(r"\b(?:trick(?:ed|ing)?|deceiv(?:e|ed|ing)|coerc(?:e|ed|ing)|pressur(?:e|ed|ing))\b.{0,80}\b(?:transfer(?:ring)?|send(?:ing)?(?:\s+money)?|pay(?:ing)?|mak(?:e|ing)\s+(?:a\s+)?payment)\b", re.I), "FRAUD_SUSPICION"),
         (re.compile(r"\bmy\s+card\b.{0,35}\b(?:stolen|compromised|hacked)\b", re.I), "CARD_SECURITY_RISK"),
         (re.compile(r"\bmy\s+account\b.{0,35}\b(?:stolen|compromised|hacked|taken\s+over)\b", re.I), "ACCOUNT_SECURITY_RISK"),
         (re.compile(r"\bmy\s+(?:credentials|password|login)\b.{0,35}\b(?:stolen|compromised|hacked|leaked)\b", re.I), "CREDENTIAL_SECURITY_RISK"),

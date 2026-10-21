@@ -7,6 +7,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from banking_agent.app.observability import DecisionTrace, ModuleOutcome, TraceContext, TraceSink
+from banking_agent.app.response_generator import ResponseGenerator
 from banking_agent.schemas import Action, AgentState
 from banking_agent.schemas.module_results import IntentResult, RecommendationResult, RetrievalResult, RulesResult
 from banking_agent.schemas.response import AgentResponse, TechnicalError
@@ -31,6 +32,7 @@ class Orchestrator:
         timeout_seconds: float = 10,
         trace_sink: TraceSink | None = None,
         trace_context: TraceContext | None = None,
+        response_generator: ResponseGenerator | None = None,
     ) -> None:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
@@ -39,6 +41,7 @@ class Orchestrator:
         self.timeout_seconds = timeout_seconds
         self.trace_sink = trace_sink
         self.trace_context = trace_context or TraceContext()
+        self.response_generator = response_generator
 
     async def _call(self, module: str, method, model, outcomes: list[ModuleOutcome], *args):
         started_at = perf_counter()
@@ -126,6 +129,10 @@ class Orchestrator:
                 if products.data.allowed and products.status == "ok":
                     state.recommendations = products.data.items
             state.final_response = build_response(state)
+            if state.decision.action == Action.ANSWER and self.response_generator is not None:
+                generated = await self.response_generator.generate(state, request_id=request_id)
+                if generated is not None:
+                    state.final_response = generated
             result_status = "ok"
             return AgentResponse(request_id=request_id, session_id=state.session_id, status="ok", decision=state.decision, text=state.final_response, citations=state.retrieved_docs if state.decision.action == Action.ANSWER else [], recommendations=state.recommendations, state=state)
         except CallFailure as caught_failure:

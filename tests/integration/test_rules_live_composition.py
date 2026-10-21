@@ -66,7 +66,11 @@ class CurrentMainCompositionTests(unittest.TestCase):
         )
         status, _, _ = self.api(
             "POST", "/api/auth/register",
-            {"username": "synthetic_test_user", "password": "testpw"}
+            {
+                "username": "synthetic_test_user",
+                "password": "testpw",
+                "synthetic_profile_key": "session-001",
+            },
         )
         self.assertEqual(status, 201)
         status, headers, _ = self.api(

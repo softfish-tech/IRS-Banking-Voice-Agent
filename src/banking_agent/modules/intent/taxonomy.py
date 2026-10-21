@@ -125,6 +125,9 @@ HIGH_RISK_PATTERNS = (
     r"\bstolen\b",
     r"\b(?:compromised|hacked)\b",
     r"\b(?:otp|one[- ]time password)\b",
+    # Social-engineering reports are high risk only when coupled to a money
+    # movement. This avoids treating a generic use of "trick" as fraud.
+    r"\b(?:trick(?:ed|ing)?|deceiv(?:e|ed|ing)|coerc(?:e|ed|ing)|pressur(?:e|ed|ing))\b.{0,80}\b(?:transfer(?:ring)?|send(?:ing)?(?:\s+money)?|pay(?:ing)?|mak(?:e|ing)\s+(?:a\s+)?payment)\b",
 )
 
 MEDIUM_RISK_PATTERNS = (

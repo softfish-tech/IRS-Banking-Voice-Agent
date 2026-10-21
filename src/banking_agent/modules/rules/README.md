@@ -32,7 +32,9 @@ is a pre-retrieval check; `ok`, `empty`, or `error` denotes the B outcome.
 1. **Urgent risk:** HIGH risk, explicit fraud/unauthorized/lost-card intents,
    or narrow customer-report patterns yield `ESCALATE`. Low A confidence
    cannot suppress this route. Text reports about a card, account or
-   credentials retain distinct security reason codes. An existing OPEN or
+   credentials retain distinct security reason codes. A narrow report of being
+   tricked, deceived, coerced, or pressured into a payment or transfer is also
+   fraud escalation, independently of A's label. An existing OPEN or
    UNDER_REVIEW complaint is preserved; otherwise an OPEN case is requested.
    Handoff becomes ESCALATED.
 2. **Hard constraints:** recommendation is blocked for unresolved complaint,

@@ -79,6 +79,11 @@ rather than a learned output. The reported level is the **more severe** of:
 - the intent baseline (high for fraud/unauthorised, medium for fee complaints,
   low for the remaining routes).
 
+A narrow social-engineering pattern (for example, someone trying to trick,
+deceive, coerce, or pressure the customer into a transfer or payment) is also
+`HIGH`. It requires both the inducement language and a money-movement term,
+so an unrelated use of those words is not escalated by this rule alone.
+
 Two invariants follow from the scenario table and must not be weakened:
 
 - a high-risk phrase is never downgraded by low intent confidence;

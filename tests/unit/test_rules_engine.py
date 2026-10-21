@@ -136,6 +136,17 @@ class RuleBoundaryTests(unittest.TestCase):
         self.assertEqual(decision.action, Action.ESCALATE)
         self.assertEqual(decision.reason_code, "FRAUD_SUSPICION")
 
+    def test_social_engineering_transfer_survives_wrong_classifier_label(self) -> None:
+        state = make_state(
+            "policy_enquiry", 0.79, RiskLevel.LOW,
+            text="I think someone is trying to trick me into making this transfer.",
+        )
+        decision = self.rules.evaluate(state).data
+        self.assertEqual(decision.action, Action.ESCALATE)
+        self.assertEqual(decision.reason_code, "FRAUD_SUSPICION")
+        self.assertEqual(decision.next_state.complaint_status, ComplaintStatus.OPEN)
+        self.assertEqual(decision.next_state.handoff_status, HandoffStatus.ESCALATED)
+
     def test_lost_card_intent_escalates_even_when_risk_signal_is_low(self) -> None:
         state = make_state("lost_card", 0.90, RiskLevel.LOW)
         self.assertEqual(

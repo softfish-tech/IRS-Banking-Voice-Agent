@@ -10,6 +10,10 @@ from typing import Any, Mapping, Protocol
 from banking_agent.app.demo import ScenarioModules
 from banking_agent.app.observability import TraceContext, TraceSink
 from banking_agent.app.orchestrator import Orchestrator
+from banking_agent.app.response_generator import (
+    ResponseGenerator,
+    build_response_generator_from_environment,
+)
 from banking_agent.app.orchestrator.interfaces import (
     IntentModule,
     RecommendationModule,
@@ -26,6 +30,7 @@ class ModuleBundle:
     retrieval: RetrievalModule
     rules: RulesModule
     recommendation: RecommendationModule
+    response_generator: ResponseGenerator | None = None
 
     def new_orchestrator(
         self,
@@ -33,6 +38,9 @@ class ModuleBundle:
         trace_sink: TraceSink | None = None,
         trace_context: TraceContext | None = None,
     ) -> Orchestrator:
+        response_generator = self.response_generator
+        if response_generator is None:
+            response_generator = build_response_generator_from_environment()
         return Orchestrator(
             self.intent,
             self.retrieval,
@@ -40,6 +48,7 @@ class ModuleBundle:
             self.recommendation,
             trace_sink=trace_sink,
             trace_context=trace_context,
+            response_generator=response_generator,
         )
 
 

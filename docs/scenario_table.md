@@ -76,6 +76,7 @@ carry them into its maintained integration/E2E suite when the branches join.
 | C-S16 | An OPEN complaint is repeated; a human reviews and resolves with evidence | `HANDLE_COMPLAINT / COMPLAINT_ALREADY_OPEN`; state machine permits `OPEN → UNDER_REVIEW → RESOLVED` only with authenticated human events and a resolution reference | E persists case revision, event IDs, evidence and human-role provenance before applying resolution. |
 | C-S17 | A replacement-fee question retrieves a delivery time or an express-shipping price but no replacement-fee amount, even when joined to a pending-fee statement | `ABSTAIN / INSUFFICIENT_EVIDENCE` | Do not render the unrelated value as the fee. |
 | C-S18 | A misclassified first-person report says the account was hacked or credentials leaked | `ESCALATE / ACCOUNT_SECURITY_RISK` or `ESCALATE / CREDENTIAL_SECURITY_RISK` | Open a case, escalate handoff and keep the reason aligned with the affected asset. |
+| C-S19 | A labels a report of being tricked, deceived, coerced, or pressured into a payment or transfer as low-risk policy enquiry | `ESCALATE / FRAUD_SUSPICION`; request `OPEN` and `ESCALATED` patches | Do not call B or D. C's text safety guard must remain effective independently of A's risk output. |
 
 ## Future E2E fixture mapping
 

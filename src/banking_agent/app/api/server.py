@@ -15,6 +15,7 @@ from wsgiref.simple_server import make_server
 
 from banking_agent.app.bootstrap import ModuleBundle, ModuleFactory, build_module_factory
 from banking_agent.app.api.dto import to_chat_turn_response_v1, to_developer_trace_v1
+from banking_agent.app.local_env import load_local_env
 from banking_agent.app.observability import TraceContext
 from banking_agent.app.persistence import ApplicationStore, SESSION_LIFETIME_SECONDS, SQLiteStore, StoreError
 from banking_agent.app.recommendation_adapter import ConversationProfileRecommendationAdapter
@@ -344,6 +345,7 @@ class DemoApplication:
 
 
 def main() -> None:
+    load_local_env()
     app = DemoApplication()
     with make_server("127.0.0.1", 8000, app) as server:
         print("Local account demo: http://127.0.0.1:8000")

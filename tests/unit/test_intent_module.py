@@ -139,6 +139,12 @@ class RiskSignalTests(unittest.TestCase):
         self.assertLess(result.confidence or 1.0, 0.9)
         self.assertEqual(result.risk_level, RiskLevel.HIGH)
 
+    def test_social_engineering_transfer_report_is_high_risk(self) -> None:
+        result = classify_by_rules(
+            "I think someone is trying to trick me into making this transfer."
+        )
+        self.assertEqual(result.risk_level, RiskLevel.HIGH)
+
     def test_fee_complaint_baseline_is_medium(self) -> None:
         result = classify_by_rules("I was charged a fee I do not understand.")
         self.assertEqual(result.risk_level, RiskLevel.MEDIUM)
