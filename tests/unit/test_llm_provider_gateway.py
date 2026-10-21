@@ -33,7 +33,10 @@ class ValidTransport:
         self.headers.append(dict(headers))
         self.payloads.append(dict(payload))
         await asyncio.sleep(0)
-        return {"choices": [{"message": {"content": '{"label":"valid"}'}}]}
+        return {
+            "choices": [{"message": {"content": '{"label":"valid"}'}}],
+            "usage": {"prompt_tokens": 11, "completion_tokens": 7, "total_tokens": 18},
+        }
 
 
 class LLMProviderGatewayTests(unittest.IsolatedAsyncioTestCase):
@@ -42,6 +45,7 @@ class LLMProviderGatewayTests(unittest.IsolatedAsyncioTestCase):
         result = await client.generate(request(), Payload)
         self.assertEqual(result.status, "ok")
         self.assertEqual(result.data, {"label": "valid"})
+        self.assertEqual(result.attempts, 1)
 
     async def test_mock_rejects_invalid_structured_output(self):
         result = await MockLLMClient([{"label": ""}]).generate(request(), Payload)
@@ -57,6 +61,7 @@ class LLMProviderGatewayTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(events[0]["outcome"], "ok")
         self.assertNotIn("prompt", events[0])
         self.assertNotIn("server-only", str(events[0]))
+        self.assertEqual(result.attempts, 2)
 
     def test_production_settings_require_https_and_server_key(self):
         with self.assertRaises(ValueError):
@@ -76,6 +81,7 @@ class LLMProviderGatewayTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(transport.calls, 1)
         self.assertEqual(first, duplicate)
         self.assertEqual(first, cached)
+        self.assertEqual((first.prompt_tokens, first.completion_tokens, first.total_tokens), (11, 7, 18))
         self.assertEqual(transport.headers, [{"Authorization": "Bearer server-only", "Content-Type": "application/json", "Idempotency-Key": "opaque-operation-1"}])
 
     async def test_rejects_reuse_of_a_key_for_different_logical_request(self):

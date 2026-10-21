@@ -75,6 +75,21 @@ class OpenAICompatibleClient:
             pass
 
     @staticmethod
+    def _usage(raw: Mapping[str, Any]) -> dict[str, int | None]:
+        """Extract only numeric provider usage; malformed/missing usage is absent."""
+        usage = raw.get("usage")
+        if not isinstance(usage, Mapping):
+            return {"prompt_tokens": None, "completion_tokens": None, "total_tokens": None}
+        def value(name: str) -> int | None:
+            item = usage.get(name)
+            return item if type(item) is int and item >= 0 else None
+        return {
+            "prompt_tokens": value("prompt_tokens"),
+            "completion_tokens": value("completion_tokens"),
+            "total_tokens": value("total_tokens"),
+        }
+
+    @staticmethod
     def _fingerprint(request: LLMRequest, response_model: type[ResponseModel]) -> str:
         # Fingerprints are process-local comparison values only; never log or
         # persist them because they are derived from prompts.
@@ -98,7 +113,10 @@ class OpenAICompatibleClient:
                     decoded = json.loads(content) if isinstance(content, str) else content
                     validated = response_model.model_validate(decoded)
                     self._emit(request_id, "ok", attempts, started)
-                    return LLMResult(request_id=request_id, status="ok", data=validated.model_dump(mode="json"))
+                    return LLMResult(
+                        request_id=request_id, status="ok", data=validated.model_dump(mode="json"),
+                        attempts=attempts, **self._usage(raw),
+                    )
                 except TimeoutError:
                     code = ProviderErrorCode.TIMEOUT
                 except ProviderTransportError as error:
@@ -109,7 +127,7 @@ class OpenAICompatibleClient:
                     await asyncio.sleep(0.1 * attempts)
                     continue
                 self._emit(request_id, "error", attempts, started)
-                return LLMResult(request_id=request_id, status="error", error_code=code)
+                return LLMResult(request_id=request_id, status="error", error_code=code, attempts=attempts)
 
     async def generate(self, request: LLMRequest, response_model: type[ResponseModel]) -> LLMResult:
         try:

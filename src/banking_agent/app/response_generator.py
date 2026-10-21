@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Sequence
+from time import perf_counter
 from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -47,6 +48,7 @@ class GroundedResponseGenerator:
             raise ValueError("llm_model_required")
         self._client = client
         self._model = model.strip()
+        self.last_outcomes: dict[str, tuple[str, int, int, int | None, int | None, int | None]] = {}
 
     @staticmethod
     def _sources(documents: Sequence[RetrievedDocument]) -> list[dict[str, str]]:
@@ -68,6 +70,7 @@ class GroundedResponseGenerator:
         return f"{answer.strip()}\n{citations}"
 
     async def generate(self, state: AgentState, *, request_id: str) -> str | None:
+        started_at = perf_counter()
         if state.decision is None or state.decision.action != Action.ANSWER:
             return None
         if not state.retrieved_docs:
@@ -107,20 +110,27 @@ class GroundedResponseGenerator:
         try:
             result = await self._client.generate(request, GroundedAnswer)
             if result.status != "ok" or result.data is None:
+                self.last_outcomes[request_id] = ("fallback", round((perf_counter() - started_at) * 1000), result.attempts, result.prompt_tokens, result.completion_tokens, result.total_tokens)
                 return None
             generated = GroundedAnswer.model_validate(result.data)
         except Exception:
+            self.last_outcomes[request_id] = ("fallback", round((perf_counter() - started_at) * 1000), 0, None, None, None)
             return None
 
         citation_ids = set(generated.citation_ids)
         if not citation_ids or not citation_ids.issubset(source_ids):
+            self.last_outcomes[request_id] = ("fallback", round((perf_counter() - started_at) * 1000), result.attempts, result.prompt_tokens, result.completion_tokens, result.total_tokens)
             return None
         cited_documents = [
             document
             for document in state.retrieved_docs
             if document.document_id in citation_ids
         ]
+        self.last_outcomes[request_id] = ("ok", round((perf_counter() - started_at) * 1000), result.attempts, result.prompt_tokens, result.completion_tokens, result.total_tokens)
         return self._render(generated.answer, cited_documents)
+
+    def outcome(self, request_id: str) -> tuple[str, int, int, int | None, int | None, int | None] | None:
+        return self.last_outcomes.pop(request_id, None)
 
 
 def build_response_generator_from_environment() -> ResponseGenerator | None:

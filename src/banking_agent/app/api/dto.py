@@ -98,10 +98,14 @@ def to_chat_turn_response_v1(response: AgentResponse) -> ChatTurnResponseV1:
 
 
 class DeveloperModuleOutcomeV1(SchemaModel):
-    module: Literal["A", "B", "C", "D"]
-    status: Literal["ok", "empty", "error"]
+    module: str
+    status: Literal["ok", "empty", "error", "fallback"]
     duration_ms: int = Field(ge=0)
     error_code: str | None = None
+    attempts: int | None = Field(default=None, ge=0)
+    prompt_tokens: int | None = Field(default=None, ge=0)
+    completion_tokens: int | None = Field(default=None, ge=0)
+    total_tokens: int | None = Field(default=None, ge=0)
 
 
 class DeveloperTraceV1(SchemaModel):

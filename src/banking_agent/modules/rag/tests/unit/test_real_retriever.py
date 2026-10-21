@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 import unittest
 from banking_agent.modules.rag import create_retriever, configure_retriever, retrieve
-from banking_agent.modules.rag.real_retriever import RealRetriever
+from banking_agent.modules.rag.real_retriever import RealRetriever, _expand_replacement_fee_query
 
 
 class RealRetrieverTests(unittest.TestCase):
@@ -40,3 +40,34 @@ class RealRetrieverTests(unittest.TestCase):
         with self.assertRaises(OSError):configure_retriever('real',jsonl_path='/missing/corpus.jsonl')
         self.assertEqual(retrieve('What is the replacement fee for my card?')['status'],'ok')
         with self.assertRaises(ValueError):create_retriever('unknown')
+
+    def test_replacement_fee_wording_is_normalised_before_ranking(self):
+        self.assertEqual(
+            _expand_replacement_fee_query("Is there a charge to get a replacement debit card?"),
+            "Is there a charge to get a replacement debit card?\nreplacement card fee",
+        )
+        self.assertEqual(
+            _expand_replacement_fee_query("Do I pay anything when I replace my card?"),
+            "Do I pay anything when I replace my card?\nreplacement card fee",
+        )
+        self.assertEqual(_expand_replacement_fee_query("When will my card arrive?"), "When will my card arrive?")
+
+    def test_crypto_wallet_recovery_uses_only_unsupported_service_expansion(self):
+        self.assertEqual(
+            _expand_replacement_fee_query("Can NovaBank recover my cryptocurrency wallet?"),
+            "Can NovaBank recover my cryptocurrency wallet?\ncryptocurrency unsupported",
+        )
+        self.assertEqual(
+            _expand_replacement_fee_query("How do I add a wallet token?"),
+            "How do I add a wallet token?",
+        )
+
+    def test_crypto_wallet_recovery_promotes_reviewed_boundary_policy_for_reranking(self):
+        ranker = Mock()
+        ranker.rerank.side_effect = lambda query, candidates, top_k: candidates[:top_k]
+        backend = RealRetriever(reranker=ranker)
+
+        result = backend.retrieve("Can NovaBank recover my cryptocurrency wallet?", 3)
+
+        self.assertEqual(result["data"]["docs"][0]["document_id"], "NB-v1_1-fiat_currency_support-001")
+        self.assertEqual(ranker.rerank.call_args.args[1][0]["document_id"], "NB-v1_1-fiat_currency_support-001")

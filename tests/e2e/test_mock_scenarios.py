@@ -42,8 +42,11 @@ class CoreScenarioTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(len(response.recommendations), expected["recommendation_count"])
                 self.assertTrue(response.text)
                 self.assertEqual(initial.model_dump(), original)
-                if "B" in modules.calls:
+                if "B" in modules.calls and expected["action"] == "ANSWER":
                     self.assertEqual(modules.rule_inputs[1].retrieved_docs, response.state.retrieved_docs)
+                elif "B" in modules.calls:
+                    self.assertTrue(modules.rule_inputs[1].retrieved_docs)
+                    self.assertEqual(response.state.retrieved_docs, [])
                 for citation in response.citations:
                     self.assertIn(citation.excerpt, response.text)
                     self.assertIn(citation.document_id, response.text)

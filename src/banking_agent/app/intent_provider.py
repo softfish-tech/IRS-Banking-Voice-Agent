@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from banking_agent.app.orchestrator.interfaces import IntentModule
+from banking_agent.app.llm_agent_support import FusedIntentModule, build_llm_understanding_from_environment
 from banking_agent.modules.intent import (
     EncoderIntentClassifier,
     IntentModuleAdapter,
@@ -26,18 +27,20 @@ def build_intent_module(
 
     selected = (provider or os.environ.get("BANKING_AGENT_INTENT_PROVIDER", "rules")).strip().lower()
     if selected == "rules":
-        return IntentModuleAdapter()
-    if selected == "minilm_encoder":
+        adapter: IntentModule = IntentModuleAdapter()
+    elif selected == "minilm_encoder":
         classifier = EncoderIntentClassifier.from_pretrained()
-        return IntentModuleAdapter(classifier=classifier.classify)
-    if selected != "trained":
+        adapter = IntentModuleAdapter(classifier=classifier.classify)
+    elif selected != "trained":
         raise ValueError("intent_provider_must_be_rules_trained_or_minilm_encoder")
-
-    configured_path = model_path or os.environ.get("BANKING_AGENT_INTENT_MODEL_PATH")
-    if not configured_path:
-        raise ValueError("trained_intent_model_path_required")
-    artifact = Path(configured_path)
-    if not artifact.is_file():
-        raise ValueError("trained_intent_model_not_found")
-    classifier = TrainedIntentClassifier.load(artifact)
-    return IntentModuleAdapter(classifier=classifier.classify)
+    else:
+        configured_path = model_path or os.environ.get("BANKING_AGENT_INTENT_MODEL_PATH")
+        if not configured_path:
+            raise ValueError("trained_intent_model_path_required")
+        artifact = Path(configured_path)
+        if not artifact.is_file():
+            raise ValueError("trained_intent_model_not_found")
+        classifier = TrainedIntentClassifier.load(artifact)
+        adapter = IntentModuleAdapter(classifier=classifier.classify)
+    llm = build_llm_understanding_from_environment()
+    return FusedIntentModule(adapter, llm) if llm else adapter

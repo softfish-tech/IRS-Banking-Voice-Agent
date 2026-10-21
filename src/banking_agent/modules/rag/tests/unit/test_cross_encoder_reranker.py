@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import Mock
+import sys
 import numpy as np
 from banking_agent.modules.rag.cross_encoder_reranker import CrossEncoderReranker
 
@@ -26,3 +27,10 @@ class RerankerTests(unittest.TestCase):
         for scores in ([1,2],[1,float('nan'),2],[[1],[2],[3]]):
             self.model.predict.return_value=np.array(scores)
             with self.assertRaises(ValueError):self.reranker.rerank('query',self.docs)
+
+    def test_default_loader_uses_verified_pytorch_weights(self):
+        factory = Mock(return_value=Mock())
+        module = Mock(CrossEncoder=factory)
+        with unittest.mock.patch.dict(sys.modules, {'sentence_transformers': module}):
+            CrossEncoderReranker('model-id', revision='revision-id', local_files_only=True)
+        self.assertEqual(factory.call_args.kwargs['model_kwargs'], {'use_safetensors': False})

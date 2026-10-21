@@ -166,6 +166,15 @@ first `ANSWER` remains in `state.decision`. C uses that state to distinguish
 the pre-retrieval permission check from the final evidence decision. A change
 to this sequencing needs a coordinated C/E interface update.
 
+The real C implementation also exposes an optional public
+`select_relevant_evidence(question, docs)` hook. E may call it between B and
+the second C check to narrow B's ranked *candidates* to excerpts C permits E
+to render. The current C policy retains the highest-ranked individually
+answerable excerpt, avoiding a response that mixes mutually conditional policy
+branches. It does not return a business decision and does not replace the
+mandatory second `decide`; rule implementations without this hook remain
+compatible with the basic two-C-call contract.
+
 ## D — Recommendation / Synthetic Data
 
 **Owner:** D
@@ -224,6 +233,29 @@ D owns product-level eligibility filtering and ranking. It does not bypass C's c
 3. The initial `ANSWER` route permits E to call B. E records the retrieval result and calls C again before a final evidence-based answer is rendered.
 4. The final C decision is `ANSWER` when evidence is sufficient, `ABSTAIN` when the understood question lacks reliable evidence, or `CLARIFY` when a required fact from the user is missing (for example, the reason for a card replacement). `RECOMMEND` permits E to call D. Other actions follow the safe path directly.
 5. E returns the unified API/UI response and records the decision trace.
+
+E may optionally use an LLM only as a typed assistant: alongside A to propose
+an operational intent/entity/risk draft, after C permits `ANSWER` to rewrite a
+retrieval query, and after C returns `CLARIFY` to phrase a question. E validates
+each result and falls back to the existing input/template on failure. The LLM
+cannot produce a `Decision`, state patch, or direct tool call; C remains the
+business and safety authority.
+
+The delivery configuration keeps understanding fusion and retrieval-query
+rewriting disabled unless `BANKING_AGENT_LLM_MIDDLE_LOOP=enabled` is explicitly
+set. C-approved clarification wording and C-approved grounded answer rendering
+remain available independently. This prevents an optional provider from
+silently changing A's route or B's query during normal delivery runs.
+
+When any of these helpers is enabled, E records a sanitized `E.LLM.understanding`,
+`E.LLM.query_rewrite`, `E.LLM.clarification`, or `E.LLM.grounded_response`
+trace event.  Its status is `ok` when a validated typed result is used or
+`fallback` when the deterministic path is retained.  Prompts, provider output,
+credentials, and customer text are never added to the trace.
+Each LLM trace event may additionally contain numeric `attempts`,
+`prompt_tokens`, `completion_tokens`, and `total_tokens` when the provider
+returns them.  These are operational metrics only. The current non-streaming
+transport records full-call duration, not time-to-first-token.
 
 ### E — grounded response generation (optional)
 

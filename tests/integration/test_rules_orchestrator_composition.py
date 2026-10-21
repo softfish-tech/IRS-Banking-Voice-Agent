@@ -155,6 +155,9 @@ class CWithEOrchestratorTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(result.status, "ok")
                 self.assertEqual(result.decision.action, expected)
                 self.assertEqual(len(result.citations), int(expected == "ANSWER"))
+                self.assertEqual(
+                    len(result.state.retrieved_docs), int(expected == "ANSWER")
+                )
 
     async def test_c_permission_and_real_d_synthetic_ranking(self):
         fixture = next(item for item in FIXTURES if item["id"] == "S06")

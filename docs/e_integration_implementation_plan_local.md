@@ -1,367 +1,439 @@
-# E integration implementation plan — local working document
+# E integration delivery plan
 
-> Status: local planning document only. Do not stage, commit, or push this
-> file. It is not an authoritative contract. Canonical shared definitions remain
-> `src/banking_agent/schemas/`, `docs/module_api_contract.md`,
-> `docs/scenario_table.md`, and `docs/engineering_conventions.md`.
+> Status: active local delivery plan (2026-10-21). This document replaces the
+> earlier plan that assumed A and C had not been integrated. It is an execution
+> roadmap, not a parallel module contract. The executable schemas and enums,
+> `docs/module_api_contract.md`, `docs/scenario_table.md`, and
+> `docs/engineering_conventions.md` remain authoritative.
 
-## 1. Purpose and current boundary
+## 1. Current baseline
 
-E owns system integration: module composition, controlled `AgentState` merges,
-public API/UI delivery, persistence, observability, and end-to-end validation.
-E does not replace A's understanding algorithms, B's retrieval logic, C's
-business decisions, or D's product eligibility/ranking logic.
+The text-agent path now composes the real A, B, C, and D public modules through
+E's orchestrator. The default path uses A's trained intent adapter, C's rule
+decision, B's retrieved evidence, and D's guarded recommendation path. E owns
+the sequencing, validated state merge, public response assembly, persistence,
+decision traces, and E2E evaluation; it does not replace the other modules'
+domain decisions.
 
-Current capabilities:
+The current single-turn baseline has the following properties:
 
-- E orchestration, fixture API, SQLite persistence, response rendering, DTOs,
-  versioned conversation writes, and sanitized decision traces exist.
-- B has a synchronous public retriever plus E's async bridge. The real B dev
-  evaluation is reproducible in `irs` after loading the verified PyTorch model
-  weights: Recall@5 95.07%, Hit@5 95.77%, MRR@5 85.31%, and zero technical
-  errors on the 76-item development set.
-- D exposes an async adapter and synthetic profile binding. Its current
-  assurance is scenario, safety, and ordering verification rather than a
-  model-quality metric.
-- Real A and C implementations are not available. Scripted A/C adapters can
-  validate E orchestration, but cannot validate actual intent/risk quality or
-  business safety policy.
+- normal E2E covers 42 single-turn fixtures (40 business cases and 2 technical
+  cases), with workflow/call-order/trace checks;
+- a semantic evaluation layer checks intent outcome, final action, permitted
+  evidence, recommendation behavior, and answer constraints for the annotated
+  business cases;
+- the LLM can generate grounded final `ANSWER` and `CLARIFY` text, while the
+  default route remains deterministic for understanding, retrieval permission,
+  risk, business state, and recommendation permission;
+- optional middle-loop LLM understanding and query rewriting exist only as an
+  experimental, feature-flagged path;
+- performance reports include request latency, LLM attempts, fallbacks,
+  latency, and token usage. Time-to-first-token is intentionally `null` until
+  a streaming provider transport is used;
+- current multi-turn support preserves canonical complaint, handoff, consent,
+  and conversation-version state, but does **not** yet provide robust semantic
+  memory for references such as “that fee” or “the second option”.
 
-## 2. Delivery strategy
+This is a synthetic banking project. No customer data, credentials, account
+numbers, raw voice recordings, model caches, or provider secrets may enter the
+repository, test fixtures, traces, or browser bundle.
 
-Do not wait idly for A/C. Divide work into two tracks.
+## 2. Non-negotiable integration rules
 
-| Track | Can proceed now | Requires real A/C |
+The next milestones must preserve the following boundaries.
+
+| Concern | Authoritative owner | E's role |
 | --- | --- | --- |
-| Evaluation | E2E fixture schema, scenario expansion, runner, reports | actual quality and policy acceptance |
-| Module integration | real B/D replacement runs below scripted A/C | production `ModuleBundle` |
-| LLM | provider gateway, mock, secret/config/error handling | A/C prompts and decision behavior |
-| Voice | ASR adapter, transcription dataset, transcript metrics | audio-to-action acceptance |
-| Application | UI, API, DB, trace, migrations, rate limits | production decision rollout |
+| Intent, entities, risk signals | A | invoke public adapter; evaluate and optionally combine typed drafts |
+| Evidence retrieval and provenance | B | invoke only on permitted route; pass public documents onward |
+| Action, reason code, canonical state patch, recommendation permission | C | invoke C before/after B; apply only valid allowed patches |
+| Eligibility and ranking | D | invoke only after C permits `RECOMMEND`; render structured result |
+| Sequencing, context delivery, API/UI, traces, evaluation | E | compose validated public contracts and fail closed |
 
-The delivery order is:
+- C remains the only authority for an action, canonical state transition, and
+  recommendation permission. An LLM response never directly becomes a
+  `Decision`, a complaint update, or a D invocation.
+- A model may enrich a typed understanding draft. It may raise ambiguity or
+  risk, but must not silently reduce an A/C high-risk outcome.
+- An answer is rendered only after C permits `ANSWER`, and its claims are
+  limited to B-returned evidence. Missing reliable evidence remains `ABSTAIN`;
+  unclear intent or required information remains `CLARIFY`.
+- Context is useful input, not a source of invented business facts. Canonical
+  `AgentState` is still the source of truth for business state.
+- Any shared schema, enum, public adapter output, or cross-module dependency
+  change requires the canonical schema, contracts, scenarios, and tests to be
+  updated together before implementation.
 
-1. Freeze E2E evaluation data and reporting.
-2. Retain B/D real-module replacement checks.
-3. Build LLM provider infrastructure without owning decisions.
-4. Build ASR as a transcript-first vertical slice.
-5. Improve application quality in parallel.
-6. Integrate real A/C and run frozen text, then voice, acceptance.
+## 3. Workstream A — broaden LLM use safely
 
-## 3. Phase 1 — E2E evaluation data and runner
+### Objective
 
-### Goal
+Use the LLM first where it most improves natural-language understanding, while
+retaining deterministic safety gates. The priority is not “call the LLM on
+every step”; it is to make uncertain, conversational input understandable and
+measurably improve the correct typed route.
 
-Create a test suite that answers: given a user request and persisted business
-state, did the system take the permitted module path and end with the correct
-safe action? It must assess behavior rather than exact natural-language wording.
+### A1. Establish a measured understanding draft
 
-### Dataset layout and record
+For every eligible text request, the optional LLM should produce a strict,
+validated `UnderstandingDraft`, not free-form control text. It may contain:
 
-Create a versioned local fixture layout:
+- an intent from A's operational taxonomy or `UNKNOWN`;
+- normalized entities and missing slots;
+- ambiguity/multi-intent indicators;
+- a bounded, privacy-safe retrieval query suggestion; and
+- a risk/escalation signal that can only make routing more conservative.
+
+The existing deterministic A result stays alongside the draft. E records the
+agreement/disagreement and the final fusion outcome in a sanitized trace. It
+must not retain raw prompts, raw provider payloads, or secrets.
+
+### A2. Shadow mode before route changes
+
+Run the LLM draft for the expanded evaluation corpus without allowing it to
+change the live route. Compare A-only versus proposed fusion by case family:
+
+- intent and entity correctness;
+- unnecessary clarifications;
+- unsafe route attempts and missed high-risk indicators;
+- retrieval evidence success after any suggested query rewrite;
+- latency, provider failure/fallback rate, and token cost.
+
+Shadow mode is accepted only when its report is reproducible from fixtures and
+contains enough detail to identify regressions by case ID, without exposing raw
+user text in normal traces.
+
+### A3. Controlled activation policy
+
+After shadow evidence is favorable, permit fusion only for explicitly bounded
+conditions, initially:
+
+1. A returns `UNKNOWN` or low confidence;
+2. A identifies an incomplete, ambiguous, multi-intent, colloquial, or likely
+   ASR-corrupted request;
+3. the LLM and A disagree and the conflict requires a safe clarification; or
+4. a safe query rewrite is needed after C has already allowed evidence search.
+
+The fusion policy must be deterministic and explainable. C still receives a
+canonical understanding envelope and can reject the route. High-risk signals
+are combined conservatively: either source may cause escalation/clarification;
+neither source may clear an existing high-risk result.
+
+### A4. Expand in this order
+
+1. Typed understanding draft in shadow mode.
+2. Low-confidence/`UNKNOWN` and ambiguity fusion.
+3. Bounded query rewriting after C permits retrieval.
+4. Structured answer planning from selected evidence, followed by the existing
+   grounded final renderer.
+5. Streaming final-answer transport, once provider/API support is designed and
+   tested, to expose time-to-first-token.
+
+Do not use an LLM to choose C actions, update canonical state, grant a
+recommendation, or cite documents it did not receive.
+
+### A5. Acceptance criteria
+
+- The normal E2E/safety suite has no regression and no added unauthorized D
+  calls or unsafe high-risk routes.
+- The hard-language evaluation improves or maintains semantic accuracy against
+  A-only, with per-family results rather than a single aggregate score.
+- Every LLM error, invalid structured response, timeout, or budget breach
+  falls back to the deterministic safe path and is traceable by sanitized code.
+- Reports show LLM coverage, disagreement rate, fusion selection, token usage,
+  end-to-end latency, and (after streaming) TTFT.
+
+## 4. Workstream B — multi-turn semantic context memory
+
+### Objective
+
+Allow follow-up turns to resolve references and continue a task without
+confusing conversational context with regulated business state. Example: after
+the assistant explains a replacement fee, “Can I waive that?” should resolve
+the fee and card context; it must not invent a waiver policy or mutate state.
+
+### B1. Memory model and boundaries
+
+Introduce an E-owned, versioned conversation-context record separate from the
+canonical `AgentState`. Its initial structured fields should be limited to:
+
+- recent turn IDs and roles, with a bounded window;
+- the last resolved operational intent and dialogue act;
+- normalized, non-sensitive entities and explicitly supplied constraints;
+- active subject/referents (for example, card, fee, transfer, recommendation);
+- pending clarification slots and the question that requested them;
+- selected evidence/document identifiers and answer/recommendation references;
+- a compact, validated conversation summary when the window must roll over;
+- context version, creation time, expiry/retention metadata, and provenance
+  (`deterministic` or `llm_assisted`).
+
+Do not store raw audio. Avoid keeping full prompts in traces. Do not copy a
+free-form LLM summary into canonical business fields. Complaint, handoff, and
+consent values continue to come only from C's validated state patch.
+
+### B2. Turn processing design
+
+Each new turn follows this sequence:
 
 ```text
-tests/fixtures/evaluation/e2e/v1/
-├── manifest.json
-├── scenario_blueprints.json
-├── dev.jsonl
-├── test.jsonl
-└── review_log.md
+load canonical AgentState + compatible context version
+  -> deterministic reference/slot resolver
+  -> optional constrained LLM ContextDraft for unresolved references
+  -> A / guarded LLM-understanding fusion
+  -> C -> B -> C -> optional D
+  -> response rendering
+  -> atomically persist allowed AgentState patch + next context snapshot
 ```
 
-The first published version remains synthetic-only. Each JSONL case records:
+The resolver must attach provenance to every carried fact: current-turn text,
+prior user confirmation, prior selected evidence, or a pending clarification.
+If a pronoun, time reference, entity, or user preference cannot be resolved
+reliably, the system asks a targeted `CLARIFY`; it never picks the most recent
+topic merely to avoid asking.
 
-```json
-{
-  "case_id": "E2E-S03-004",
-  "split": "test",
-  "user_text": "That card purchase was not mine.",
-  "initial_state": {
-    "complaint_status": "NONE",
-    "handoff_status": "NOT_REQUIRED",
-    "consent": "UNKNOWN"
-  },
-  "expected": {
-    "action": "ESCALATE",
-    "modules_called": ["A", "C"],
-    "complaint_status": "OPEN",
-    "handoff_status": "ESCALATED",
-    "citation_count": 0,
-    "recommendation_count": 0
-  }
-}
-```
+Conversation writes retain the existing expected-version conflict behavior.
+On a concurrent update or stale context, reload and re-resolve rather than
+merging two summaries blindly.
 
-For fixture-driven runs, a case can also point to expected A/C/B/D envelopes.
-The runner uses those envelopes only through public adapter protocols; it must
-not implement action policy itself.
+### B3. Incremental implementation
 
-### Coverage
+1. Implement deterministic memory for last intent, active subject, pending
+   clarification slots, selected document IDs, and current synthetic product
+   references.
+2. Add multi-turn fixtures with explicit gold context dependencies and test
+   atomic persistence/version conflicts.
+3. Add a typed `ContextDraft` in shadow mode only for references the
+   deterministic resolver marks unresolved.
+4. Activate LLM-assisted resolution behind a flag after comparison with the
+   deterministic baseline; the draft can propose context links or `CLARIFY`,
+   never a business action/state patch.
+5. Add expiry, reset/new-topic behavior, and user-visible recovery when context
+   is stale or wrong.
 
-Start with S01–S11, then add a high-risk/low-confidence precedence case. Each
-family needs normal, paraphrased, incomplete, and stateful variants.
+### B4. Multi-turn acceptance measures
 
-| Family | Required behavior |
-| --- | --- |
-| Grounded policy answer | `A → C → B → C`; citation only after final `ANSWER` |
-| Complaint | C patches complaint state; no D call |
-| Fraud/unauthorized transaction | high risk wins; `ESCALATE`; no B/D call |
-| Unclear request | `CLARIFY`; no unsupported assumption |
-| Missing evidence | B can return empty; final C action is `ABSTAIN` |
-| Recommendation blocked | unresolved complaint or no consent; D not called |
-| Recommendation permitted | C `RECOMMEND` before D; valid ranked output only |
-| Multi-turn state | previous complaint/handoff/consent state influences next turn |
-| Technical failure | no technical error becomes a business success |
+Report by sequence and turn number:
 
-### Data creation process
+- context-reference resolution accuracy;
+- correct carry-over of pending slots and selected evidence;
+- incorrect carry-over / stale-context rate;
+- action, evidence, and recommendation semantic correctness after turn 2+;
+- safe-clarification rate for deliberately ambiguous follow-ups;
+- state-version conflict and recovery results; and
+- added LLM latency/tokens where context assistance was used.
 
-Do not write every sentence manually and do not adopt public datasets as policy
-truth.
+No multi-turn scenario passes merely because its final text sounds plausible:
+the expected referent, allowed modules, final C action, state patch, evidence,
+and response constraints must all match the fixture.
 
-1. Manually author scenario blueprints from the Scenario Table and NovaBank
-   synthetic policies. These define gold business behavior.
-2. Write two or three reviewed seed utterances per blueprint.
-3. Generate paraphrases with templates, public intent wording, or an LLM.
-4. Human-review each candidate for intended meaning, safety label, and split.
-5. Freeze test cases, hash them in `manifest.json`, and never tune against them.
+## 5. Workstream C — harder user-input and semantic evaluation data
 
-Banking77 can provide English phrasing ideas for A's intent expressions. It is
-not gold evidence for B, action policy for C, or ranking truth for D. NovaBank
-policy/recommendation labels must be created and reviewed inside this project.
+### Objective
 
-### Initial scope and split policy
+Keep the existing 42 single-turn E2E fixtures as stable workflow regression
+coverage, and grow a reviewed semantic corpus around them. The new corpus does
+not replace basic E2E: it adds cases where a simple intent label is insufficient
+to show that the agent understood the user.
 
-- 12 scenario families;
-- 3 reviewed seed utterances per family;
-- 4–5 reviewed variants per seed or family as appropriate;
-- approximately 80–100 single-turn cases;
-- 15–20 multi-turn state sequences;
-- dev/test split by paraphrase family, not random utterance splitting.
+### C1. Dataset layers
 
-All paraphrases of the same seed and business fact remain in one split. This
-prevents the system from seeing test wording during tuning.
-
-### Metrics
-
-The runner outputs machine-readable JSON plus a short Markdown summary.
-
-| Area | Metric | Desired interpretation |
+| Layer | Purpose | Execution expectation |
 | --- | --- | --- |
-| Workflow | scenario pass rate | expected end-to-end behavior completed |
-| Module routing | call-order pass rate | E called only permitted modules |
-| Safety | high-risk unsafe-route count | must be zero |
-| Grounding | expected citation pass rate | answer contains only permitted evidence |
-| Abstention | expected-ABSTAIN pass rate | unsupported information is not fabricated |
-| Recommendation | unauthorized-D-call count | must be zero |
-| Reliability | technical-failure pass rate | errors never become business success |
-| State | transition pass rate | C patches are preserved without invention |
+| Core workflow regression | stable S01–S11/technical fixtures | deterministic CI or local smoke |
+| Semantic single-turn set | action, evidence, recommendation, response constraints | regular real-module/LLM evaluation |
+| Complex-language challenge set | difficult wording and mixed constraints | scheduled/manual comparison; not tuned as a hidden test |
+| Multi-turn semantic set | context dependencies across turns | integration/E2E evaluation |
+| Voice-to-text set | transcript quality plus equivalent text behavior | ASR and frontend integration evaluation |
 
-Do not score exact final prose. Test action, citations, recommendation presence,
-public error shape, and state instead.
+Keep test and development cases separate by underlying business fact and seed
+utterance family. Do not turn Banking77 labels into NovaBank action/evidence
+truth. Public datasets may inspire phrasing only; every final label is derived
+from the Scenario Table and synthetic corpus.
 
-## 4. Phase 2 — real B/D integration below scripted A/C
+### C2. Priority case families
 
-Maintain replacement configurations:
+Expand reviewed input cases in balanced groups rather than adding only easy
+paraphrases.
 
-```text
-Scripted A + real B + scripted C + real D
-Scripted A + real B + scripted C + D technical failure
-Scripted A + B empty + scripted C + no D
-```
+| Family | Examples of difficulty | Required gold checks |
+| --- | --- | --- |
+| Natural variation | terse, colloquial, typo-heavy, code-switched, ASR-like wording | intended intent/entities or safe ambiguity handling |
+| Multi-intent and priority | complaint plus policy question; fraud plus recommendation request | C-safe priority, prohibited calls, final action |
+| Ambiguity and references | “that charge”, “do it again”, missing card/transaction | expected referent or `CLARIFY` |
+| Constraint-rich requests | product preferences, budget/eligibility constraints, exclusions | C permission and D result boundaries |
+| Grounding traps | topical but wrong documents, conflicting wording, absent policy | required/forbidden evidence and `ABSTAIN` behavior |
+| Safety/adversarial text | prompt injection, irrelevant instructions, sensitive-data bait | no control takeover, safe public response |
+| Complex response needs | explanation plus next steps, citations, denied recommendation | factual response groups and forbidden claims |
 
-These tests prove that E:
+For each record, annotate at least: case ID/version/split, input or turn
+sequence, initial canonical state, required context if any, expected final
+action/reason, permitted module calls/order, required and forbidden document
+IDs, recommendation expectation, response facts/forbidden claims, and whether
+LLM use is expected/allowed/ignored for comparison.
 
-- invokes B only after C permits the answer route;
-- sends B canonical retrieved documents to C's second decision;
-- renders citations only when final C action is `ANSWER`;
-- invokes D only after C returns `RECOMMEND`;
-- resolves conversation ID to a validated synthetic D profile server-side;
-- hides recommendations on denial/error;
-- keeps state and public output safe on invalid envelopes, timeouts, and
-  technical failures.
+### C3. Evaluation output
 
-They do not prove that C rule semantics are correct.
+Replace a single “pass rate” headline with a report containing:
 
-### B operational rule
+- workflow/call-order/trace correctness;
+- semantic correctness overall and by scenario/family;
+- A-only, LLM-draft, and fusion comparison where applicable;
+- B evidence precision/required-document recovery at the selected-answer level;
+- C/D safety results (high-risk routes, unauthorized recommendation calls,
+  forbidden evidence/claims);
+- final answer constraint score, with examples of failures by case ID;
+- multi-turn context measures after Workstream B; and
+- operational metrics: requests, LLM coverage, retries/fallbacks, tokens,
+  full request latency, and TTFT when streaming exists.
 
-E can use an asynchronous bridge around B's public synchronous retriever. Build
-the real backend once at application startup. B scores are ranking logits, not
-answer-confidence probabilities. E must never turn B `ok` into `ANSWER`; C's
-second decision is still required.
+Human review is still required for new gold labels and for sampled generative
+answers whose acceptability cannot be represented safely by explicit rules. Do
+not mark a response correct merely because the LLM itself judged it correct.
 
-When reading B evaluation:
+## 6. Workstream D — frontend, speech-to-text, and answer presentation
 
-- Recall@K is the average fraction of all gold evidence recovered in top K;
-- Hit@K is whether any gold evidence appears in top K;
-- all-gold recall checks every required chunk for multi-evidence questions;
-- MRR@K rewards earlier first correct evidence;
-- technical errors must be zero before interpreting a metric.
+This plan interprets “语义转文字” as speech-to-text (ASR). The UI should make
+the resulting text and its semantic handling visible and correctable before it
+drives the banking-agent flow.
 
-No-evidence false-positive retrieval is not automatically an E failure; C must
-reject topically similar but insufficient evidence.
+### D1. Text-chat vertical slice first
 
-## 5. Phase 3 — LLM provider gateway
+Build a frontend against E's versioned public API before coupling it to live
+audio. It needs:
 
-### Scope
+- conversation list/new/reset and optimistic-safe turn submission;
+- clearly separated user/assistant chat bubbles;
+- structured rendering of answers, citations, recommendations, clarifications,
+  abstentions, escalations, loading, retry, and sanitized technical errors;
+- source cards and recommendation cards using public DTO fields only;
+- a visible synthetic/demo notice and no browser access to provider secrets,
+  internal reason codes, raw RAG scores, internal document IDs, or traces;
+- session/conversation version handling, including a recoverable stale-turn
+  message; and
+- accessibility basics: keyboard send, focus behavior, readable status, and
+  non-color-only error/risk cues.
 
-E supplies safe, injectable transport. E does not own domain prompts, intent/
-risk semantics, rule decisions, or product recommendations.
+The UI must render what C/E produced, not reinterpret an answer as permission
+to show a product or transition a business state.
 
-Suggested structure:
+### D2. Speech-to-text interaction
 
-```text
-app/providers/
-├── interfaces.py       # async LLMClient protocol
-├── provider_x.py       # vendor transport adapter
-├── mock.py             # deterministic CI client
-├── settings.py         # non-secret configuration parsing
-└── errors.py           # sanitized provider failure mapping
-```
-
-Suggested protocol:
-
-```python
-class LLMClient(Protocol):
-    async def generate(self, request: LLMRequest) -> LLMResult: ...
-```
-
-### E-owned responsibilities
-
-- server-only configuration and secret lookup;
-- timeout, bounded retry, cancellation, concurrency and rate limits;
-- provider-independent request IDs and sanitized error codes;
-- mock provider with no external network use in CI;
-- structured-output/Pydantic transport validation;
-- telemetry excluding keys, full prompts, raw transcripts and sensitive data.
-
-Secrets must not enter browser code, SQLite records, source control, or traces.
-
-### Module ownership
-
-| Responsibility | Owner |
-| --- | --- |
-| provider client/configuration/timeout/retry/logging | E |
-| intent/entity/risk candidate interpretation | A |
-| action/reason/state patch/recommendation permission | C |
-| eligibility filtering and product ranking | D |
-| evidence retrieval and provenance | B |
-| controlled invocation/state merge/API/UI response | E |
-
-E must never parse free-form LLM prose into `OPEN`, `ESCALATED`, `RECOMMEND`,
-or other canonical business state. If C uses an LLM internally, C validates the
-output and returns canonical `Decision`; E applies only `RuleStatePatch`.
-
-Initially retain deterministic response templates. A later LLM renderer may run
-only after C permits the action and may only use B-returned evidence.
-
-## 6. Phase 4 — ASR vertical slice
-
-### Initial architecture
-
-Keep ASR separate from the text agent until text E2E is stable:
+Add ASR as an input adapter, not a second agent path:
 
 ```text
-audio upload/recording
-  → input validation
-  → async ASR adapter
-  → transcript + confidence
-  → user review/confirmation
-  → existing text request path
+record/upload -> validate audio -> ASR -> editable transcript + confidence
+  -> user confirms/edits -> normal text conversation request
 ```
 
-An initial local contract can be:
+Required behavior:
 
-```text
-transcribe(audio, language) -> {status, text, confidence, duration_ms}
-```
+- enforce client/server type, size, duration, and timeout limits;
+- show transcription progress, failure, and retry/cancel states;
+- display the transcript in an editable field before submit;
+- make low-confidence or critical-token uncertainty require review rather than
+  automatically submitting a guessed financial instruction;
+- send only confirmed text into the normal agent API;
+- delete temporary server audio on success/failure and do not persist raw audio
+  by default;
+- never place audio, provider keys, or full internal traces in browser storage.
 
-Do not add raw audio to `AgentState`. Keep transcript state transient until the
-normal text request begins; do not persist raw recordings by default.
+The existing voice module remains the public ASR extension point. E consumes
+its public transcription result and reports ASR status/metrics without importing
+voice internals into the orchestrator.
 
-### Safety and operations
+### D3. Answer rendering and streaming
 
-- limit MIME type, byte size, duration and request timeout;
-- delete temporary audio files on success and failure;
-- do not log raw audio, complete transcripts, credentials, account numbers or
-  voiceprint-style data;
-- use confirmation/clarification for low confidence;
-- never infer financial facts not reliably transcribed.
+Initially render a completed response. When streaming is introduced, use a
+separate, typed event protocol that distinguishes `status`, safe text chunks,
+structured citations/recommendations, `complete`, and sanitized `error`.
+Never render unfinished content as an approved product recommendation or a
+confirmed business-state change. The final structured result is authoritative.
 
-### ASR data and metrics
+Streaming enables a real TTFT measurement. The trace/report needs request start,
+first safe content event, final completion, provider/model identifier, retry and
+fallback indicators, and token totals where supplied by the provider.
 
-Use public speech data only for generic recognition quality. Use internally
-created synthetic banking utterances for bank-domain tests, derived from already
-approved text cases and never from real customer recordings.
+### D4. Frontend/voice acceptance
 
-| Layer | Metric |
-| --- | --- |
-| General transcription | WER/CER |
-| Banking terminology | amount/date/product/security-keyword preservation |
-| User intent | transcript-to-intent agreement once A exists |
-| Full workflow | audio-to-final-action agreement once A/C exist |
+- Text input produces the same public result as the tested backend case.
+- Citations and recommendations appear only when the final public DTO permits
+  them; `CLARIFY`, `ABSTAIN`, and `ESCALATE` do not leak stale cards.
+- A user can edit a transcript and the edited text—not hidden ASR text—is the
+  recorded agent input.
+- Equivalent approved audio and text fixtures have matching safe action and
+  evidence/recommendation behavior.
+- UI integration tests cover loading, failure, stale version, low ASR
+  confidence, clarification follow-up, citation rendering, and recommendation
+  denial.
 
-## 7. Phase 5 — API, frontend, persistence and observability
+## 7. Recommended execution order
 
-### Backend/API
+The workstreams deliberately overlap, but activation is gated by evaluation.
 
-- version public DTOs and keep internal State/reason codes hidden;
-- validate payloads, enforce request limits and retain idempotency;
-- retain atomic expected-version turn commits;
-- add health/readiness checks without secret/provider details;
-- make provider/ASR/module mode explicit feature flags;
-- retain generic public technical errors and sanitized internal traces.
+| Milestone | Deliverable | Depends on | Completion evidence |
+| --- | --- | --- | --- |
+| M0: baseline freeze | current report/trace schema and stable core fixtures | current modules | reproducible single-turn report and clean trace checks |
+| M1: complex evaluation | reviewed hard single-turn cases and per-family report | M0 | deterministic labels, dev/test separation, failure examples |
+| M2: deterministic context | structured semantic-memory store and multi-turn fixtures | M0 | reference/slot/version tests pass without LLM |
+| M3: LLM shadow | typed understanding/context drafts and A-only comparison | M1; M2 for context cases | metrics, cost, latency, and safety comparison |
+| M4: guarded LLM activation | low-confidence fusion and bounded query rewrite | M3 | no safety regression; documented enable/rollback flag |
+| M5: text frontend | public API chat, response/source/recommendation rendering | M0 | browser/API integration tests and error-state coverage |
+| M6: ASR frontend | reviewable transcript flow and audio evaluation | M5; voice public adapter | ASR limits, transcript edit, audio/text equivalence tests |
+| M7: streaming polish | streaming events and TTFT reporting | stable M5/M6 transport | final-event correctness plus TTFT metrics |
 
-### Persistence
+M1 and M5 can proceed in parallel. M2 should precede LLM-assisted context.
+M3 must precede any broader LLM route control. A feature flag/rollback path is
+required for every provider-dependent activation.
 
-- retain synthetic-only user/profile data;
-- migration-test every schema change;
-- index conversation, message, trace and ownership lookup paths;
-- define trace/audio retention before persistent voice features;
-- prevent payloads from selecting or overriding a D profile key.
+## 8. Trace, privacy, and experiment requirements
 
-### Frontend
+Every evaluated turn must emit an ordered, sanitized trace sufficient to answer
+what happened without recording sensitive content:
 
-- display citations and recommendations as separate structured components;
-- provide loading, retry and technical-error states with safe wording;
-- label fixtures, policies, accounts and recommendations as synthetic/demo;
-- add recording, upload failure and low-confidence transcript review states;
-- never expose provider keys, internal traces, reason codes, document IDs or
-  raw RAG scores.
+1. request/conversation/case identifiers and elapsed timing;
+2. context availability, resolver outcome, provenance category, and version;
+3. A output summary and, when enabled, LLM draft/fusion outcome;
+4. C decisions, permitted B/D calls, selected evidence/recommendation IDs;
+5. final response mode, fallback/retry/technical status; and
+6. performance counters: total latency, per-provider latency, input/output/
+   total tokens when available, and TTFT only for streaming.
 
-## 8. Phase 6 — integrate once real A/C arrive
+Trace completeness and permitted event ordering remain hard evaluation gates.
+Metrics are reported in aggregate and by fixture family. Raw prompts, full
+transcripts, audio, credentials, and secret configuration are excluded.
 
-1. Run E's adapter-contract harness for each real adapter.
-2. Inject all four real adapters through `ModuleBundle`.
-3. Run frozen text E2E dev/test data without scripted A/C.
-4. Measure A intent/risk and C rule coverage separately from aggregate E2E.
-5. Verify C high-risk precedence, complaint lifecycle, evidence post-check and
-   recommendation permission route.
-6. Add ASR audio-to-action cases only after text behavior is accepted.
-7. Enable a production-like non-fixture UI only after these checks pass.
+## 9. Definition of delivery readiness
 
-## 9. Completion checklist
+Before claiming a broader LLM-enabled, multi-turn, voice-capable agent path:
 
-### Ready for real text integration
+- [ ] Core single-turn workflow/trace regressions pass with real A/B/C/D.
+- [ ] Complex semantic data is reviewed, versioned, and reported by family.
+- [ ] Deterministic multi-turn context passes its referent, pending-slot, reset,
+      stale-version, and safety cases.
+- [ ] Any LLM fusion/context route has shadow comparison evidence, a feature
+      flag, deterministic fallback, and no safety regression.
+- [ ] C remains the source of all canonical actions/state/recommendation gates.
+- [ ] Frontend displays only public structured outputs and handles retry,
+      clarification, no-evidence, escalation, and stale conversation versions.
+- [ ] ASR requires editable/confirmed text, obeys retention limits, and matches
+      equivalent text-case outcomes.
+- [ ] Evaluation output includes workflow, semantic, evidence, context, safety,
+      token/cost proxy, full latency, and—when streaming—TTFT metrics.
 
-- [ ] E2E fixtures have manifest, dev/test split and review history.
-- [ ] Real B/D replacement tests pass below scripted A/C.
-- [ ] B real retrieval has zero technical errors in selected environment.
-- [ ] LLM provider failures are sanitized and fail closed.
-- [ ] API, trace, persistence and frontend do not expose sensitive data.
+## 10. Immediate next implementation slice
 
-### Ready for real A/C integration
+The next recommended slice is deliberately small and measurable:
 
-- [ ] A/C adapters satisfy public contracts.
-- [ ] Frozen text E2E cases pass with non-scripted A/C.
-- [ ] High-risk unsafe-route and unauthorized-D-call counts are zero.
-- [ ] C patches are the only source of business-state transitions.
-- [ ] B evidence reaches C's second decision and never independently permits an
-      answer.
+1. Add the first reviewed complex-language and multi-turn fixture families,
+   including ambiguity, multi-intent priority, a context reference, and a
+   safety/injection case.
+2. Implement deterministic context storage/resolution for active subject and
+   pending clarification slots; add public-contract and persistence tests.
+3. Run the existing LLM understanding draft in shadow mode over that corpus and
+   publish A-only versus draft/fusion diagnostics.
+4. In parallel, establish the text-chat public API contract and a frontend
+   shell that renders completed structured responses before adding ASR.
 
-### Ready for voice acceptance
-
-- [ ] ASR input limits and temporary-data deletion are tested.
-- [ ] Synthetic audio evaluation has reference transcripts and review records.
-- [ ] Critical banking terms meet an agreed preservation target.
-- [ ] Audio and equivalent text cases produce the same safe C action.
-- [ ] No raw audio or sensitive information is persisted by default.
+Only after these measurements should E enable LLM fusion for bounded
+low-confidence/ambiguous traffic or expand it into query rewriting and richer
+context resolution.

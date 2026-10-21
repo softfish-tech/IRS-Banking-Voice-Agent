@@ -152,6 +152,12 @@ class RuleEngine:
             return self._result(Action.ABSTAIN, "INSUFFICIENT_EVIDENCE")
         return self._result(Action.ANSWER, "POLICY_EVIDENCE_FOUND")
 
+    def select_relevant_evidence(
+        self, question: str, docs: list[RetrievedDocument]
+    ) -> list[RetrievedDocument]:
+        """Public C-owned evidence narrowing used between B and final C."""
+        return self.evidence.select_relevant(question, docs)
+
     async def decide(self, state: AgentState) -> dict[str, object]:
         """Implement E's async ``RulesModule.decide(state)`` adapter.
 

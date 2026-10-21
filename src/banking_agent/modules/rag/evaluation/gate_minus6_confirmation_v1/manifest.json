@@ -22,7 +22,7 @@
   "frozen_source_sha256": {
     "real_retriever.py": "f5e0951ec1202400eddae2fc377e748d2cb10a8e78c89ca7cbd029e7ed1ff92d",
     "bm25_retriever.py": "603adc0ff215dbe2ad818fa2241652fe685d9eb364c11914130d490cf060625e",
-    "cross_encoder_reranker.py": "455bb1d193e30cb05f8cb9b32ddd6ee6c7724fd5dd73f1cc3674e8298984a5cd",
+    "cross_encoder_reranker.py": "b94eb00bbe13c0dd8195d2480119c6d9b46900c1763a36400aa15789a1ac66e8",
     "retriever.py": "a3056f00d48ba29d84cfdeb83f9f056996be21952f885531269cde7c2107d3ad",
     "chunks/NovaBank_knowledge_chunks_v1_1.jsonl": "6ef68066d1081d72f252933b3222a0c4e3331dd034e07b6e1c32f7fc7f7a53d4",
     "chunks/NovaBank_faq_chunk_mapping_v1_1.jsonl": "22779d56f4ba3627cc07bdf11a81c2eafc7e77cb3d9fcf1a844f2352d35a5ea9",

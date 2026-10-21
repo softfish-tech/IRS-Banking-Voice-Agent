@@ -119,6 +119,76 @@ class ScenarioTableTests(unittest.TestCase):
         self.assertEqual(decision.reason_code, "INSUFFICIENT_EVIDENCE")
 
 
+class EvidenceSelectionTests(unittest.TestCase):
+    def test_keeps_only_the_answerable_lost_card_fee_candidate(self) -> None:
+        lost_fee = RetrievedDocument(
+            document_id="lost-card-fee",
+            title="Lost or stolen card replacement",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt="A lost card replacement fee is SGD 15.",
+        )
+        shipping = RetrievedDocument(
+            document_id="express-shipping",
+            title="Express card delivery",
+            source="Synthetic policy",
+            score=0.8,
+            excerpt="Express delivery costs SGD 10 and takes one day.",
+        )
+        related_but_lower_ranked = RetrievedDocument(
+            document_id="courier-loss-fee",
+            title="Replacement after courier loss",
+            source="Synthetic policy",
+            score=0.7,
+            excerpt="A courier-loss card replacement fee is SGD 0.",
+        )
+        selected = RuleEngine().select_relevant_evidence(
+            "How much does replacing a lost card cost?",
+            [lost_fee, related_but_lower_ranked, shipping],
+        )
+        self.assertEqual([doc.document_id for doc in selected], ["lost-card-fee"])
+
+    def test_preserves_reason_specific_candidate_for_required_clarification(self) -> None:
+        lost_fee = RetrievedDocument(
+            document_id="lost-card-fee",
+            title="Lost or stolen card replacement",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt="A lost card replacement fee is SGD 15.",
+        )
+        selected = RuleEngine().select_relevant_evidence(
+            "What is the replacement fee for my card?", [lost_fee]
+        )
+        self.assertEqual([doc.document_id for doc in selected], ["lost-card-fee"])
+
+    def test_natural_fee_wording_keeps_the_reason_specific_clarification(self) -> None:
+        lost_fee = RetrievedDocument(
+            document_id="lost-card-fee",
+            title="Lost or stolen card replacement",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt="A lost card replacement fee is SGD 15.",
+        )
+        selected = RuleEngine().select_relevant_evidence(
+            "Do I pay anything when I replace my card?", [lost_fee]
+        )
+        self.assertEqual([doc.document_id for doc in selected], ["lost-card-fee"])
+
+    def test_generic_replacement_question_does_not_inherit_retained_card_fee(self) -> None:
+        retained_fee = RetrievedDocument(
+            document_id="retained-card-fee",
+            title="Retained-card replacement",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt="A retained card replacement fee is SGD 15.",
+        )
+        decision = RuleEngine().evidence.assess(
+            "Is there a charge to get a replacement debit card?", [retained_fee]
+        )
+        self.assertFalse(decision.sufficient)
+        self.assertEqual(decision.reason_code, "REPLACEMENT_REASON_REQUIRED")
+
+
 class RuleBoundaryTests(unittest.TestCase):
     def setUp(self) -> None:
         self.rules = RuleEngine()
@@ -356,6 +426,26 @@ class EvidenceArbitrationTests(unittest.TestCase):
         )
         self.assertFalse(result.sufficient)
         self.assertEqual(result.reason_code, "EVIDENCE_SCOPE_MISMATCH")
+
+    def test_crypto_wallet_recovery_can_only_use_reviewed_unsupported_service_policy(self) -> None:
+        boundary = RetrievedDocument(
+            document_id="NB-v1_1-fiat_currency_support-001",
+            title="Supported balances and funding boundaries",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt="Other fiat currencies, cryptocurrency and precious metals are unsupported.",
+        )
+        supported = self.gate.assess(
+            "Can NovaBank recover my cryptocurrency wallet?", [boundary]
+        )
+        self.assertTrue(supported.sufficient)
+
+        wrong_document = boundary.model_copy(update={"document_id": "unreviewed-crypto-note"})
+        unsupported = self.gate.assess(
+            "Can NovaBank recover my cryptocurrency wallet?", [wrong_document]
+        )
+        self.assertFalse(unsupported.sufficient)
+        self.assertEqual(unsupported.reason_code, "EVIDENCE_SCOPE_MISMATCH")
 
     def test_missing_specific_detail_abstains_despite_related_card_excerpt(self) -> None:
         result = self.gate.assess(

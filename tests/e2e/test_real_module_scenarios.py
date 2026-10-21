@@ -26,7 +26,7 @@ REAL_EXPECTATIONS = {
     "S05": ("BLOCK", "UNRESOLVED_COMPLAINT", ["A", "C"]),
     "S06": ("RECOMMEND", "RECOMMENDATION_PERMITTED", ["A", "C", "D"]),
     "S07": ("CLARIFY", "LOW_INTENT_CONFIDENCE", ["A", "C"]),
-    "S08": ("ABSTAIN", "INSUFFICIENT_EVIDENCE", ["A", "C", "B", "C"]),
+    "S08": ("ANSWER", "POLICY_EVIDENCE_FOUND", ["A", "C", "B", "C"]),
 }
 
 
@@ -48,6 +48,9 @@ class RecordingRuleEngine:
     async def decide(self, state: AgentState) -> dict[str, object]:
         self._calls.append("C")
         return await self._engine.decide(state)
+
+    def select_relevant_evidence(self, question, docs):
+        return self._engine.select_relevant_evidence(question, docs)
 
 
 class RealModuleScenarioE2ETests(unittest.IsolatedAsyncioTestCase):

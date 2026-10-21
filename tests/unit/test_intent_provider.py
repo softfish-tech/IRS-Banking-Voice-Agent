@@ -35,6 +35,11 @@ class IntentProviderTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "trained_intent_model_not_found"):
             build_intent_module("trained", "/private/tmp/missing-intent-model.joblib")
 
+    @patch.dict("os.environ", {"BANKING_AGENT_LLM_UNDERSTANDING": "llm", "BANKING_AGENT_LLM_MIDDLE_LOOP": "off"}, clear=False)
+    def test_llm_understanding_requires_explicit_middle_loop_opt_in(self) -> None:
+        adapter = build_intent_module("rules")
+        self.assertEqual(adapter.__class__.__name__, "IntentModuleAdapter")
+
 
 if __name__ == "__main__":
     unittest.main()

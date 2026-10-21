@@ -299,7 +299,9 @@ FAQ候选映射不是人工gold，不能代替Policy依据。
 ```text
 RealRetriever
   → BM25Retriever：优化召回前20
-  → CrossEncoderReranker：重排、默认取5
+  → CrossEncoderReranker：重排、默认取5；固定加载经验证的
+    `pytorch_model.bin`，而非同一revision内会产生NaN分数的
+    `model.safetensors`
   → 严格契约校验
   → 返回完整证据
 ```

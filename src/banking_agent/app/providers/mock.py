@@ -31,4 +31,4 @@ class MockLLMClient:
             validated = response_model.model_validate(self._responses.popleft())
         except (ValidationError, TypeError, ValueError):
             return LLMResult(request_id=request_id, status="error", error_code=ProviderErrorCode.INVALID_RESPONSE)
-        return LLMResult(request_id=request_id, status="ok", data=validated.model_dump(mode="json"))
+        return LLMResult(request_id=request_id, status="ok", data=validated.model_dump(mode="json"), attempts=1)

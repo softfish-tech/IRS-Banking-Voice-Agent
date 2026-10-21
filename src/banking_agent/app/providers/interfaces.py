@@ -32,6 +32,10 @@ class LLMResult(_Model):
     status: str = Field(pattern="^(ok|error)$")
     data: Mapping[str, Any] | None = None
     error_code: str | None = None
+    attempts: int = Field(default=0, ge=0)
+    prompt_tokens: int | None = Field(default=None, ge=0)
+    completion_tokens: int | None = Field(default=None, ge=0)
+    total_tokens: int | None = Field(default=None, ge=0)
 
 
 ResponseModel = TypeVar("ResponseModel", bound=BaseModel)

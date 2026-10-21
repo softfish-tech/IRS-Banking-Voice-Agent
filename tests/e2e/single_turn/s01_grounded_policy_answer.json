@@ -49,8 +49,8 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
+            "action": "CLARIFY",
+            "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           }
@@ -72,8 +72,8 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
-        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "action": "CLARIFY",
+        "reason_code": "REPLACEMENT_REASON_REQUIRED",
         "module_call_order": [
           "A",
           "C",
@@ -88,9 +88,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ],
+        "citation_ids": [],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -109,11 +107,8 @@
           "should_call": false
         },
         "public_response": {
-          "kind": "answer",
-          "must_contain": [
-            "SGD 10",
-            "Card Fees Policy"
-          ],
+          "kind": "clarification",
+          "must_contain": [],
           "must_not_contain": [
             "RECOMMENDATION_PERMITTED"
           ]
@@ -174,8 +169,8 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
+            "action": "CLARIFY",
+            "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           }
@@ -197,8 +192,8 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
-        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "action": "CLARIFY",
+        "reason_code": "REPLACEMENT_REASON_REQUIRED",
         "module_call_order": [
           "A",
           "C",
@@ -213,9 +208,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ],
+        "citation_ids": [],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -234,11 +227,8 @@
           "should_call": false
         },
         "public_response": {
-          "kind": "answer",
-          "must_contain": [
-            "SGD 10",
-            "Card Fees Policy"
-          ],
+          "kind": "clarification",
+          "must_contain": [],
           "must_not_contain": [
             "RECOMMENDATION_PERMITTED"
           ]
@@ -424,8 +414,8 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
+            "action": "CLARIFY",
+            "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           }
@@ -447,8 +437,8 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
-        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "action": "CLARIFY",
+        "reason_code": "REPLACEMENT_REASON_REQUIRED",
         "module_call_order": [
           "A",
           "C",
@@ -463,9 +453,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ],
+        "citation_ids": [],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -484,11 +472,8 @@
           "should_call": false
         },
         "public_response": {
-          "kind": "answer",
-          "must_contain": [
-            "SGD 10",
-            "Card Fees Policy"
-          ],
+          "kind": "clarification",
+          "must_contain": [],
           "must_not_contain": [
             "RECOMMENDATION_PERMITTED"
           ]
@@ -549,8 +534,8 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
+            "action": "CLARIFY",
+            "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           }
@@ -572,8 +557,8 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
-        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "action": "CLARIFY",
+        "reason_code": "REPLACEMENT_REASON_REQUIRED",
         "module_call_order": [
           "A",
           "C",
@@ -588,9 +573,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ],
+        "citation_ids": [],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -609,11 +592,8 @@
           "should_call": false
         },
         "public_response": {
-          "kind": "answer",
-          "must_contain": [
-            "SGD 10",
-            "Card Fees Policy"
-          ],
+          "kind": "clarification",
+          "must_contain": [],
           "must_not_contain": [
             "RECOMMENDATION_PERMITTED"
           ]

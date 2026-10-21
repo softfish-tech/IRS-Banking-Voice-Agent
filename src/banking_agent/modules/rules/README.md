@@ -75,8 +75,12 @@ synthetic fixture until E adds those case-management capabilities.
 ## Evidence permission
 
 B's `ok` and ranking score mean candidate retrieval, not answer permission.
-`EvidenceArbitrator` checks every document because E currently renders every
-retrieved excerpt. It rejects empty/malformed documents, non-finite scores,
+Before final arbitration, E may call C's public
+`RuleEngine.select_relevant_evidence(question, docs)` hook. It removes
+candidates that cannot safely be rendered for this question; C then checks the
+highest-ranked individually answerable excerpt and makes the required final
+decision. It rejects
+empty/malformed documents, non-finite scores,
 topic mismatch and missing requested details or values. It requires each
 rendered excerpt to cover all salient request terms after a small set of
 normalizations, so paraphrases outside that set can cause safe abstention.

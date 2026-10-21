@@ -109,6 +109,24 @@ documents C has approved; invalid or unavailable LLM output falls back to the
 deterministic evidence response. It is never invoked for safety, complaint,
 recommendation, clarification, or abstention decisions.
 
+For the delivery configuration, LLMs are limited to C-approved clarification
+wording and C-approved evidence-grounded answers. LLM understanding and query
+rewriting are experimental because they can alter A/B inputs: they require both
+their individual setting (`BANKING_AGENT_LLM_UNDERSTANDING=llm` or
+`BANKING_AGENT_LLM_QUERY_REWRITE=llm`) **and**
+`BANKING_AGENT_LLM_MIDDLE_LOOP=enabled`. The latter is `off` by default.
+`BANKING_AGENT_LLM_CLARIFICATION=llm` remains available without that flag,
+because C has already selected `CLARIFY` before it runs.
+
+After configuring a compatible provider in the ignored `.env`, run the small
+paid, synthetic-only terminal smoke test with
+`PYTHONPATH=src python scripts/smoke_llm_middle_loop.py`. It verifies LLM
+understanding, query rewrite, clarification, and evidence-grounded answering;
+it is intentionally separate from CI.
+
+For the paid terminal five-path composition check (real MiniLM, B/C/D and
+DeepSeek), run `PYTHONPATH=src python scripts/run_real_llm_e2e.py`.
+
 ## Optional local ASR demo
 
 The browser application does not yet accept audio. The ASR slice is a

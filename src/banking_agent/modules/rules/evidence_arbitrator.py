@@ -18,19 +18,19 @@ from banking_agent.schemas.state import RetrievedDocument
 _STOPWORDS = frozenset(
     "a an and are as at be been before by can could do does for from has have how "
     "i if in is it me my of on or our please should that the their these this those "
-    "to us we what when where which who why will with would you your bank banking "
+    "to us we what when where which who why will with would you your bank banking there get anything "
     "novabank policy tell explain help about need want know exact specific "
     "much many long".split()
 )
 _ALIASES = {
-    "fees": "fee", "cost": "fee", "costs": "fee", "charges": "fee",
+    "fees": "fee", "cost": "fee", "costs": "fee", "charges": "fee", "pay": "fee", "paying": "fee",
     "charge": "fee", "price": "fee", "prices": "fee",
     "replace": "replacement", "replacing": "replacement", "replaced": "replacement",
     "cards": "card", "wallets": "wallet", "crypto": "cryptocurrency",
     "cryptocurrencies": "cryptocurrency", "recovery": "recover", "recovering": "recover",
     "delivery": "deliver", "delivered": "deliver", "arrival": "deliver", "arrive": "deliver",
     "shipping": "deliver", "ship": "deliver", "days": "day", "hours": "hour",
-    "minutes": "minute", "unauthorised": "unauthorized", "unrecognised": "unrecognized",
+    "minutes": "minute", "unauthorised": "unauthorized", "unrecognised": "unrecognized", "debit": "card",
     "loss": "lost", "damaged": "damage",
     "grams": "gram", "manufactures": "manufacture", "printed": "print",
 }
@@ -42,6 +42,13 @@ _MONEY_VALUE = re.compile(
 )
 _FEE_CONTEXT = re.compile(r"\b(?:fee|fees|cost|costs|charge|charges|price|replacement)\b", re.I)
 _TIME_VALUE = re.compile(r"\b(?:\d+|one|two|three|five|seven|ten)\s*(?:days?|hours?|minutes?|weeks?)\b|\b(?:immediate|instantly|same-day)\b", re.I)
+_CRYPTO_WALLET_RECOVERY = re.compile(
+    r"(?=.*\b(?:crypto|cryptocurrency)\b)(?=.*\bwallet\b)"
+    r"(?=.*\b(?:recover(?:y|ing)?|restor(?:e|ation)|los[et]\s+access)\b)",
+    re.I,
+)
+_CRYPTO_UNSUPPORTED = re.compile(r"\bcryptocurrency\b.{0,80}\bunsupported\b", re.I)
+_CRYPTO_BOUNDARY_DOCUMENT_ID = "NB-v1_1-fiat_currency_support-001"
 
 
 def _terms(text: str) -> frozenset[str]:
@@ -81,6 +88,33 @@ class EvidenceAssessment:
 class EvidenceArbitrator:
     """Reject missing, malformed, irrelevant or incomplete retrieved excerpts."""
 
+    def select_relevant(
+        self, question: str, docs: list[RetrievedDocument]
+    ) -> list[RetrievedDocument]:
+        """Narrow B's candidates to excerpts that C may safely render.
+
+        A B ranking is a candidate list rather than an answerability decision.
+        The final :meth:`assess` call still makes the permission decision after
+        E stores this subset.  If nothing is answerable but a document exposes
+        a missing replacement reason, preserve it so C can issue its required
+        clarification instead of turning an understood request into ABSTAIN.
+        """
+        answerable: list[RetrievedDocument] = []
+        clarification_candidates: list[RetrievedDocument] = []
+        for doc in docs:
+            assessment = self.assess(question, [doc])
+            if assessment.sufficient:
+                answerable.append(doc)
+            elif assessment.reason_code == "REPLACEMENT_REASON_REQUIRED":
+                clarification_candidates.append(doc)
+        # ``docs`` preserves B's descending rank.  Because ``assess`` already
+        # requires each retained excerpt to answer the complete question, one
+        # highest-ranked answerable source is sufficient and avoids rendering
+        # adjacent policy branches with different conditions or prices.
+        if answerable:
+            return answerable[:1]
+        return clarification_candidates[:1]
+
     def assess(self, question: str, docs: list[RetrievedDocument]) -> EvidenceAssessment:
         if not docs:
             return EvidenceAssessment(False, "NO_EVIDENCE")
@@ -89,6 +123,7 @@ class EvidenceArbitrator:
             return EvidenceAssessment(False, "QUESTION_SCOPE_UNCLEAR")
 
         seen: set[str] = set()
+        crypto_wallet_recovery = bool(_CRYPTO_WALLET_RECOVERY.search(question))
         for doc in docs:
             if (
                 not doc.document_id.strip() or doc.document_id in seen
@@ -97,6 +132,19 @@ class EvidenceArbitrator:
             ):
                 return EvidenceAssessment(False, "INVALID_EVIDENCE")
             seen.add(doc.document_id)
+
+            # This is a deliberately narrow unsupported-service exception.
+            # The policy does not describe a wallet-recovery procedure; it
+            # establishes that cryptocurrency itself is unsupported. That is
+            # sufficient only to answer that NovaBank cannot provide the
+            # requested crypto-wallet recovery service, and only from the
+            # reviewed boundary document.
+            if (
+                crypto_wallet_recovery
+                and doc.document_id == _CRYPTO_BOUNDARY_DOCUMENT_ID
+                and _CRYPTO_UNSUPPORTED.search(doc.excerpt)
+            ):
+                continue
 
             # The E renderer currently displays all docs. A single unrelated
             # excerpt therefore prevents the whole answer from being rendered.
@@ -121,7 +169,10 @@ class EvidenceArbitrator:
                 {"lost", "stolen", "damage", "compromised", "compromise"} & query_terms
             ):
                 branch_terms = _terms(f"{doc.document_id} {doc.title} {doc.excerpt}")
-                if {"lost", "stolen", "damage", "compromised", "compromise"} & branch_terms:
+                if {
+                    "lost", "stolen", "damage", "compromised", "compromise",
+                    "retained", "swallowed",
+                } & branch_terms:
                     return EvidenceAssessment(False, "REPLACEMENT_REASON_REQUIRED")
 
             query_lower = question.casefold()

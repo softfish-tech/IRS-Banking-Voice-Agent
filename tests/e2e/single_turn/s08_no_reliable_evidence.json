@@ -49,23 +49,29 @@
           {
             "status": "ok",
             "data": {
-              "action": "ABSTAIN",
-              "reason_code": "INSUFFICIENT_EVIDENCE",
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
               "next_state": {}
             }
           }
         ],
         "B": {
-          "status": "empty",
+          "status": "ok",
           "data": {
-            "docs": []
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
           }
         }
       },
       "expected": {
         "status": "ok",
-        "action": "ABSTAIN",
-        "reason_code": "INSUFFICIENT_EVIDENCE",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
         "module_call_order": [
           "A",
           "C",
@@ -80,7 +86,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [],
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -90,16 +96,16 @@
         },
         "rag": {
           "should_call": true,
-          "expected_status": "empty",
-          "required_document_ids": []
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
         },
         "recommendation": {
           "should_call": false
         },
         "public_response": {
-          "kind": "abstention",
+          "kind": "answer",
           "must_contain": [
-            "Reliable information is unavailable"
+            "cryptocurrency"
           ],
           "must_not_contain": [
             "Card Fees Policy"
@@ -161,23 +167,29 @@
           {
             "status": "ok",
             "data": {
-              "action": "ABSTAIN",
-              "reason_code": "INSUFFICIENT_EVIDENCE",
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
               "next_state": {}
             }
           }
         ],
         "B": {
-          "status": "empty",
+          "status": "ok",
           "data": {
-            "docs": []
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
           }
         }
       },
       "expected": {
         "status": "ok",
-        "action": "ABSTAIN",
-        "reason_code": "INSUFFICIENT_EVIDENCE",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
         "module_call_order": [
           "A",
           "C",
@@ -192,7 +204,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [],
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -202,16 +214,16 @@
         },
         "rag": {
           "should_call": true,
-          "expected_status": "empty",
-          "required_document_ids": []
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
         },
         "recommendation": {
           "should_call": false
         },
         "public_response": {
-          "kind": "abstention",
+          "kind": "answer",
           "must_contain": [
-            "Reliable information is unavailable"
+            "cryptocurrency"
           ],
           "must_not_contain": [
             "Card Fees Policy"
@@ -273,23 +285,29 @@
           {
             "status": "ok",
             "data": {
-              "action": "ABSTAIN",
-              "reason_code": "INSUFFICIENT_EVIDENCE",
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
               "next_state": {}
             }
           }
         ],
         "B": {
-          "status": "empty",
+          "status": "ok",
           "data": {
-            "docs": []
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
           }
         }
       },
       "expected": {
         "status": "ok",
-        "action": "ABSTAIN",
-        "reason_code": "INSUFFICIENT_EVIDENCE",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
         "module_call_order": [
           "A",
           "C",
@@ -304,7 +322,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [],
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -314,16 +332,16 @@
         },
         "rag": {
           "should_call": true,
-          "expected_status": "empty",
-          "required_document_ids": []
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
         },
         "recommendation": {
           "should_call": false
         },
         "public_response": {
-          "kind": "abstention",
+          "kind": "answer",
           "must_contain": [
-            "Reliable information is unavailable"
+            "cryptocurrency"
           ],
           "must_not_contain": [
             "Card Fees Policy"
@@ -385,23 +403,29 @@
           {
             "status": "ok",
             "data": {
-              "action": "ABSTAIN",
-              "reason_code": "INSUFFICIENT_EVIDENCE",
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
               "next_state": {}
             }
           }
         ],
         "B": {
-          "status": "empty",
+          "status": "ok",
           "data": {
-            "docs": []
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
           }
         }
       },
       "expected": {
         "status": "ok",
-        "action": "ABSTAIN",
-        "reason_code": "INSUFFICIENT_EVIDENCE",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
         "module_call_order": [
           "A",
           "C",
@@ -416,7 +440,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [],
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -426,16 +450,16 @@
         },
         "rag": {
           "should_call": true,
-          "expected_status": "empty",
-          "required_document_ids": []
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
         },
         "recommendation": {
           "should_call": false
         },
         "public_response": {
-          "kind": "abstention",
+          "kind": "answer",
           "must_contain": [
-            "Reliable information is unavailable"
+            "cryptocurrency"
           ],
           "must_not_contain": [
             "Card Fees Policy"

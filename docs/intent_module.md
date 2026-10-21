@@ -67,6 +67,16 @@ returned with a low confidence (0.31, matching S07) so that C can apply its
 low-confidence rule. `empty` is reserved for "no usable result"; `error` is
 reserved for technical failures such as a missing `user_text`.
 
+### Project-route calibration
+
+When an injected BANKING77 classifier is used, `IntentModuleAdapter` applies a
+small auditable calibration layer after inference. BANKING77 has no exact label
+for the project's fee-complaint, product-recommendation, replacement-fee, or
+anaphoric-help routes. Only unambiguous wording is corrected; ordinary banking
+language remains the classifier's result. The layer recomputes A's risk signal
+from the corrected route and original text, preserves extracted entities, and
+never creates a C-owned action, reason code, or State patch.
+
 ## Risk signals
 
 BANKING77 carries no risk labels, so risk is an explicit, auditable rule layer

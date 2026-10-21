@@ -5,6 +5,7 @@ module implementation logic.
 """
 
 from dataclasses import dataclass
+import os
 from typing import Any, Mapping, Protocol
 
 from banking_agent.app.demo import ScenarioModules
@@ -13,6 +14,12 @@ from banking_agent.app.orchestrator import Orchestrator
 from banking_agent.app.response_generator import (
     ResponseGenerator,
     build_response_generator_from_environment,
+)
+from banking_agent.app.llm_agent_support import (
+    ClarificationGenerator,
+    QueryRewriter,
+    build_llm_text_assistant_from_environment,
+    middle_loop_enabled,
 )
 from banking_agent.app.orchestrator.interfaces import (
     IntentModule,
@@ -31,6 +38,8 @@ class ModuleBundle:
     rules: RulesModule
     recommendation: RecommendationModule
     response_generator: ResponseGenerator | None = None
+    query_rewriter: QueryRewriter | None = None
+    clarification_generator: ClarificationGenerator | None = None
 
     def new_orchestrator(
         self,
@@ -41,6 +50,16 @@ class ModuleBundle:
         response_generator = self.response_generator
         if response_generator is None:
             response_generator = build_response_generator_from_environment()
+        assistant = build_llm_text_assistant_from_environment()
+        query_rewriter = self.query_rewriter or (
+            assistant
+            if middle_loop_enabled()
+            and os.environ.get("BANKING_AGENT_LLM_QUERY_REWRITE", "off").lower() == "llm"
+            else None
+        )
+        clarification_generator = self.clarification_generator or (
+            assistant if os.environ.get("BANKING_AGENT_LLM_CLARIFICATION", "off").lower() == "llm" else None
+        )
         return Orchestrator(
             self.intent,
             self.retrieval,
@@ -49,6 +68,8 @@ class ModuleBundle:
             trace_sink=trace_sink,
             trace_context=trace_context,
             response_generator=response_generator,
+            query_rewriter=query_rewriter,
+            clarification_generator=clarification_generator,
         )
 
 

@@ -142,7 +142,7 @@
             "status": "ok",
             "data": {
               "action": "ESCALATE",
-              "reason_code": "HIGH_RISK_TRANSACTION",
+              "reason_code": "FRAUD_SUSPICION",
               "next_state": {
                 "complaint_status": "OPEN",
                 "handoff_status": "ESCALATED"
@@ -154,7 +154,7 @@
       "expected": {
         "status": "ok",
         "action": "ESCALATE",
-        "reason_code": "HIGH_RISK_TRANSACTION",
+        "reason_code": "FRAUD_SUSPICION",
         "module_call_order": [
           "A",
           "C"
@@ -242,7 +242,7 @@
             "status": "ok",
             "data": {
               "action": "ESCALATE",
-              "reason_code": "HIGH_RISK_TRANSACTION",
+              "reason_code": "FRAUD_SUSPICION",
               "next_state": {
                 "complaint_status": "OPEN",
                 "handoff_status": "ESCALATED"
@@ -254,7 +254,7 @@
       "expected": {
         "status": "ok",
         "action": "ESCALATE",
-        "reason_code": "HIGH_RISK_TRANSACTION",
+        "reason_code": "FRAUD_SUSPICION",
         "module_call_order": [
           "A",
           "C"

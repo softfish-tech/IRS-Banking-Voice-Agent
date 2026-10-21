@@ -73,7 +73,7 @@ class SingleTurnSeedDataTests(unittest.IsolatedAsyncioTestCase):
 
                 rag = acceptance["rag"]
                 self.assertEqual("B" in modules.calls, rag["should_call"])
-                if rag["should_call"]:
+                if rag["should_call"] and expected["action"] == "ANSWER":
                     # The second C decision receives B's actual output.  A real
                     # retriever may return different IDs than the old mock.
                     self.assertEqual(
@@ -82,6 +82,9 @@ class SingleTurnSeedDataTests(unittest.IsolatedAsyncioTestCase):
                     )
                     if expected["action"] == "ANSWER":
                         self.assertTrue(response.citations)
+                elif rag["should_call"]:
+                    self.assertTrue(modules.rule_inputs[-1].retrieved_docs)
+                    self.assertEqual(response.state.retrieved_docs, [])
 
                 recommendation = acceptance["recommendation"]
                 self.assertEqual("D" in modules.calls, recommendation["should_call"])

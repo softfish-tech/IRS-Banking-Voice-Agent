@@ -64,8 +64,11 @@ class RealIntentScenarioE2ETests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(response.state.handoff_status.value, expected["handoff_status"])
                 self.assertEqual(initial.model_dump(), original)
 
-                if "B" in scripted_c.calls:
+                if "B" in scripted_c.calls and expected["action"] == "ANSWER":
                     self.assertEqual(scripted_c.rule_inputs[-1].retrieved_docs, response.state.retrieved_docs)
+                elif "B" in scripted_c.calls:
+                    self.assertTrue(scripted_c.rule_inputs[-1].retrieved_docs)
+                    self.assertEqual(response.state.retrieved_docs, [])
                 if expected["action"] == "ANSWER":
                     self.assertEqual(response.citations, response.state.retrieved_docs)
                     self.assertTrue(response.citations)

@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from banking_agent.app.observability import DecisionTrace, ModuleOutcome, TraceContext, TraceSink
 from banking_agent.app.response_generator import ResponseGenerator
+from banking_agent.app.llm_agent_support import ClarificationGenerator, QueryRewriter
 from banking_agent.schemas import Action, AgentState
 from banking_agent.schemas.module_results import IntentResult, RecommendationResult, RetrievalResult, RulesResult
 from banking_agent.schemas.response import AgentResponse, TechnicalError
@@ -33,6 +34,8 @@ class Orchestrator:
         trace_sink: TraceSink | None = None,
         trace_context: TraceContext | None = None,
         response_generator: ResponseGenerator | None = None,
+        query_rewriter: QueryRewriter | None = None,
+        clarification_generator: ClarificationGenerator | None = None,
     ) -> None:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
@@ -42,6 +45,8 @@ class Orchestrator:
         self.trace_sink = trace_sink
         self.trace_context = trace_context or TraceContext()
         self.response_generator = response_generator
+        self.query_rewriter = query_rewriter
+        self.clarification_generator = clarification_generator
 
     async def _call(self, module: str, method, model, outcomes: list[ModuleOutcome], *args):
         started_at = perf_counter()
@@ -71,6 +76,16 @@ class Orchestrator:
         state.decision = result.data
         for key, value in result.data.next_state.model_dump(exclude_none=True).items():
             setattr(state, key, value)
+
+    @staticmethod
+    def _record_optional_llm(
+        outcomes: list[ModuleOutcome], module: str, provider, *outcome_args: str
+    ) -> None:
+        """Record an optional LLM use/fallback without putting its content in a trace."""
+        outcome = getattr(provider, "outcome", lambda *_: None)(*outcome_args)
+        if outcome is not None:
+            status, duration_ms, attempts, prompt_tokens, completion_tokens, total_tokens = outcome
+            outcomes.append(ModuleOutcome(module, status, duration_ms, attempts=attempts, prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens))
 
     def _record_trace(
         self,
@@ -114,23 +129,57 @@ class Orchestrator:
         result_status = "error"
         try:
             understood = await self._call("A", self.intent.analyze, IntentResult, outcomes, state.session_id, state.user_text)
+            if getattr(self.intent, "last_llm_status", None) is not None:
+                prompt_tokens, completion_tokens, total_tokens = self.intent.last_llm_tokens
+                outcomes.append(ModuleOutcome("E.LLM.understanding", self.intent.last_llm_status, self.intent.last_llm_duration_ms, attempts=self.intent.last_llm_attempts, prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens))
             state.understanding = understood.data
             await self._decide(state, outcomes)
             if state.decision.action == Action.ANSWER:
-                evidence = await self._call("B", self.retrieval.retrieve, RetrievalResult, outcomes, state.user_text, 3)
+                query = state.user_text
+                if self.query_rewriter is not None:
+                    rewritten = await self.query_rewriter.rewrite(state, request_id=request_id)
+                    self._record_optional_llm(outcomes, "E.LLM.query_rewrite", self.query_rewriter, "retrieval query", request_id)
+                    if rewritten:
+                        # Preserve the original customer wording so a fluent
+                        # rewrite cannot drop a B-critical term or condition.
+                        query = f"{state.user_text}\n{rewritten}"
+                evidence = await self._call("B", self.retrieval.retrieve, RetrievalResult, outcomes, query, 3)
                 if evidence.status == "empty" and evidence.data.docs:
                     raise CallFailure("B", "invalid_result")
                 state.retrieved_docs = evidence.data.docs
+                # B supplies ranked candidates.  The real C implementation
+                # optionally narrows them through its public evidence contract
+                # before its mandatory final decision. Fixture and third-party
+                # rule adapters remain compatible without this hook.
+                select_evidence = getattr(self.rules, "select_relevant_evidence", None)
+                if callable(select_evidence):
+                    state.retrieved_docs = select_evidence(
+                        state.user_text, state.retrieved_docs
+                    )
                 await self._decide(state, outcomes)
-                if state.decision.action == Action.ANSWER and not state.retrieved_docs:
+                if state.decision.action != Action.ANSWER:
+                    # B's candidates were supplied to C for its final
+                    # evidence decision, but must not survive into a response
+                    # or a request trace once C declines to answer. In
+                    # particular, an ambiguous generic replacement-fee query
+                    # may retrieve a lost-card branch solely to identify the
+                    # missing condition; that branch is not approved evidence.
+                    state.retrieved_docs = []
+                elif not state.retrieved_docs:
                     raise CallFailure("C", "invalid_result")
             if state.decision.action == Action.RECOMMEND:
                 products = await self._call("D", self.recommendation.recommend, RecommendationResult, outcomes, state.session_id, state.complaint_status.value, state.handoff_status.value, state.consent.value)
                 if products.data.allowed and products.status == "ok":
                     state.recommendations = products.data.items
             state.final_response = build_response(state)
+            if state.decision.action == Action.CLARIFY and self.clarification_generator is not None:
+                clarification = await self.clarification_generator.clarify(state, request_id=request_id)
+                self._record_optional_llm(outcomes, "E.LLM.clarification", self.clarification_generator, "clarifying question", request_id)
+                if clarification is not None:
+                    state.final_response = clarification
             if state.decision.action == Action.ANSWER and self.response_generator is not None:
                 generated = await self.response_generator.generate(state, request_id=request_id)
+                self._record_optional_llm(outcomes, "E.LLM.grounded_response", self.response_generator, request_id)
                 if generated is not None:
                     state.final_response = generated
             result_status = "ok"
