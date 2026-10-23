@@ -20,7 +20,7 @@ def _is_crypto_wallet_recovery_query(query: str) -> bool:
     lowered = query.casefold()
     return bool(
         re.search(r"\b(?:crypto|cryptocurrency)\b", lowered)
-        and re.search(r"\bwallet\b", lowered)
+        and re.search(r"\bwallets?\b", lowered)
         and re.search(r"\b(?:recover(?:y|ing)?|restor(?:e|ation)|los[et]\s+access)\b", lowered)
     )
 
@@ -33,9 +33,12 @@ def _expand_replacement_fee_query(query: str) -> str:
     normalisation: it neither manufactures evidence nor grants permission.
     """
     lowered = query.casefold()
-    has_replacement = bool(re.search(r"\b(?:replace|replacement|replacing)\b", lowered))
+    has_replacement = bool(re.search(r"\b(?:replace|replacement|replacing|repl(?:acement|cement|acment))\b", lowered))
     has_card = bool(re.search(r"\b(?:debit\s+)?card\b", lowered))
-    has_fee_language = bool(re.search(r"\b(?:fee|charge|cost|pay|paying)\b", lowered))
+    has_fee_language = bool(
+        re.search(r"\b(?:fee|charge|cost|pay|paying)\b", lowered)
+        or "how much" in lowered
+    )
     expansions: list[str] = []
     if has_replacement and has_card and has_fee_language:
         expansions.append("replacement card fee")
@@ -100,6 +103,23 @@ class RealRetriever:
                     key=lambda item: item['document_id'] != CRYPTO_UNSUPPORTED_BOUNDARY_DOCUMENT_ID,
                 )
             docs: list[EvidenceDocument] = self._reranker.rerank(retrieval_query, candidates, top_k)
+            if _is_crypto_wallet_recovery_query(query):
+                # A relevance model can rank a generic wallet document above
+                # the one reviewed unsupported-service boundary.  This is not
+                # an answer permission decision: retain the boundary as a
+                # candidate so C can apply its existing, exclusive rule.
+                boundary = next(
+                    (
+                        candidate for candidate in candidates
+                        if candidate['document_id'] == CRYPTO_UNSUPPORTED_BOUNDARY_DOCUMENT_ID
+                    ),
+                    None,
+                )
+                if boundary is not None:
+                    docs = [boundary, *(
+                        doc for doc in docs
+                        if doc['document_id'] != CRYPTO_UNSUPPORTED_BOUNDARY_DOCUMENT_ID
+                    )][:top_k]
             originals = {d['document_id']: d for d in candidates}
             for doc in docs:
                 original = originals[doc['document_id']]

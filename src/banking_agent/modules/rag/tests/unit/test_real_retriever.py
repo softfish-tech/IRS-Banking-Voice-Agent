@@ -51,6 +51,14 @@ class RealRetrieverTests(unittest.TestCase):
             "Do I pay anything when I replace my card?\nreplacement card fee",
         )
         self.assertEqual(_expand_replacement_fee_query("When will my card arrive?"), "When will my card arrive?")
+        self.assertEqual(
+            _expand_replacement_fee_query("how much to replace my card lol"),
+            "how much to replace my card lol\nreplacement card fee",
+        )
+        self.assertEqual(
+            _expand_replacement_fee_query("card replcement fee?"),
+            "card replcement fee?\nreplacement card fee",
+        )
 
     def test_crypto_wallet_recovery_uses_only_unsupported_service_expansion(self):
         self.assertEqual(
@@ -60,6 +68,10 @@ class RealRetrieverTests(unittest.TestCase):
         self.assertEqual(
             _expand_replacement_fee_query("How do I add a wallet token?"),
             "How do I add a wallet token?",
+        )
+        self.assertEqual(
+            _expand_replacement_fee_query("Does the bank support recovering crypto wallets?"),
+            "Does the bank support recovering crypto wallets?\ncryptocurrency unsupported",
         )
 
     def test_crypto_wallet_recovery_promotes_reviewed_boundary_policy_for_reranking(self):
@@ -71,3 +83,12 @@ class RealRetrieverTests(unittest.TestCase):
 
         self.assertEqual(result["data"]["docs"][0]["document_id"], "NB-v1_1-fiat_currency_support-001")
         self.assertEqual(ranker.rerank.call_args.args[1][0]["document_id"], "NB-v1_1-fiat_currency_support-001")
+
+    def test_crypto_wallet_recovery_retains_boundary_after_reranking(self):
+        ranker = Mock()
+        ranker.rerank.side_effect = lambda query, candidates, top_k: candidates[1:top_k + 1]
+        backend = RealRetriever(reranker=ranker)
+
+        result = backend.retrieve("Can NovaBank recover my cryptocurrency wallet?", 3)
+
+        self.assertEqual(result["data"]["docs"][0]["document_id"], "NB-v1_1-fiat_currency_support-001")

@@ -232,4 +232,3 @@ class BM25Retriever:
                  "excerpt": self._documents[i].excerpt}
                 for i in matched[:top_k]]
         return {"status": "ok" if docs else "empty", "data": {"docs": docs}}
-

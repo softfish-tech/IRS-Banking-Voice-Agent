@@ -13,3 +13,7 @@ The package-level retrieve and real backend now convert invalid requests and
 runtime Exceptions into error/docs=[]. Startup errors still propagate explicitly;
 no silent mock fallback. Low-level BM25 methods retain ValueError for experiments.
 No rejection threshold has been enabled. C owns sufficiency decisions, E owns State.
+
+For the reviewed crypto-wallet-recovery unsupported-service boundary, B always
+keeps the boundary document in the ranked candidate set. C remains the sole
+owner of whether that document is admissible and sufficient to answer.
