@@ -15,10 +15,12 @@ evaluation, not a claim that all generated text has passed an LLM judge.
 | [Corrected raw-v1 aggregation](../artifacts/evaluation/unified_freeze_20261023_182527/report_rescored.json) | Same raw attempts; corrected legacy denominators only | `a308cb05aff1b91515d23e965be1e7f595deb406ee1843705995e252004402f1` |
 | [Legacy reconciliation-v2](../artifacts/evaluation/legacy_reconciliation_v2_20261023/report.json) | Legacy 24 sequences / 49 turns ×3 after C/fixture reconciliation | `e9be9fdd1963ed71679f1d548c9f1ba7bbcee168b89d2e584050834f147fc563` |
 | [Legacy reconciliation post-B0 fix](../artifacts/evaluation/legacy_reconciliation_post_b0_fix_20261023/report.json) | Same legacy population ×3 after the bounded-context safety repair | `ce2f9c51e30ee53ef8cf4b3670bc0d2391b860f1f1f95cbfc2ea19fade180fbd` |
+| [Legacy fixture reconciliation-v3](../artifacts/evaluation/legacy_fixture_reconciliation_v3_20261024/report.json) | Offline re-aggregation of the post-B0 attempts under the updated first-turn clarification fixture | `6d77a1b9791bf3e6dc2f589ce900af9e5f8963791fbd8f75bf87a8e309d412e5` |
 
-Raw-v1 remains immutable. The post-B0 reconciliation replaces the legacy
-state/workflow conclusion below. Its manifest records the submitted code
-revision; its `dirty` flag is caused only by an untracked local zip, not a
+Raw-v1 remains immutable. Fixture reconciliation-v3 replaces only the
+pre-context legacy diagnostic below; it is an offline re-aggregation of the
+post-B0 rows, not a new agent run. The post-B0 manifest records the submitted
+code revision; its `dirty` flag is caused only by an untracked local zip, not a
 tracked source diff. This remains a controlled cross-revision synthesis, not a
 manufactured same-revision total.
 
@@ -42,7 +44,7 @@ manufactured same-revision total.
 | --- | ---: | ---: | --- |
 | Legacy state/workflow, post-B0 reconciliation | 29/36 | 4/6 | Remaining safe workflow/action mismatches are reported separately. |
 | B0 bounded context, post-B0 reconciliation | 54/54 | 18/18 | All contextual oracles pass; no context safety violation. |
-| Pre-context legacy oracle, post-B0 reconciliation | 15/54 | 5/18 | Historical context-disabled diagnostic only. |
+| Pre-context legacy oracle, fixture reconciliation-v3 | 51/54 | 17/18 | Offline fixture alignment; not a new model-run result. |
 | Legacy technical fixture | 3 attempts | — | Not a real-module success denominator. |
 | Expanded reviewed multi-turn, raw-v1 | 117/117 | 13/13 | Structured actions, context, evidence, D permission and available text constraints passed. |
 
