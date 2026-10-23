@@ -103,9 +103,12 @@ def _candidate_rows(unified: dict, legacy: dict) -> list[dict]:
 
 async def evaluate(
     unified_path: Path, legacy_path: Path, *, dry_run: bool, resume_path: Path | None = None,
+    legacy_only: bool = False,
 ) -> dict:
     unified, legacy = _load(unified_path), _load(legacy_path)
     rows = _candidate_rows(unified, legacy)
+    if legacy_only:
+        rows = [row for row in rows if row["population"] == "legacy_multi_turn_reconciliation"]
     resume = _load(resume_path) if resume_path else None
     previous_by_key = {}
     if resume:
@@ -154,7 +157,7 @@ async def evaluate(
         in_scope=[x for x in items if x["scope"]=="answer_or_clarify"]
         scored=[x for x in in_scope if x["scored"]]
         summary[name]={"all_recorded_responses":len(items),"answer_or_clarify_candidates":len(in_scope),"scored":len(scored),"response_passed":sum(x.get("response_passed") is True for x in scored),"unscored":len(in_scope)-len(scored),"non_answer_structural_safety_only":sum(x["scope"]=="non_answer_structural_safety_only" for x in items)}
-    return {"evaluation":"final_response_semantic_v1","generated_at":datetime.now(UTC).isoformat(),"method":"llm_semantic_v1_minimum_acceptability","sources":{"unified_report":str(unified_path),"unified_sha256":_sha(unified_path),"legacy_reconciliation":str(legacy_path),"legacy_sha256":_sha(legacy_path)},"scope":{"judge_actions":["ANSWER","CLARIFY"],"non_answer":"structural safety only; no text-quality headline","temperature":0,"dry_run":dry_run},"resume":None if resume is None else {"source_report":str(resume_path),"source_sha256":_sha(resume_path),"reused_verdicts":len(verdicts)-retried_unavailable_candidates,"retried_unavailable_candidates":retried_unavailable_candidates},"summary":summary,"verdicts":verdicts}
+    return {"evaluation":"final_response_semantic_v1","generated_at":datetime.now(UTC).isoformat(),"method":"llm_semantic_v1_minimum_acceptability","sources":{"unified_report":str(unified_path),"unified_sha256":_sha(unified_path),"legacy_reconciliation":str(legacy_path),"legacy_sha256":_sha(legacy_path)},"scope":{"judge_actions":["ANSWER","CLARIFY"],"non_answer":"structural safety only; no text-quality headline","temperature":0,"dry_run":dry_run,"legacy_only":legacy_only},"resume":None if resume is None else {"source_report":str(resume_path),"source_sha256":_sha(resume_path),"reused_verdicts":len(verdicts)-retried_unavailable_candidates,"retried_unavailable_candidates":retried_unavailable_candidates},"summary":summary,"verdicts":verdicts}
 
 
 def main() -> None:
@@ -163,7 +166,8 @@ def main() -> None:
     p.add_argument("--legacy-report",type=Path,default=ROOT/"artifacts/evaluation/legacy_reconciliation_v2_20261023/report.json")
     p.add_argument("--output",type=Path,default=ROOT/"artifacts/evaluation/final_response_semantic_v1/report.json")
     p.add_argument("--resume-report",type=Path,help="Reuse all prior verdicts and retry only judge-unavailable rows.")
+    p.add_argument("--legacy-only",action="store_true",help="Judge only the legacy reconciliation population.")
     p.add_argument("--dry-run",action="store_true")
-    a=p.parse_args(); report=asyncio.run(evaluate(a.unified_report,a.legacy_report,dry_run=a.dry_run,resume_path=a.resume_report)); a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8"); print(json.dumps({"report_json":str(a.output),"summary":report["summary"]},ensure_ascii=False))
+    a=p.parse_args(); report=asyncio.run(evaluate(a.unified_report,a.legacy_report,dry_run=a.dry_run,resume_path=a.resume_report,legacy_only=a.legacy_only)); a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8"); print(json.dumps({"report_json":str(a.output),"summary":report["summary"]},ensure_ascii=False))
 
 if __name__=="__main__": main()
