@@ -6,6 +6,16 @@ This repository contains a modular prototype for a safe banking service agent fo
 
 The prototype uses synthetic data only. It does not connect to real banking systems, process real customer records, execute transactions, or make binding financial decisions.
 
+## Final evaluation summary
+
+The submission-level result and its scope/limitations are in
+[`docs/unified_freeze_final_report_20261023.md`](docs/unified_freeze_final_report_20261023.md).
+It is the single narrative entry point for the text-agent structured freeze,
+independent final-response semantic overlay, and separate local ASR smoke
+evaluation. Detailed fixture denominators and methods remain in
+[`docs/evaluation_catalog.md`](docs/evaluation_catalog.md) and
+[`docs/semantic_evaluation.md`](docs/semantic_evaluation.md).
+
 ## Current phase
 
 The project is currently in Phase 1: text-first integration design and mock readiness.
@@ -54,7 +64,7 @@ use real role-based access control.
 ## E2E integration data and checks
 
 E owns the frozen, versioned text E2E fixtures and their runner. The current
-hybrid suite contains 42 single-turn cases and 16 multi-turn sequences. It
+hybrid suite contains 42 single-turn cases and 24 multi-turn sequences. It
 uses real public B retrieval and real D recommendation through their public
 interfaces, while A/C remain scripted contract envelopes until their owners
 deliver implementations. The fixture status is explicitly
@@ -102,21 +112,41 @@ data minimisation, not a substitute for provider contractual and regional-data
 review.
 
 To enable optional LLM wording for C-approved, evidence-backed `ANSWER`
-responses, also set `BANKING_AGENT_RESPONSE_GENERATOR=llm` and
+ responses, also set `BANKING_AGENT_RESPONSE_GENERATOR=llm` and
 `BANKING_AGENT_LLM_MODEL` (the model name supported by the chosen
 OpenAI-compatible endpoint). It is off by default. The generator can only cite
 documents C has approved; invalid or unavailable LLM output falls back to the
 deterministic evidence response. It is never invoked for safety, complaint,
 recommendation, clarification, or abstention decisions.
 
+Recommendation presentation is a separate, opt-in delivery feature:
+set `BANKING_AGENT_RECOMMENDATION_RESPONSE_GENERATOR=llm` together with
+`BANKING_AGENT_LLM_MODEL`. It runs only after C has permitted `RECOMMEND` and
+D has returned one or more eligible synthetic items. The model can supply only
+a short non-factual introduction; E always renders D's product names, order,
+and reasons unchanged. Invalid or unavailable output falls back to the same
+deterministic recommendation list, so this setting cannot alter eligibility or
+which product is shown.
+
 For the delivery configuration, LLMs are limited to C-approved clarification
 wording and C-approved evidence-grounded answers. LLM understanding and query
 rewriting are experimental because they can alter A/B inputs: they require both
 their individual setting (`BANKING_AGENT_LLM_UNDERSTANDING=llm` or
 `BANKING_AGENT_LLM_QUERY_REWRITE=llm`) **and**
-`BANKING_AGENT_LLM_MIDDLE_LOOP=enabled`. The latter is `off` by default.
+`BANKING_AGENT_LLM_MIDDLE_LOOP=enabled`. The latter is `off` by default. When
+understanding is enabled, it runs in `shadow` mode by default and records a
+sanitized draft comparison without changing A's result; set
+`BANKING_AGENT_LLM_UNDERSTANDING_MODE=fuse` only after reviewed shadow results.
 `BANKING_AGENT_LLM_CLARIFICATION=llm` remains available without that flag,
 because C has already selected `CLARIFY` before it runs.
+
+The bounded B0 multi-turn context path is off by default. Set
+`BANKING_AGENT_CONTEXT_MEMORY=enabled` only together with the configured LLM
+understanding/Fuse path. E then supplies at most three completed public turns
+from the same conversation to the typed understanding draft. A context draft
+may clarify an explicit reference in the current turn, but cannot create a C
+decision or state patch; unavailable, ambiguous, or invalid context falls back
+to current-turn behavior.
 
 After configuring a compatible provider in the ignored `.env`, run the small
 paid, synthetic-only terminal smoke test with
@@ -138,12 +168,17 @@ adapter.
 The demo is fixed to the multilingual `large-v3-turbo-q5_0` Whisper model. It
 is not committed to Git and must be installed by a developer or evaluator once;
 the application does not ask end users to select or download a model. Its
-measured ASCEND smoke-evaluation result on this project is 22.26% mixed-token
-error rate (80 generic public clips). This is not a banking-domain quality or
-safety claim.
+measured ASCEND smoke-evaluation result on this project is 21.12% mixed-token
+error rate on the 60 mixed-language clips, with all 80 selected generic public
+clips transcribed successfully. This is not a banking-domain quality or safety
+claim; the submission-level summary is in the final evaluation report above.
 
-Clone and build the official `whisper.cpp` source, then download the model into
-the ignored `models/` directory. On Apple Silicon, build the tested Metal
+### Install the tested ASR model
+
+Clone and build the official `whisper.cpp` source, then explicitly download
+the tested multilingual `large-v3-turbo-q5_0` model into the ignored `models/`
+directory. Model download is a developer setup step; the application never
+downloads a model automatically. On Apple Silicon, build the tested Metal
 configuration:
 
 ```bash
@@ -151,6 +186,7 @@ git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git /private/tmp/whi
 cmake -S /private/tmp/whisper-cpp -B /private/tmp/whisper-cpp/build \
   -DGGML_METAL=ON -DGGML_METAL_EMBED_LIBRARY=ON
 cmake --build /private/tmp/whisper-cpp/build --config Release -j 4
+mkdir -p models
 /private/tmp/whisper-cpp/models/download-ggml-model.sh large-v3-turbo-q5_0 "$PWD/models"
 shasum -a 256 models/ggml-large-v3-turbo-q5_0.bin
 ```

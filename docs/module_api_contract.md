@@ -38,6 +38,16 @@ The canonical shared fields and enums are implemented in [`../src/banking_agent/
 | `session_id` | Current session identifier. |
 | `user_text` | Text to analyse. |
 
+E may optionally invoke its context-aware Fusion adapter with an E-owned,
+bounded `ConversationContext` in addition to this unchanged A public input.
+The baseline A adapter always receives the current `user_text` alone. The
+context window contains at most three complete, successful, public
+user/assistant pairs from the same conversation.  Each retained user text is
+bounded to 2,000 characters and each retained assistant text to 8,000
+characters.  The window is enabled only by
+`BANKING_AGENT_CONTEXT_MEMORY=enabled`. It is untrusted context, not a new
+instruction or a source of business state.
+
 ```json
 {
   "session_id": "session-001",
@@ -80,7 +90,7 @@ The canonical shared fields and enums are implemented in [`../src/banking_agent/
 ```json
 {
   "query": "What are the bank's card replacement fees?",
-  "top_k": 3
+  "top_k": 5
 }
 ```
 
@@ -139,6 +149,17 @@ C receives the business-decision view of `AgentState`, not UI, API, or logging d
 }
 ```
 
+For B0 context memory, `AgentState` also carries E-owned request-local fields:
+`conversation_context`, `context_reference_resolved`, and
+`resolved_user_text`. C must continue to apply all urgent-risk, complaint,
+account-operation, handoff and recommendation-permission rules against the
+current raw `user_text`. It may use `context_reference_resolved` only to avoid
+treating a previously context-free follow-up as context-free when E's typed
+resolver has high-confidence, non-ambiguous support. `resolved_user_text` is
+available only in that condition and may be used for B query/evidence scope;
+it never updates canonical business state or replaces the raw text for safety
+checks.
+
 ### Output
 
 ```json
@@ -168,12 +189,18 @@ to this sequencing needs a coordinated C/E interface update.
 
 The real C implementation also exposes an optional public
 `select_relevant_evidence(question, docs)` hook. E may call it between B and
-the second C check to narrow B's ranked *candidates* to excerpts C permits E
-to render. The current C policy retains the highest-ranked individually
-answerable excerpt, avoiding a response that mixes mutually conditional policy
-branches. It does not return a business decision and does not replace the
-mandatory second `decide`; rule implementations without this hook remain
-compatible with the basic two-C-call contract.
+the second C check to remove malformed or duplicate candidates, but it does
+not perform semantic ranking or collapse ordinary B results to one document.
+The sole current narrow exception is crypto-wallet recovery: C retains only
+its reviewed unsupported-service boundary document, because no other document
+is admissible evidence for that conclusion.
+E passes the bounded, C-admissible evidence set to the grounded response
+generator. C's mandatory second `decide` still owns answer permission and
+checks that at least one admissible document supports the requested policy
+fact; it retains hard business conditions such as requiring a replacement
+reason before applying a reason-specific card fee. The response model must
+cite only document IDs from this C-admissible set and must not combine facts
+from mutually conditional sources.
 
 ## D — Recommendation / Synthetic Data
 
@@ -236,26 +263,52 @@ D owns product-level eligibility filtering and ranking. It does not bypass C's c
 
 E may optionally use an LLM only as a typed assistant: alongside A to propose
 an operational intent/entity/risk draft, after C permits `ANSWER` to rewrite a
-retrieval query, and after C returns `CLARIFY` to phrase a question. E validates
+retrieval query or render a grounded answer, after C returns `CLARIFY` to
+phrase a question, and after C permits `RECOMMEND` and D has returned items to
+write a non-factual introduction. E validates
 each result and falls back to the existing input/template on failure. The LLM
 cannot produce a `Decision`, state patch, or direct tool call; C remains the
 business and safety authority.
 
+When B0 context memory is enabled, the typed understanding draft may return a
+boolean context-resolution declaration and a bounded restatement of the
+current request. E accepts it only for an explicit current-text reference, a
+non-ambiguous high-confidence draft, available same-session history, and no
+high-risk signal. Provider failure, invalid output, an ambiguous reference, or
+a missing history window leaves the existing current-turn path unchanged.
+
 The delivery configuration keeps understanding fusion and retrieval-query
 rewriting disabled unless `BANKING_AGENT_LLM_MIDDLE_LOOP=enabled` is explicitly
-set. C-approved clarification wording and C-approved grounded answer rendering
-remain available independently. This prevents an optional provider from
-silently changing A's route or B's query during normal delivery runs.
+set. When LLM understanding is enabled, `BANKING_AGENT_LLM_UNDERSTANDING_MODE`
+defaults to `shadow`: E validates and traces a draft but passes A's original
+result to C. `fuse` is an additional explicit opt-in and may only use a draft
+for A `UNKNOWN`/low-confidence results, an explicit context reference together
+with an LLM draft marked `ambiguous=true` and `UNKNOWN` (which becomes safe
+`UNKNOWN`), a higher risk signal supported by an explicit urgent text signal,
+or a non-ambiguous, materially higher-
+confidence correction within the bounded low-risk `policy_enquiry` /
+`card_fee_enquiry` pair. C-approved clarification wording and
+C-approved grounded answer rendering remain available independently. This
+prevents an optional provider from silently changing A's route or B's query
+during normal delivery runs.
 
 When any of these helpers is enabled, E records a sanitized `E.LLM.understanding`,
-`E.LLM.query_rewrite`, `E.LLM.clarification`, or `E.LLM.grounded_response`
+`E.LLM.query_rewrite`, `E.LLM.clarification`, `E.LLM.grounded_response`, or
+`E.LLM.recommendation_presentation`
 trace event.  Its status is `ok` when a validated typed result is used or
-`fallback` when the deterministic path is retained.  Prompts, provider output,
+`fallback` when the deterministic path is retained. A grounded-response
+fallback may carry a bounded technical category such as `invalid_citation` or
+`invalid_response`; prompts, provider output,
 credentials, and customer text are never added to the trace.
 Each LLM trace event may additionally contain numeric `attempts`,
 `prompt_tokens`, `completion_tokens`, and `total_tokens` when the provider
 returns them.  These are operational metrics only. The current non-streaming
 transport records full-call duration, not time-to-first-token.
+
+When a non-empty B0 window is supplied to a context-aware Fusion adapter, E
+also emits `E.context_memory` with only the bounded window size category (for
+example, `window_2`). It never records the dialogue content, resolved text, or
+the model's raw output in a trace.
 
 ### E — grounded response generation (optional)
 
@@ -264,10 +317,31 @@ generator. It receives only the user question and B documents already approved
 by C, and must return Pydantic-validated `answer` text plus one or more
 `citation_ids` drawn from those documents. E appends the cited source metadata
 itself. Invalid output, an unavailable provider, or an unrecognised citation
-falls back to E's deterministic evidence renderer; it never changes C's
-decision, State patch, citations, or tool sequence. The generator is not run
-for `ABSTAIN`, `CLARIFY`, `ESCALATE`, `BLOCK`, complaint, or recommendation
-routes.
+causes one bounded render-only retry against the same C-approved documents;
+if that retry also fails, E falls back to its deterministic evidence renderer.
+The retry never changes C's decision, State patch, B query, evidence set, or
+tool sequence. The generator is not run for `ABSTAIN`, `CLARIFY`, `ESCALATE`,
+`BLOCK`, complaint, or recommendation routes.
+
+### E — recommendation presentation generation (optional)
+
+After C permits `RECOMMEND` and D returns one or more items, E may invoke a
+separate presentation generator only when
+`BANKING_AGENT_RECOMMENDATION_RESPONSE_GENERATOR=llm`. It may return a short,
+non-factual introduction. E rejects text containing product names, eligibility
+conditions, customer facts, monetary values, rates, fees, risk, benefits, or
+ranking claims, and falls back to the deterministic renderer on any failure.
+E itself always inserts D's original product names, rank order and reasons;
+the model never returns or selects product IDs. This helper cannot run before
+C/D, change their results, or add product facts not represented in D's dataset.
+
+The deterministic renderer may express a narrowly reviewed implication only
+when C has selected its corresponding boundary evidence. For example, the
+reviewed fiat-currency boundary document may be rendered as “crypto wallet
+recovery is not supported” for a crypto-wallet recovery question because C's
+public evidence assessment has already established that cryptocurrency itself
+is unsupported. E must not infer comparable service boundaries from arbitrary
+documents or use this rendering path after C declines `ANSWER`.
 
 ## Empty results and failures
 

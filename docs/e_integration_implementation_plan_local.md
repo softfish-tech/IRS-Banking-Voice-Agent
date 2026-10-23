@@ -30,9 +30,10 @@ The current single-turn baseline has the following properties:
 - performance reports include request latency, LLM attempts, fallbacks,
   latency, and token usage. Time-to-first-token is intentionally `null` until
   a streaming provider transport is used;
-- current multi-turn support preserves canonical complaint, handoff, consent,
-  and conversation-version state, but does **not** yet provide robust semantic
-  memory for references such as “that fee” or “the second option”.
+- multi-turn support preserves canonical complaint, handoff, consent, and
+  conversation-version state, and provides an opt-in B0 bounded recent-public
+  context window (at most three successful pairs) for reviewed references;
+  this is not yet durable cross-session semantic memory.
 
 This is a synthetic banking project. No customer data, credentials, account
 numbers, raw voice recordings, model caches, or provider secrets may enter the
@@ -152,6 +153,71 @@ confusing conversational context with regulated business state. Example: after
 the assistant explains a replacement fee, “Can I waive that?” should resolve
 the fee and card context; it must not invent a waiver policy or mutate state.
 
+### B0. Agreed first delivery slice — bounded recent-turn memory
+
+The first implementation is intentionally smaller than durable semantic memory:
+on **every** turn, E supplies the understanding layer with a bounded window of
+the most recent two or three public `user` / `assistant` turn pairs plus the
+current user text. This supports ordinary follow-ups, multiple related
+questions, and topic changes; it is not limited to the turn after `CLARIFY`.
+The assistant entry is the public response actually shown to the user, whether
+it was template-rendered or LLM-assisted, not an internal prompt or trace.
+
+The understanding prompt must state that the current user text is the request
+to classify. History may only resolve a reference or a condition; it cannot be
+treated as a fresh instruction, used to execute a prior request, or override a
+clear new topic in the current text. A-only remains able to analyse the current
+turn independently. C remains the sole authority for actions, business state,
+and B/D permissions.
+
+The initial boundary is deliberately narrow:
+
+- retain only the current session's latest 2--3 user/assistant pairs; expire
+  them with the conversation and support an explicit reset;
+- retain the window for every turn, while keeping canonical complaint,
+  handoff, and consent state separate and C-owned;
+- pass bounded history only to the typed understanding path. A validated
+  restatement of the **current** request may subsequently be used as B's query
+  and C's evidence-scope input, but history itself is never supplied to B, D,
+  or response rendering as an instruction source;
+- treat history as untrusted user-visible content, including prompt-injection
+  text; current-turn safety guards and LLM failure fallback remain unchanged;
+- trace only context availability, number of retained turns, selected mode,
+  and fallback/provenance category--never the raw dialogue window.
+
+This MVP is sufficient for the current short synthetic conversations. It does
+not claim long-term memory, a free-form history summary, user preferences, or
+automatic carry-over of a prior topic. Those remain later, separately evaluated
+extensions.
+
+Initial data and acceptance work for this slice adds compact three-turn
+fixtures for: follow-up questions (for example, lost card -> "what about the
+fee and delivery time?"), clarification plus user-supplied condition, explicit
+topic switching, multiple related requests, contradiction/cancellation, and
+history-injection text. The primary measures are context-dependent route
+accuracy, incorrect old-topic carry-over, safe clarification when unresolved,
+and zero new B/D or high-risk-route violations. Run A-only, context shadow,
+and guarded fuse modes before enabling context-aware fuse by default.
+
+**Implementation status (2026-10-23):** the opt-in window, current-turn-first
+typed prompt, controlled `resolved_user_text`, raw-text safety boundary, and
+sanitized context trace are implemented. The existing 18 `semantic_context`
+sequences now run through the real Fuse evaluator with the B0 window. Their
+legacy fallback `expected` values remain unchanged for scripted regression;
+each has a separately reviewed `semantic_oracle.b0_expected` with contextual
+route, reason, resolution requirement, and rationale. The real evaluator
+reports these as a separate B0 scorecard. A later expanded corpus remains
+necessary before claiming broad multi-turn readiness.
+
+**B0 semantic freeze (2026-10-23):**
+[`artifacts/evaluation/b0_multi_turn_semantic_freeze_v1/report.json`](../artifacts/evaluation/b0_multi_turn_semantic_freeze_v1/report.json)
+records one complete real Fuse run with context memory and full LLM assistance:
+all 18 reviewed semantic follow-up oracles passed (`18/18`). The run resolved
+seven follow-ups into a controlled query; the remaining cases correctly used
+clarification, complaint-state, topic-switch, or urgent-risk boundaries. This
+freezes the bounded B0 population only; it does not replace the planned wider
+three-plus-turn corpus or final-response quality evaluation.
+
 ### B1. Memory model and boundaries
 
 Introduce an E-owned, versioned conversation-context record separate from the
@@ -197,18 +263,28 @@ merging two summaries blindly.
 
 ### B3. Incremental implementation
 
-1. Implement deterministic memory for last intent, active subject, pending
-   clarification slots, selected document IDs, and current synthetic product
-   references.
-2. Add multi-turn fixtures with explicit gold context dependencies and test
-   atomic persistence/version conflicts.
-3. Add a typed `ContextDraft` in shadow mode only for references the
-   deterministic resolver marks unresolved.
-4. Activate LLM-assisted resolution behind a flag after comparison with the
-   deterministic baseline; the draft can propose context links or `CLARIFY`,
-   never a business action/state patch.
-5. Add expiry, reset/new-topic behavior, and user-visible recovery when context
-   is stale or wrong.
+1. **Complete:** B0's bounded recent-turn window and current-turn-first prompt
+   contract use persisted public pairs, a maximum three-turn window, and the
+   explicit `BANKING_AGENT_CONTEXT_MEMORY=enabled` flag; there is no second
+   durable memory store.
+2. **In review:** maintain explicit context, safety, evidence, and response
+   oracles in the expanded 13-sequence / 39-turn candidate fixture, including
+   a direct `CLARIFY → damaged-condition → ANSWER` closure (MTX-013). The
+   project owner approved MTX-002's `not_required` resolution on 2026-10-23,
+   so this population is now a freeze denominator.
+3. **Complete for B0:** evaluate context-aware Fuse separately from the
+   legacy context-disabled scripted oracle; do not let context success rewrite
+   the baseline regression contract.
+4. **Complete:** MTX-013's real full-chain candidate regression passed 3/3
+   turns with Fuse, bounded context, and final-response assistance. The
+   unified three-repeat runner, explicit multi-turn metric denominators, and
+   controlled technical fail-closed injection are implemented. Representative
+   one-repeat smokes passed for MTX-013 clarification closure and MTX-004
+   topic switch. Do not start its full real experiment without the project
+   owner's explicit request.
+5. Add durable active-subject, pending-slot, selected-evidence, and
+   product-reference fields only where this bounded-window evaluation shows a
+   clear need; do not introduce them merely to improve a fixture score.
 
 ### B4. Multi-turn acceptance measures
 
@@ -225,6 +301,17 @@ Report by sequence and turn number:
 No multi-turn scenario passes merely because its final text sounds plausible:
 the expected referent, allowed modules, final C action, state patch, evidence,
 and response constraints must all match the fixture.
+
+### B5. Delivery freeze handoff
+
+After B0 and its focused context fixtures pass, do not describe the result as
+the final system acceptance by itself. Run the three-repeat full-system freeze
+defined in `docs/evaluation_catalog.md#planned-full-system-freeze-acceptance`.
+That run combines the disjoint 88-case single-turn business population, the
+two technical fail-closed cases, and all multi-turn sequences under one pinned
+real-module/Fuse/final-response configuration. It reports appropriate outcome,
+resolved-answer, safe-non-answer, RAG/grounding, recommendation, stability,
+latency, and token metrics separately.
 
 ## 5. Workstream C — harder user-input and semantic evaluation data
 

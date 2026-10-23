@@ -57,8 +57,8 @@ only after RECOMMEND.
 C checks every retrieved excerpt because E's response builder renders all
 retrieved excerpts on ANSWER. Ranking scores are not treated as answerability
 probabilities. A generic replacement-fee question is clarified when B only
-returns a reason-specific price. A specified lost-card fee may be answered
-from the matching maintained corpus excerpt. A delivery time or a separate
+returns a reason-specific price. An explicit lost-card condition is routed to
+card-security escalation before retrieval, including a fee question. A delivery time or a separate
 shipping charge does not satisfy a replacement-fee question.
 
 ## Joint work before claiming full end-to-end alignment
