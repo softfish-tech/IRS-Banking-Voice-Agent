@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-004",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "anaphora",
     "required_resolution": "Clarify which card property the user means.",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "CONTEXT_REQUIRED", "resolution": "forbidden", "rationale": "‘the same card’ does not identify a property or task; do not invent one from history."}
   },
   "initial_state": {
     "complaint_status": "NONE",

@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-006",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "pronoun",
     "required_resolution": "Can I dispute the replacement-card fee?",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "HANDLE_COMPLAINT", "reason_code": "FEE_COMPLAINT", "resolution": "required", "rationale": "‘it’ resolves to the prior fee; disputing it opens a fee complaint rather than an evidence answer."}
   },
   "initial_state": {
     "complaint_status": "NONE",

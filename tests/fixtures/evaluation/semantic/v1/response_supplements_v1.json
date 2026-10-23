@@ -1,0 +1,27 @@
+{
+  "schema_version": "response-supplements-v1",
+  "purpose": "Minimum final-text constraints added to previously structural-only reviewed semantic overlays.",
+  "complex": {
+    "AOC-AMB-01": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bfee\\b", "\\bclarif\\w*\\b", "\\?"]}]},
+    "AOC-AMB-02": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bagain\\b", "\\bclarif\\w*\\b", "\\?"]}]},
+    "AOC-AMB-03": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bother\\b", "\\bwhich\\b", "\\?"]}]},
+    "AOC-AMB-04": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bcard\\b", "\\bwhat kind\\b", "\\?"]}]},
+    "AOC-AMB-05": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\brefer\\b", "\\bwhich\\b", "\\?"]}]},
+    "AOC-AMB-06": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bwhich\\b", "\\breferr\\w*\\b", "\\?"]}]},
+    "AOC-EVID-02": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "AOH-AMB-01": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\bwhich\\b", "\\boption\\b", "\\?"]}]},
+    "AOH-AMB-02": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\brefer\\b", "\\bwhat\\b", "\\?"]}]}
+  },
+  "expanded": {
+    "MTX-001:1": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-001:2": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-002:1": {"required_fact_groups": [{"id": "replacement_order_steps", "any_of": ["\\b(?:authenticate|verify)\\b", "\\border id\\b", "\\b(?:replacement|order)\\b"]}]},
+    "MTX-004:3": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-006:1": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-007:1": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-007:2": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\btransfer\\b", "\\bwhich\\b", "\\?"]}]},
+    "MTX-010:2": {"required_fact_groups": [{"id": "replacement_reason", "any_of": ["\\b(?:lost|stolen|damage|damaged|compromised|reason)\\b", "\\?"]}]},
+    "MTX-010:3": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\brefer\\b", "\\bwhat\\b", "\\?"]}]},
+    "MTX-012:1": {"required_fact_groups": [{"id": "clarification", "any_of": ["\\btransfer\\b", "\\bdetail\\w*\\b", "\\?"]}]}
+  }
+}

@@ -95,8 +95,6 @@
         "action": "CLARIFY",
         "module_call_order": [
           "A",
-          "C",
-          "B",
           "C"
         ],
         "state_after": {

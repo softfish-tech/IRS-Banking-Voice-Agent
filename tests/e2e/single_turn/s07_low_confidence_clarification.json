@@ -148,6 +148,9 @@
         "status": "ok",
         "action": "CLARIFY",
         "reason_code": "LOW_INTENT_CONFIDENCE",
+        "allowed_reason_codes": [
+          "UNKNOWN_INTENT"
+        ],
         "module_call_order": [
           "A",
           "C"

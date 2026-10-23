@@ -1,0 +1,23 @@
+{
+  "schema_version": "expanded-multi-turn-metric-tags-v1",
+  "fixture": "expanded_e2e_annotations.json",
+  "purpose": "Reviewed denominator tags for multi-turn diagnostic metrics; these do not alter the C/E action or evidence oracle.",
+  "tags": [
+    {"sequence_id": "MTX-001", "turn_id": 2, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-001", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-002", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-004", "turn_id": 2, "metrics": ["explicit_topic_switch", "stale_context_prevention"]},
+    {"sequence_id": "MTX-004", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-006", "turn_id": 2, "metrics": ["explicit_topic_switch", "stale_context_prevention"]},
+    {"sequence_id": "MTX-007", "turn_id": 2, "metrics": ["unresolved_reference_clarification"]},
+    {"sequence_id": "MTX-007", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-008", "turn_id": 2, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-008", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-010", "turn_id": 2, "metrics": ["stale_context_prevention"]},
+    {"sequence_id": "MTX-010", "turn_id": 3, "metrics": ["context_reference_resolution"]},
+    {"sequence_id": "MTX-011", "turn_id": 2, "metrics": ["stale_context_prevention"]},
+    {"sequence_id": "MTX-012", "turn_id": 2, "metrics": ["explicit_topic_switch", "stale_context_prevention"]},
+    {"sequence_id": "MTX-013", "turn_id": 2, "metrics": ["context_reference_resolution", "clarification_closure"]},
+    {"sequence_id": "MTX-013", "turn_id": 3, "metrics": ["context_reference_resolution"]}
+  ]
+}

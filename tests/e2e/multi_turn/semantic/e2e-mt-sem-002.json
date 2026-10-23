@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-002",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "anaphora",
     "required_resolution": "Does the replacement-card fee include delivery?",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "REPLACEMENT_REASON_REQUIRED", "resolution": "required", "rationale": "Delivery is about the prior replacement card, but the policy branch still needs the replacement reason."}
   },
   "initial_state": {
     "complaint_status": "NONE",

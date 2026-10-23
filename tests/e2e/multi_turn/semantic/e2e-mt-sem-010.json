@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-010",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "high_risk_interruption",
     "required_resolution": "Unauthorised transaction must override prior card-fee context.",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "ESCALATE", "reason_code": "HIGH_RISK_TRANSACTION", "resolution": "forbidden", "rationale": "The current unauthorised-use report overrides all prior context."}
   },
   "initial_state": {
     "complaint_status": "NONE",

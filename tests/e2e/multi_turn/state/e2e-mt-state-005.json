@@ -1,0 +1,12 @@
+{
+  "sequence_id": "E2E-MT-STATE-005",
+  "status": "draft_pending_c_approval",
+  "type": "business_state",
+  "validation": {"orchestrator_contract": "verified_scripted", "c_policy_approval": "pending", "context_contract_status": "not_applicable"},
+  "initial_state": {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "GRANTED"},
+  "turns": [
+    {"turn_id": 1, "user_text": "I do not recognise this card fee.", "expected_state_before": {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "GRANTED"}, "scripted_module_envelopes": {"A": {"status": "ok", "data": {"intent": "fee_complaint", "confidence": 0.91, "risk_level": "MEDIUM", "entities": []}}, "C": [{"status": "ok", "data": {"action": "HANDLE_COMPLAINT", "reason_code": "FEE_COMPLAINT", "next_state": {"complaint_status": "OPEN"}}}]}, "expected": {"status": "ok", "action": "HANDLE_COMPLAINT", "module_call_order": ["A", "C"], "state_after": {"complaint_status": "OPEN", "handoff_status": "NOT_REQUIRED", "consent": "GRANTED"}, "public_message_kind": "complaint"}},
+    {"turn_id": 2, "user_text": "Can I get a savings product instead?", "expected_state_before": {"complaint_status": "OPEN", "handoff_status": "NOT_REQUIRED", "consent": "GRANTED"}, "scripted_module_envelopes": {"A": {"status": "ok", "data": {"intent": "product_recommendation", "confidence": 0.90, "risk_level": "LOW", "entities": []}}, "C": [{"status": "ok", "data": {"action": "BLOCK", "reason_code": "UNRESOLVED_COMPLAINT", "next_state": {}}}]}, "expected": {"status": "ok", "action": "BLOCK", "module_call_order": ["A", "C"], "modules_not_called": ["B", "D"], "state_after": {"complaint_status": "OPEN", "handoff_status": "NOT_REQUIRED", "consent": "GRANTED"}, "public_message_kind": "blocked"}}
+  ],
+  "sequence_assertions": {"state_is_carried_between_turns": true, "unauthorised_d_call_count": 0}
+}

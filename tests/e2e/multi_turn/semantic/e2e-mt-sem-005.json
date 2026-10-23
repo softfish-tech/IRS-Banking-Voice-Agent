@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-005",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "pronoun",
     "required_resolution": "When will the replacement card arrive?",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "REPLACEMENT_REASON_REQUIRED", "resolution": "required", "rationale": "‘it’ resolves to the replacement card, but delivery timing remains reason-specific."}
   },
   "initial_state": {
     "complaint_status": "NONE",

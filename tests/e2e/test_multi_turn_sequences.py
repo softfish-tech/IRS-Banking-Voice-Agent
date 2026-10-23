@@ -21,10 +21,28 @@ def load_sequences() -> list[dict]:
 
 
 class MultiTurnSequenceTests(unittest.IsolatedAsyncioTestCase):
+    def test_semantic_context_sequences_have_complete_b0_oracles(self) -> None:
+        semantic = [
+            sequence for sequence in load_sequences()
+            if sequence["type"] == "semantic_context"
+        ]
+        self.assertEqual(len(semantic), 18)
+        for sequence in semantic:
+            with self.subTest(sequence=sequence["sequence_id"]):
+                self.assertEqual(sequence["status"], "b0_oracle_ready")
+                self.assertEqual(
+                    sequence["validation"]["context_contract_status"],
+                    "b0_oracle_ready",
+                )
+                expected = sequence["semantic_oracle"]["b0_expected"]
+                self.assertIn(expected["action"], {"ANSWER", "ABSTAIN", "BLOCK", "CLARIFY", "ESCALATE", "HANDLE_COMPLAINT", "RECOMMEND"})
+                self.assertIn(expected["resolution"], {"required", "forbidden", "not_required"})
+                self.assertTrue(expected["rationale"])
+
     async def test_sequences_preserve_declared_business_state(self) -> None:
         sequences = load_sequences()
-        self.assertEqual(len(sequences), 16)
-        self.assertEqual(len({item["sequence_id"] for item in sequences}), 16)
+        self.assertEqual(len(sequences), 24)
+        self.assertEqual(len({item["sequence_id"] for item in sequences}), 24)
 
         for sequence in sequences:
             with self.subTest(sequence=sequence["sequence_id"]):
@@ -46,6 +64,11 @@ class MultiTurnSequenceTests(unittest.IsolatedAsyncioTestCase):
                     ).handle(initial)
                     expected = turn["expected"]
                     self.assertEqual(response.status, expected["status"])
+                    if response.status == "ok":
+                        self.assertIsNotNone(response.decision)
+                        self.assertEqual(response.decision.action.value, expected["action"])
+                    else:
+                        self.assertNotIn("action", expected)
                     self.assertEqual(modules.calls, expected["module_call_order"])
                     for module in expected.get("modules_not_called", []):
                         self.assertNotIn(module, modules.calls)

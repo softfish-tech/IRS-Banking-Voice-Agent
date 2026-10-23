@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-001",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "ellipsis",
     "required_resolution": "What is the replacement-card fee?",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "REPLACEMENT_REASON_REQUIRED", "resolution": "required", "rationale": "The follow-up inherits the replacement-fee subject, but the replacement reason remains required."}
   },
   "initial_state": {
     "complaint_status": "NONE",

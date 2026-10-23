@@ -1,16 +1,17 @@
 {
   "sequence_id": "E2E-MT-SEM-012",
-  "status": "draft_pending_c_approval",
+  "status": "b0_oracle_ready",
   "type": "semantic_context",
   "validation": {
     "orchestrator_contract": "verified_scripted",
     "c_policy_approval": "pending",
-    "context_contract_status": "not_implemented"
+    "context_contract_status": "b0_oracle_ready"
   },
   "semantic_oracle": {
     "relation": "ambiguous_reference",
     "required_resolution": "Clarify the unspecified prerequisite.",
-    "baseline": "context_disabled"
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "CONTEXT_REQUIRED", "resolution": "forbidden", "rationale": "No prerequisite is named, so history cannot establish a safe answer scope."}
   },
   "initial_state": {
     "complaint_status": "NONE",
