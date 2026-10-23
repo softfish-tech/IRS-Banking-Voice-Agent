@@ -94,12 +94,13 @@ semantic rates.
 
 ## Independent final-response semantic overlay
 
-The derived response-judge report is
-[`final_response_semantic_v1/report_retry_v2.json`](../artifacts/evaluation/final_response_semantic_v1/report_retry_v2.json)
-(SHA-256 `9e6eea2aad6d5f03785a0c2e6eb1b69981008b50ec8d9e613a269bfbf0325ef9`).
-It reads the retained response text; it did not rerun A/B/C/D/E or alter any
-structured-freeze row. Only reviewed `ANSWER` and `CLARIFY` text enters this
-semantic denominator. All other actions stay in their existing structural
+The merged response-judge report is
+[`final_response_semantic_v2/report.json`](../artifacts/evaluation/final_response_semantic_v2/report.json)
+(SHA-256 `dc416ed6c74a946756d1c1abca444a42798c373e05984814660b7847e087ef3d`).
+It preserves the earlier core/complex/expanded verdicts and replaces their
+unscored legacy population with the separately judged post-B0 legacy report;
+it does not rerun A/B/C/D/E. Only reviewed `ANSWER` and `CLARIFY` text enters
+this semantic denominator. All other actions stay in their existing structural
 safety metrics.
 
 | Population | Text passed / scored | Judge unavailable | Not in text denominator |
@@ -107,15 +108,17 @@ safety metrics.
 | Core single-turn | 33/33 | 0 | 87 structural-action rows |
 | Complex single-turn | 55/55 | 2 | 87 structural-action rows |
 | Expanded multi-turn | 60/64 | 2 | 51 structural-action rows |
-| **Reviewed-text total** | **148/152 (97.4%)** | **4** | **225 structural-action rows** |
-| Legacy multi-turn | Pending judge run | — | 72 reviewed `ANSWER`/`CLARIFY` attempts; 75 structural-only rows |
+| Legacy multi-turn | 63/72 | 0 | 75 structural-action rows |
+| **Reviewed-text total** | **211/224 (94.2%)** | **4** | **300 structural-action rows** |
 
-The four scored text failures are all expanded-multi-turn clarifications that
-ask which card or fee is meant rather than the required replacement reason.
-The four unavailable rows exhausted the judge's structured-output retries and
-are explicitly unscored, not treated as passes or agent failures. The earlier
-judge request-ID collision was corrected; the retry report reused 519 prior
-verdicts and retried only the nine unavailable rows.
+The 13 scored text failures comprise four expanded-multi-turn clarifications
+and nine legacy clarifications that ask for a card type, fee reference, or
+other context rather than the required replacement reason. They are text-quality
+failures, not safety violations. The four unavailable rows exhausted the
+judge's structured-output retries and are explicitly unscored, not treated as
+passes or agent failures. The earlier judge request-ID collision was corrected;
+the retry report reused 519 prior verdicts and retried only the nine unavailable
+rows.
 
 ## Post-freeze B0 repair evidence and full legacy confirmation
 

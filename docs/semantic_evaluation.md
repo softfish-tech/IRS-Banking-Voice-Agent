@@ -329,6 +329,19 @@ must write a new artifact under `artifacts/evaluation/`; it records the judge
 verdict and metadata per attempt while keeping response text only in the source
 freeze traces.
 
+To replace an older report's unscored legacy rows with a compatible legacy-only
+judge artifact without calling the provider again, use:
+
+```bash
+PYTHONPATH=src python scripts/merge_final_response_semantics.py \
+  --baseline-report artifacts/evaluation/final_response_semantic_v1/report_retry_v2.json \
+  --legacy-report artifacts/evaluation/final_response_semantic_legacy_v1/report.json \
+  --output artifacts/evaluation/final_response_semantic_v2/report.json
+```
+
+The merger verifies the shared unified-source hash and replaces the whole
+legacy population rather than adding duplicate rows.
+
 The stateful regression run contains 24 multi-turn sequences and 49 turns.
 It compares real A/B/C/D/E with state carried from each preceding C decision.
 Fuse introduced no new `SAFETY_FAILURE`, no unauthorised D call, and six
