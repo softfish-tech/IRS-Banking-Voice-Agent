@@ -20,6 +20,14 @@ one or more case-insensitive regular-expression alternatives. `forbidden_pattern
 reject unsafe claims. The evaluator does not write raw responses or prompts into
 the report.
 
+The response supplement also contains 25 declared `ANSWER`/`CLARIFY` turns
+from the legacy 24-sequence fixture. They use only the existing reviewed
+minimum rubrics (`replacement_reason` or focused `clarification`) and can be
+judged from a recorded reconciliation report without rerunning A/B/C/D/E.
+Technical fixtures and turns whose expected route is a structural non-answer
+remain outside the text-quality denominator, even if an erroneous runtime
+route happened to emit a clarification.
+
 For the full-agent complex-language freeze, regex checks are retained only as
 `response_lexical_*` diagnostics. The final `response_passed` value instead
 comes from the evaluation-only `llm_semantic_v1` judge, at temperature zero. It
@@ -298,11 +306,13 @@ permission check.
 
 The reviewed baseline scorecards plus
 [`response_supplements_v1.json`](../tests/fixtures/evaluation/semantic/v1/response_supplements_v1.json)
-now cover 52 distinct `ANSWER`/`CLARIFY` case-or-turns, or 156 recorded
-attempts across the three repeats: core 33, complex 57 and expanded multi-turn
-66. The remaining 25 legacy turns (75 attempts) have no reviewed final-text
-gold and are deliberately emitted as `missing_reviewed_response_rubric`, not
-silently scored. The supplements add minimum fact/clarification constraints;
+now cover the original 52 distinct `ANSWER`/`CLARIFY` case-or-turns (156
+recorded attempts across the three repeats: core 33, complex 57 and expanded
+multi-turn 66), plus 25 declared legacy turns. In the post-B0 reconciliation,
+72 legacy attempts actually reached `ANSWER`/`CLARIFY` with reviewed text gold.
+The remaining legacy rows are structural-only: three technical-fixture attempts,
+one unexpected complaint-path clarification, and turns whose actual route was
+not text-eligible. The supplements add minimum fact/clarification constraints;
 they do not make a prose-style quality claim.
 
 Before a provider run, validate the frozen input and denominator with:
@@ -312,11 +322,12 @@ PYTHONPATH=src python scripts/evaluate_final_response_semantics.py \
   --dry-run --output /private/tmp/final_response_semantic_dry_run.json
 ```
 
-The expected dry-run reason counts are 156 `dry_run`, 75
-`missing_reviewed_response_rubric`, and 297 outside-scope structural rows.
-The actual provider command removes `--dry-run` and must write a new artifact
-under `artifacts/evaluation/`; it records the judge verdict and metadata per
-attempt while keeping response text only in the source freeze traces.
+When the post-B0 legacy report is supplied with `--legacy-report`, its dry run
+has 228 `dry_run` candidates (the original 156 plus 72 legacy attempts) and
+300 structural-only rows. The actual provider command removes `--dry-run` and
+must write a new artifact under `artifacts/evaluation/`; it records the judge
+verdict and metadata per attempt while keeping response text only in the source
+freeze traces.
 
 The stateful regression run contains 24 multi-turn sequences and 49 turns.
 It compares real A/B/C/D/E with state carried from each preceding C decision.

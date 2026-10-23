@@ -10,6 +10,7 @@ from scripts.evaluate_real_llm_e2e import FORBIDDEN_PATTERN_RUBRICS, RESPONSE_FA
 ROOT = Path(__file__).parents[2]
 FIXTURE_ROOT = ROOT / "tests/fixtures/evaluation/semantic/v1"
 E2E_ROOT = ROOT / "tests/e2e/single_turn"
+MULTI_TURN_ROOT = ROOT / "tests/e2e/multi_turn"
 
 
 def _scorecard_cases() -> list[dict]:
@@ -82,6 +83,7 @@ class SemanticEvaluationFixtureTests(unittest.TestCase):
         )
         self.assertEqual(supplements["schema_version"], "response-supplements-v1")
         response_records.extend(supplements["complex"].values())
+        response_records.extend(supplements["legacy"].values())
         response_records.extend(supplements["expanded"].values())
         required_ids = {
             group["id"]
@@ -95,6 +97,19 @@ class SemanticEvaluationFixtureTests(unittest.TestCase):
         }
         self.assertTrue(required_ids <= RESPONSE_FACT_RUBRICS.keys())
         self.assertTrue(forbidden_patterns <= FORBIDDEN_PATTERN_RUBRICS.keys())
+
+    def test_legacy_response_supplements_cover_declared_text_quality_turns(self) -> None:
+        supplements = json.loads(
+            (FIXTURE_ROOT / "response_supplements_v1.json").read_text(encoding="utf-8")
+        )
+        expected = {
+            f"{sequence['sequence_id']}:{turn_id}"
+            for path in MULTI_TURN_ROOT.glob("**/*.json")
+            for sequence in [json.loads(path.read_text(encoding="utf-8"))]
+            for turn_id, turn in enumerate(sequence["turns"], start=1)
+            if turn["expected"].get("action") in {"ANSWER", "CLARIFY"}
+        }
+        self.assertEqual(set(supplements["legacy"]), expected)
 
     def test_ambiguous_understanding_gold_declares_allowed_routes(self) -> None:
         cases = {case["case_id"]: case for case in _scorecard_cases()}

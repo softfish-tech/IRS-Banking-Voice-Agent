@@ -47,7 +47,7 @@ def _missing_judge_rubrics(response_gold: dict) -> list[str]:
     return missing
 
 
-def _rubrics() -> tuple[dict, dict, dict]:
+def _rubrics() -> tuple[dict, dict, dict, dict]:
     core_gold = {x["source_case_id"]: x.get("response", {}) for x in core._load_semantic_scorecard() .values()}
     complex_gold = {x["case_id"]: x["semantic_gold"].get("response", {}) for x in complex_freeze._load_cases()}
     annotations = {x["sequence_id"]: x["turn_oracles"] for x in _load(EXPANDED)["sequences"]}
@@ -59,17 +59,27 @@ def _rubrics() -> tuple[dict, dict, dict]:
     for key, response_gold in supplements.get("expanded", {}).items():
         sequence_id, turn_id = key.rsplit(":", 1)
         expanded_gold[(sequence_id, int(turn_id))] = response_gold
-    return core_gold, complex_gold, expanded_gold
+    legacy_gold = {}
+    for key, response_gold in supplements.get("legacy", {}).items():
+        sequence_id, turn_id = key.rsplit(":", 1)
+        legacy_gold[(sequence_id, int(turn_id))] = response_gold
+    return core_gold, complex_gold, expanded_gold, legacy_gold
 
 
 def _candidate_rows(unified: dict, legacy: dict) -> list[dict]:
-    core_gold, complex_gold, expanded_gold = _rubrics()
+    core_gold, complex_gold, expanded_gold, legacy_gold = _rubrics()
     result = []
     core_questions={x["case_id"]:x["input"]["user_text"] if isinstance(x.get("input"),dict) else x.get("input") for x in core._load_cases()}
     complex_questions={x["case_id"]:x["input"] for x in complex_freeze._load_cases()}
     expanded_questions={(sequence["id"], index): turn["text"] for sequence, _ in core._load_expanded_multi_turn() for index, turn in enumerate(sequence["turns"], start=1)}
-    def add(population, row, answer, action, question, gold):
-        result.append({"population": population, "source": row, "answer": answer, "action": action, "question": question, "response_gold": gold or {}})
+    legacy_questions = {
+        (sequence["sequence_id"], turn_id): turn["user_text"]
+        for path in sorted(core.MULTI_TURN_ROOT.glob("**/*.json"))
+        for sequence in [json.loads(path.read_text(encoding="utf-8"))]
+        for turn_id, turn in enumerate(sequence["turns"], start=1)
+    }
+    def add(population, row, answer, action, question, gold, *, text_quality_eligible=True):
+        result.append({"population": population, "source": row, "answer": answer, "action": action, "question": question, "response_gold": gold or {}, "text_quality_eligible": text_quality_eligible})
     for row in unified["core_attempts"]:
         seq = row.get("sequence_id") or ""
         action = row["actual"].get("action")
@@ -81,7 +91,13 @@ def _candidate_rows(unified: dict, legacy: dict) -> list[dict]:
         add("complex_single_turn", row, row.get("final_response_text"), row["actual"].get("action"), complex_questions.get(row["case_id"], ""), complex_gold.get(row["case_id"]))
     # Reconciliation replaces, rather than adds to, raw-v1 legacy attempts.
     for row in legacy["rows"]:
-        add("legacy_multi_turn_reconciliation", row, row["response_text"], row["actual"].get("action"), "Recorded legacy turn", {})
+        sequence_id, turn_id = row["sequence_id"], row["case_id"]
+        add(
+            "legacy_multi_turn_reconciliation", row, row["response_text"], row["actual"].get("action"),
+            legacy_questions.get((sequence_id, turn_id), ""),
+            legacy_gold.get((sequence_id, turn_id)),
+            text_quality_eligible=(sequence_id, turn_id) in legacy_gold,
+        )
     return result
 
 
@@ -115,6 +131,8 @@ async def evaluate(
             continue
         if previous:
             retried_unavailable_candidates += 1
+        if not item["text_quality_eligible"]:
+            verdicts.append({**base,"scope":"non_answer_structural_safety_only","scored":False,"reason":"outside_reviewed_text_population"}); continue
         if action not in {"ANSWER","CLARIFY"}:
             verdicts.append({**base,"scope":"non_answer_structural_safety_only","scored":False,"reason":"outside_text_quality_scope"}); continue
         if not item["response_gold"]:
