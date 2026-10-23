@@ -1,13 +1,27 @@
 """Local account API keeps identity, history, and agent state outside modules."""
 
 import asyncio
+from io import BytesIO
 import json
 import unittest
+import wave
 
 from banking_agent.app.api.server import DEFAULT_RECOMMENDATION_FIXTURE_PATH, DemoApplication
 from banking_agent.app.bootstrap import FixtureModuleFactory, ModuleBundle, StaticModuleFactory
 from banking_agent.app.persistence import InMemoryStore
 from banking_agent.modules.recommendation import RecommendationAdapter, load_fixture
+from banking_agent.modules.voice import ASRService, MockASRBackend
+from banking_agent.schemas import TranscriptionResult, TranscriptionStatus
+
+
+def pcm_wav() -> bytes:
+    buffer = BytesIO()
+    with wave.open(buffer, "wb") as writer:
+        writer.setnchannels(1)
+        writer.setsampwidth(2)
+        writer.setframerate(16_000)
+        writer.writeframes(b"\x00\x00" * 160)
+    return buffer.getvalue()
 
 
 class RecordingFactory:
@@ -83,9 +97,9 @@ class DemoApiTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.app.store.close()
 
-    def api(self, method: str, path: str, body: dict | None = None, cookie: str = ""):
-        raw = json.dumps(body).encode() if body is not None else b""
-        status, headers, response = asyncio.run(self.app.api(method, path, raw, cookie))
+    def api(self, method: str, path: str, body: dict | bytes | None = None, cookie: str = "", content_type: str = "application/json"):
+        raw = json.dumps(body).encode() if isinstance(body, dict) else body or b""
+        status, headers, response = asyncio.run(self.app.api(method, path, raw, cookie, content_type))
         return status, dict(headers), json.loads(response)
 
     def account(self, username: str, profile: str = "session-001") -> str:
@@ -189,6 +203,49 @@ class DemoApiTests(unittest.TestCase):
             status, _, body = self.api("POST", "/api/conversations", {"user_text": text}, cookie)
             self.assertEqual(status.value, 400)
             self.assertEqual(body, {"error": "user_text_must_be_1_to_2000_characters"})
+
+    def test_voice_transcription_is_production_only_transient_and_requires_login(self) -> None:
+        status, _, body = self.api("POST", "/api/transcriptions", pcm_wav(), content_type="audio/wav")
+        self.assertEqual(status.value, 401)
+        self.assertEqual(body, {"error": "authentication_required"})
+
+        cookie = self.account("alice")
+        status, _, body = self.api("POST", "/api/transcriptions", pcm_wav(), cookie, "audio/wav")
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "voice_input_not_available"})
+
+        self.app.store.close()
+        modules = ProductionModules()
+        self.app = DemoApplication(
+            store=InMemoryStore(),
+            module_factory=StaticModuleFactory(ModuleBundle(modules, modules, modules, modules)),
+            asr_service=ASRService(MockASRBackend([
+                TranscriptionResult(status=TranscriptionStatus.OK, text="Synthetic spoken question", backend="test"),
+            ])),
+        )
+        cookie = self.account("voiceuser")
+        status, _, config = self.api("GET", "/api/config")
+        self.assertTrue(config["voice_input_available"])
+        status, _, body = self.api("POST", "/api/transcriptions", pcm_wav(), cookie, "audio/wav")
+        self.assertEqual(status.value, 200)
+        self.assertEqual(body["status"], "OK")
+        self.assertEqual(body["text"], "Synthetic spoken question")
+        self.assertNotIn("backend", body)
+        self.assertNotIn("quality", body)
+        self.assertEqual(self.app.store.list_conversations(1), [])
+
+    def test_voice_transcription_rejects_invalid_wav_before_backend(self) -> None:
+        self.app.store.close()
+        modules = ProductionModules()
+        self.app = DemoApplication(
+            store=InMemoryStore(),
+            module_factory=StaticModuleFactory(ModuleBundle(modules, modules, modules, modules)),
+            asr_service=ASRService(MockASRBackend([])),
+        )
+        cookie = self.account("voiceuser")
+        status, _, body = self.api("POST", "/api/transcriptions", b"not-wav", cookie, "audio/wav")
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "invalid_wav"})
 
     def test_login_conversation_and_safe_turn_are_persisted(self) -> None:
         cookie = self.account("alice")

@@ -159,11 +159,14 @@ DeepSeek), run `PYTHONPATH=src python scripts/run_real_llm_e2e.py`.
 
 ## Optional local ASR demo
 
-The browser application does not yet accept audio. The ASR slice is a
-terminal-only local demo: it produces a candidate transcript which a later
-voice UI must show and have the user confirm before it enters the banking
-workflow. Audio is never sent to a remote provider or persisted by the ASR
-adapter.
+The ASR slice provides both a terminal demo and an optional local browser
+input adapter. The browser feature is deliberately off by default and is
+available only for an explicitly injected `production` module bundle. It
+records through the browser microphone, creates a 16 kHz mono PCM WAV locally,
+and sends it to the local process only. The returned transcript is editable;
+the user must explicitly use the edited text before it enters the ordinary text
+workflow. Audio and unconfirmed transcripts are never persisted or added to
+agent traces.
 
 The demo is fixed to the multilingual `large-v3-turbo-q5_0` Whisper model. It
 is not committed to Git and must be installed by a developer or evaluator once;
@@ -210,6 +213,23 @@ PYTHONPATH=src python -m banking_agent.modules.voice.cli path/to/input.wav \
   --model "$PWD/models/ggml-large-v3-turbo-q5_0.bin" \
   --language auto
 ```
+
+### Enable the local browser microphone adapter
+
+After installing the same executable and model, start an application that has
+an owner-provided `production` `ModuleBundle` and set the following local
+environment variables. The app never downloads a model automatically.
+
+```bash
+export BANKING_AGENT_ASR=enabled
+export BANKING_AGENT_ASR_EXECUTABLE=/private/tmp/whisper-cpp/build/bin/whisper-cli
+export BANKING_AGENT_ASR_MODEL="$PWD/models/ggml-large-v3-turbo-q5_0.bin"
+export BANKING_AGENT_ASR_TIMEOUT_SECONDS=90
+```
+
+`GET /api/config` advertises `voice_input_available` only when the adapter is
+configured and the module mode is `production`; fixture mode remains fully
+deterministic and text-only. The browser does not include text-to-speech.
 
 The initial input contract is PCM WAV, 16 kHz, mono, 16-bit, maximum 60 seconds
 and 10 MiB. The public ASCEND smoke evaluation remains local because its

@@ -484,7 +484,8 @@ same-origin JSON endpoints:
 | `POST /api/auth/register` | Creates a synthetic local account. | Username, 6+ character test password, and `synthetic_profile_key` selected from `GET /api/config`. The choice is local fixture configuration, not authentication. |
 | `POST /api/auth/login` / `logout` | Starts or clears the local session. | Login returns an HttpOnly cookie. |
 | `GET /api/me` | Returns the current synthetic account. | Requires authentication. |
-| `GET /api/config` | Returns the active application module mode and valid local synthetic profiles. | `{ "module_mode": "fixture" | "production", "synthetic_profiles": [{"id":"session-001","label":"..."}] }`; used by the UI to select its input surface and registration profile. |
+| `GET /api/config` | Returns the active application module mode, valid local synthetic profiles, and whether local voice input is available. | `{ "module_mode": "fixture" | "production", "synthetic_profiles": [{"id":"session-001","label":"..."}], "voice_input_available": false }`; used by the UI to select its input surface and registration profile. |
+| `POST /api/transcriptions` | Authenticated, production-only local ASR adapter. It accepts raw `audio/wav` bytes and returns an unconfirmed transcript. | Only enabled when E explicitly configures a local ASR service. The response is `{ "api_version": "v1", "status": "OK" | "EMPTY" | "ERROR", "text", "language", "duration_seconds", "error_code" }`. Backend/model/quality details are not public. No conversation, `AgentState`, trace, or persisted message is created. |
 | `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Fixture mode only; scenario IDs and fixture user text only. |
 | `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Fixture mode creates with `{"scenario_id":"S01"}`. Production mode creates and runs the first turn with `{"user_text":"synthetic test text"}`. The account's profile key is snapshotted server-side; payloads carrying `synthetic_profile_key` are rejected. |
 | `GET /api/conversations/{id}` | Returns one caller-owned conversation and its history. | Other users receive `conversation_not_found`. |
@@ -545,7 +546,7 @@ adapters implementing the existing public Protocols. Thus, replacing fixtures
 with real implementations changes composition only—not the API, session store,
 frontend, shared schema, or orchestrator.
 
-## Voice / ASR extension (terminal MVP)
+## Voice / ASR extension
 
 `modules/voice/` is an E-owned extension boundary and is deliberately not part
 of the text-agent `ModuleBundle` yet. Its public contract is `ASRService` and
@@ -563,10 +564,17 @@ paths, does not download models, and does not send audio remotely. The terminal
 entry point is `python -m banking_agent.modules.voice.cli`; its default mock
 backend exists for deterministic local verification.
 
-A successful result is only a candidate transcript. A later voice controller
-must display it and obtain an explicit user confirmation before supplying its
-text to the existing A/C/B/D flow. ASR quality fields are diagnostics, not an
-authorization or safety confidence signal; C remains the sole decision gate.
+A successful result is only a candidate transcript. The local browser UI sends
+an authenticated raw WAV request to `POST /api/transcriptions` only in
+`production` module mode when the ASR adapter is explicitly enabled. It records
+through the browser microphone, converts the captured audio to 16 kHz mono PCM
+WAV locally, then displays an editable transcript. The UI sends the edited text
+only after an explicit **Use this text** action; that subsequent normal text
+conversation request is the sole input to A/C/B/D. The temporary browser audio,
+unconfirmed transcript, backend/model details, and ASR quality diagnostics are
+not persisted, traced, or exposed through the public API. ASR quality fields
+remain diagnostics, not an authorization or safety confidence signal; C remains
+the sole decision gate.
 
 `modules.voice.ascend_eval` is a local evaluation utility, not an application
 path. It deterministically selects 80 clips from the public ASCEND test split

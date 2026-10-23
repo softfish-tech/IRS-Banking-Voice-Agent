@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from banking_agent.schemas import Action
+from banking_agent.schemas import Action, TranscriptionResult, TranscriptionStatus
 from banking_agent.schemas.response import AgentResponse
 from banking_agent.schemas.state import SchemaModel
 
@@ -57,6 +57,29 @@ class ChatTurnResponseV1(SchemaModel):
     citations: list[PublicCitation] = Field(default_factory=list)
     recommendations: list[PublicRecommendation] = Field(default_factory=list)
     error: PublicError | None = None
+
+
+class TranscriptionResponseV1(SchemaModel):
+    """Public, non-persistent result of one local ASR attempt."""
+
+    api_version: Literal["v1"] = PUBLIC_API_VERSION
+    status: TranscriptionStatus
+    text: str | None = None
+    language: str | None = None
+    duration_seconds: float | None = None
+    error_code: str | None = None
+
+
+def to_transcription_response_v1(result: TranscriptionResult) -> TranscriptionResponseV1:
+    """Hide backend/model details and ASR diagnostics from the browser API."""
+
+    return TranscriptionResponseV1(
+        status=result.status,
+        text=result.text,
+        language=result.language,
+        duration_seconds=result.duration_seconds,
+        error_code=result.error_code,
+    )
 
 
 MESSAGE_KIND_BY_ACTION: dict[Action, str] = {

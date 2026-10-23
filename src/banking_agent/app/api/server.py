@@ -15,13 +15,19 @@ from wsgiref.simple_server import make_server
 
 from banking_agent.app.bootstrap import ModuleBundle, ModuleFactory, build_module_factory
 from banking_agent.app.conversation_context import context_memory_enabled, recent_public_context
-from banking_agent.app.api.dto import to_chat_turn_response_v1, to_developer_trace_v1
+from banking_agent.app.api.dto import (
+    to_chat_turn_response_v1,
+    to_developer_trace_v1,
+    to_transcription_response_v1,
+)
 from banking_agent.app.local_env import load_local_env
 from banking_agent.app.observability import TraceContext
 from banking_agent.app.persistence import ApplicationStore, SESSION_LIFETIME_SECONDS, SQLiteStore, StoreError
 from banking_agent.app.recommendation_adapter import ConversationProfileRecommendationAdapter
 from banking_agent.modules.recommendation import load_fixture
-from banking_agent.schemas import AgentState
+from banking_agent.modules.voice import ASRService, AudioValidationError, WhisperCppBackend
+from banking_agent.modules.voice.asr import MAX_AUDIO_BYTES
+from banking_agent.schemas import AgentState, AudioUpload
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_SCENARIOS_PATH = REPOSITORY_ROOT / "tests" / "fixtures" / "scenarios" / "core.json"
@@ -41,6 +47,26 @@ class DeveloperAccessDenied(Exception):
     """The authenticated account is not the configured local developer."""
 
 
+def build_asr_service_from_environment() -> ASRService | None:
+    """Build the opt-in local ASR adapter without downloading or probing models.
+
+    A missing path is deliberately represented by the backend's sanitized
+    ``backend_not_configured`` response instead of preventing the local app from
+    starting.  The feature remains absent unless explicitly enabled.
+    """
+    if os.environ.get("BANKING_AGENT_ASR", "off").lower() != "enabled":
+        return None
+    executable = os.environ.get("BANKING_AGENT_ASR_EXECUTABLE", "")
+    model = os.environ.get("BANKING_AGENT_ASR_MODEL", "")
+    try:
+        timeout_seconds = float(os.environ.get("BANKING_AGENT_ASR_TIMEOUT_SECONDS", "90"))
+    except ValueError:
+        timeout_seconds = 90.0
+    return ASRService(
+        WhisperCppBackend(Path(executable), Path(model), timeout_seconds=max(1.0, timeout_seconds))
+    )
+
+
 class DemoApplication:
     """WSGI application for local synthetic-data development, never production."""
 
@@ -53,6 +79,7 @@ class DemoApplication:
         recommendation_fixture_path: Path = DEFAULT_RECOMMENDATION_FIXTURE_PATH,
         developer_dashboard: bool | None = None,
         developer_username: str | None = None,
+        asr_service: ASRService | None = None,
     ) -> None:
         scenarios = json.loads(scenarios_path.read_text(encoding="utf-8"))
         self._scenarios = {scenario["id"]: scenario for scenario in scenarios}
@@ -67,6 +94,12 @@ class DemoApplication:
         self.developer_username = developer_username if developer_username is not None else os.environ.get(
             "BANKING_AGENT_DEVELOPER_USERNAME", ""
         )
+        self.asr_service = asr_service
+
+    @property
+    def voice_input_available(self) -> bool:
+        """Voice is a production-only, explicitly configured input adapter."""
+        return self.module_mode == "production" and self.asr_service is not None
 
     @staticmethod
     def _json(status: HTTPStatus, payload: Any, headers: list[tuple[str, str]] | None = None) -> tuple[HTTPStatus, list[tuple[str, str]], bytes]:
@@ -209,7 +242,14 @@ class DemoApplication:
             )
         return public_response, conversation
 
-    async def api(self, method: str, path: str, body: bytes = b"", cookie_header: str = "") -> tuple[HTTPStatus, list[tuple[str, str]], bytes]:
+    async def api(
+        self,
+        method: str,
+        path: str,
+        body: bytes = b"",
+        cookie_header: str = "",
+        content_type: str = "application/json",
+    ) -> tuple[HTTPStatus, list[tuple[str, str]], bytes]:
         try:
             if method == "GET" and path == "/api/config":
                 return self._json(
@@ -220,6 +260,7 @@ class DemoApplication:
                             {"id": key, "label": f"Synthetic profile {key}"}
                             for key in sorted(self.synthetic_profile_keys)
                         ],
+                        "voice_input_available": self.voice_input_available,
                     },
                 )
             if method == "GET" and path == "/api/scenarios":
@@ -260,6 +301,16 @@ class DemoApplication:
                 return self._json(HTTPStatus.OK, {"api_version": "v1", "traces": traces})
 
             user = self._user_or_error(cookie_header)
+            if method == "POST" and path == "/api/transcriptions":
+                if not self.voice_input_available:
+                    raise StoreError("voice_input_not_available")
+                try:
+                    result = await self.asr_service.transcribe(AudioUpload(content_type=content_type, data=body))
+                except AudioValidationError as error:
+                    raise StoreError(error.code) from error
+                except Exception:
+                    return self._json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "asr_unavailable"})
+                return self._json(HTTPStatus.OK, to_transcription_response_v1(result).model_dump(mode="json"))
             if method == "GET" and path == "/api/conversations":
                 return self._json(HTTPStatus.OK, {"conversations": self.store.list_conversations(int(user["id"]))})
             if method == "POST" and path == "/api/conversations":
@@ -347,16 +398,25 @@ class DemoApplication:
             content = DEVELOPER_STATIC_PATH.read_bytes()
             start_response("200 OK", [("Content-Type", "text/html; charset=utf-8"), ("Content-Length", str(len(content)))])
             return [content]
-        length = int(environ.get("CONTENT_LENGTH") or 0)
+        try:
+            length = max(0, int(environ.get("CONTENT_LENGTH") or 0))
+        except ValueError:
+            length = 0
+        if method == "POST" and path == "/api/transcriptions" and length > MAX_AUDIO_BYTES:
+            status, headers, result = self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_audio_size"})
+            start_response(f"{status.value} {status.phrase}", headers)
+            return [result]
         body = environ["wsgi.input"].read(length)
-        status, headers, result = asyncio.run(self.api(method, path, body, environ.get("HTTP_COOKIE", "")))
+        status, headers, result = asyncio.run(
+            self.api(method, path, body, environ.get("HTTP_COOKIE", ""), environ.get("CONTENT_TYPE", ""))
+        )
         start_response(f"{status.value} {status.phrase}", headers)
         return [result]
 
 
 def main() -> None:
     load_local_env()
-    app = DemoApplication()
+    app = DemoApplication(asr_service=build_asr_service_from_environment())
     with make_server("127.0.0.1", 8000, app) as server:
         print("Local account demo: http://127.0.0.1:8000")
         server.serve_forever()
