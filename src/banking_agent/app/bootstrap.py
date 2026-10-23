@@ -12,7 +12,9 @@ from banking_agent.app.demo import ScenarioModules
 from banking_agent.app.observability import TraceContext, TraceSink
 from banking_agent.app.orchestrator import Orchestrator
 from banking_agent.app.response_generator import (
+    RecommendationResponseGenerator,
     ResponseGenerator,
+    build_recommendation_response_generator_from_environment,
     build_response_generator_from_environment,
 )
 from banking_agent.app.llm_agent_support import (
@@ -38,6 +40,7 @@ class ModuleBundle:
     rules: RulesModule
     recommendation: RecommendationModule
     response_generator: ResponseGenerator | None = None
+    recommendation_response_generator: RecommendationResponseGenerator | None = None
     query_rewriter: QueryRewriter | None = None
     clarification_generator: ClarificationGenerator | None = None
 
@@ -50,6 +53,9 @@ class ModuleBundle:
         response_generator = self.response_generator
         if response_generator is None:
             response_generator = build_response_generator_from_environment()
+        recommendation_response_generator = self.recommendation_response_generator
+        if recommendation_response_generator is None:
+            recommendation_response_generator = build_recommendation_response_generator_from_environment()
         assistant = build_llm_text_assistant_from_environment()
         query_rewriter = self.query_rewriter or (
             assistant
@@ -68,6 +74,7 @@ class ModuleBundle:
             trace_sink=trace_sink,
             trace_context=trace_context,
             response_generator=response_generator,
+            recommendation_response_generator=recommendation_response_generator,
             query_rewriter=query_rewriter,
             clarification_generator=clarification_generator,
         )

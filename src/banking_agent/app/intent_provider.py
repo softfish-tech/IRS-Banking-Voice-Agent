@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from banking_agent.app.orchestrator.interfaces import IntentModule
-from banking_agent.app.llm_agent_support import FusedIntentModule, build_llm_understanding_from_environment
+from banking_agent.app.llm_agent_support import FusedIntentModule, build_llm_understanding_from_environment, understanding_mode_from_environment
 from banking_agent.modules.intent import (
     EncoderIntentClassifier,
     IntentModuleAdapter,
@@ -43,4 +43,4 @@ def build_intent_module(
         classifier = TrainedIntentClassifier.load(artifact)
         adapter = IntentModuleAdapter(classifier=classifier.classify)
     llm = build_llm_understanding_from_environment()
-    return FusedIntentModule(adapter, llm) if llm else adapter
+    return FusedIntentModule(adapter, llm, mode=understanding_mode_from_environment()) if llm else adapter

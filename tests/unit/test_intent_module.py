@@ -156,6 +156,35 @@ class RiskSignalTests(unittest.TestCase):
         self.assertNotEqual(result.risk_level, RiskLevel.LOW)
 
 
+class ProjectCalibrationTests(unittest.TestCase):
+    def test_colloquial_ambiguity_fee_and_replacement_routes_are_normalised(self) -> None:
+        baseline = UnderstandingResult(intent="policy_enquiry", confidence=0.95, risk_level=RiskLevel.LOW)
+        cases = (
+            ("help with that bank thing pls", "UNKNOWN", RiskLevel.UNKNOWN),
+            ("I got billed a weird card charge", "fee_complaint", RiskLevel.MEDIUM),
+            ("this fee on my card makes no sense", "fee_complaint", RiskLevel.MEDIUM),
+            ("why did u charge me this fee", "fee_complaint", RiskLevel.MEDIUM),
+            ("card replcement fee?", "card_fee_enquiry", RiskLevel.LOW),
+        )
+        for text, intent, risk in cases:
+            with self.subTest(text=text):
+                result = calibrate_project_route(text, baseline)
+                self.assertEqual(result.intent, intent)
+                self.assertEqual(result.risk_level, risk)
+
+    def test_replacement_delivery_does_not_become_a_fee_enquiry_without_price_language(self) -> None:
+        baseline = UnderstandingResult(
+            intent="policy_enquiry", confidence=0.97, risk_level=RiskLevel.LOW
+        )
+
+        result = calibrate_project_route(
+            "how long does a replacement card take to arrive", baseline
+        )
+
+        self.assertEqual(result.intent, "policy_enquiry")
+        self.assertEqual(result.risk_level, RiskLevel.LOW)
+
+
 class EntityExtractionTests(unittest.TestCase):
     def test_scenario_example_extracts_payment_method(self) -> None:
         entities = extract_entities("Someone used my card without my permission.")
@@ -277,6 +306,7 @@ class ProjectRouteCalibrationTests(unittest.TestCase):
         cases = (
             ("Why was I charged this fee?", "fee_complaint", RiskLevel.MEDIUM),
             ("There is a card fee on my account that I do not recognise.", "fee_complaint", RiskLevel.MEDIUM),
+            ("I do not recognise this fee, can you recommend something too", "fee_complaint", RiskLevel.MEDIUM),
             ("Which savings product should I choose?", "product_recommendation", RiskLevel.LOW),
             ("My fee dispute is still open. Which savings product should I choose?", "product_recommendation", RiskLevel.MEDIUM),
             ("I do not recognise a purchase on my card.", "unauthorized_transaction", RiskLevel.HIGH),

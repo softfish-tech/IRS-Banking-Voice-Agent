@@ -28,7 +28,8 @@ from .taxonomy import (
 
 _VAGUE_REQUEST = re.compile(
     r"^\s*(?:can you help (?:with )?(?:that )?(?:bank )?thing|"
-    r"i need help with (?:it|that)|what about (?:the )?other one)\s*[?.!]*\s*$",
+    r"(?:i )?need help with (?:it|that)|help with that (?:bank )?thing|"
+    r"what about (?:the )?other one)\s*(?:pls|please)?\s*[?.!]*\s*$",
     re.I,
 )
 _FRAUD_REPORT = re.compile(
@@ -49,18 +50,28 @@ _RECOMMENDATION = re.compile(
     re.I,
 )
 _FEE_COMPLAINT = re.compile(
-    r"\b(?:charged|charge|fee|fees)\b.{0,80}"
+    r"\b(?:billed|bill|charged|charge|fee|fees)\b.{0,80}"
     r"\b(?:do not (?:understand|recognise)|don't (?:understand|recognise)|"
-    r"not (?:right|recognised|recognized)|unexpected|dispute|wrong|why)\b|"
-    r"\b(?:dispute|unexpected|wrong)\b.{0,80}\b(?:charge|fee)\b",
+    r"not (?:right|recognised|recognized)|unexpected|dispute|wrong|why|weird|"
+    r"makes? no sense)\b|"
+    r"\b(?:dispute|unexpected|wrong|weird|makes? no sense)\b.{0,80}"
+    r"\b(?:billed|bill|charge|fee)\b|"
+    r"\b(?:do not|don't)\s+recognise\b.{0,80}\b(?:billed|bill|charge|fee)\b",
+    re.I,
+)
+_EXISTING_COMPLAINT_REFERENCE = re.compile(
+    r"\b(?:fee\s+)?(?:complaint|dispute)\s+is\s+(?:still\s+)?open\b",
     re.I,
 )
 _WHY_CHARGED_FEE = re.compile(
-    r"\bwhy\b.{0,60}\bcharged\b.{0,60}\bfee\b", re.I
+    r"\bwhy\b.{0,60}\bcharg(?:e|ed)\b.{0,60}\bfee\b", re.I
 )
 _CARD_FEE_ENQUIRY = re.compile(
-    r"\b(?:replacement|replace|replacing)\b.{0,60}\b(?:card|fee|cost|charge|pay)\b|"
-    r"\b(?:fee|cost|charge)\b.{0,60}\b(?:replacement|replace|replacing|card)\b",
+    # Replacement alone is not a fee query: it can concern delivery, card
+    # status, eligibility, or security.  Require an explicit price/charge
+    # signal before overriding the learned BANKING77 policy route.
+    r"\b(?:replacement|repl(?:acement|cement|acment)|replace|replacing)\b.{0,60}\b(?:fee|cost|charge|pay)\b|"
+    r"\b(?:fee|cost|charge)\b.{0,60}\b(?:replacement|repl(?:acement|cement|acment)|replace|replacing|card)\b",
     re.I,
 )
 _CRYPTO_POLICY = re.compile(
@@ -76,15 +87,19 @@ def _route_for(text: str) -> tuple[str, float] | None:
         return UNKNOWN_INTENT, 0.31
     if _FRAUD_REPORT.search(text):
         return INTENT_FRAUD_SUSPICION, 0.93
-    # A clear product request must reach C's recommendation gate. C then
-    # applies the unresolved-complaint and consent constraints; A must not
-    # hide that request merely because the customer mentions an open fee case.
+    # A disputed fee is an active complaint, even when the customer also asks
+    # for a recommendation. Complaint handling precedes an optional product
+    # request; C owns the resulting state transition and later recommendation
+    # permission. A bare unrecognised purchase remains high-risk below.
+    if (
+        (_FEE_COMPLAINT.search(text) or _WHY_CHARGED_FEE.search(text))
+        and not _EXISTING_COMPLAINT_REFERENCE.search(text)
+    ):
+        return INTENT_FEE_COMPLAINT, 0.90
+    # A clear product request otherwise reaches C's recommendation gate. C
+    # applies the unresolved-complaint and consent constraints.
     if _RECOMMENDATION.search(text):
         return INTENT_PRODUCT_RECOMMENDATION, 0.91
-    # A disputed fee is a complaint, even when the customer says they do not
-    # recognise it. A bare unrecognised purchase remains high-risk below.
-    if _FEE_COMPLAINT.search(text) or _WHY_CHARGED_FEE.search(text):
-        return INTENT_FEE_COMPLAINT, 0.90
     if _CRYPTO_POLICY.search(text):
         return INTENT_POLICY_ENQUIRY, 0.88
     if _UNAUTHORIZED_REPORT.search(text):

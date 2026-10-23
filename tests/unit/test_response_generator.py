@@ -40,10 +40,34 @@ class GroundedResponseGeneratorTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_unknown_citation_falls_back(self) -> None:
         generator = GroundedResponseGenerator(
-            MockLLMClient([{"answer": "Invented answer", "citation_ids": ["not-a-source"]}]),
+            MockLLMClient([
+                {"answer": "Invented answer", "citation_ids": ["not-a-source"]},
+                {"answer": "Still invented", "citation_ids": ["not-a-source"]},
+            ]),
             model="test-model",
         )
         self.assertIsNone(await generator.generate(answer_state(), request_id="opaque-request"))
+        self.assertEqual(generator.outcome("opaque-request")[-1], "invalid_citation")
+
+    async def test_invalid_first_draft_retries_once_with_same_approved_sources(self) -> None:
+        client = MockLLMClient(
+            [
+                {"answer": "Invented answer", "citation_ids": ["not-a-source"]},
+                {"answer": "The replacement fee is SGD 10.", "citation_ids": ["policy-1"]},
+            ]
+        )
+        generator = GroundedResponseGenerator(client, model="test-model")
+
+        text = await generator.generate(answer_state(), request_id="opaque-request")
+
+        self.assertEqual(
+            text,
+            "The replacement fee is SGD 10.\n[Source: Synthetic fees; policy-1]",
+        )
+        self.assertEqual(len(client.requests), 2)
+        self.assertEqual(
+            generator.outcome("opaque-request")[2], 2,
+        )
 
     async def test_non_answer_route_never_calls_provider(self) -> None:
         client = MockLLMClient([{"answer": "Unused", "citation_ids": ["policy-1"]}])

@@ -11,6 +11,8 @@ from .enums import (
 from .asr import ASRQuality, AudioUpload, TranscriptionResult
 from .state import (
     AgentState,
+    ConversationContext,
+    ConversationTurn,
     Decision,
     Entity,
     RecommendationItem,
@@ -26,6 +28,8 @@ __all__ = [
     "AudioUpload",
     "ComplaintStatus",
     "ConsentStatus",
+    "ConversationContext",
+    "ConversationTurn",
     "Decision",
     "Entity",
     "HandoffStatus",

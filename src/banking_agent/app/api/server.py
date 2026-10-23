@@ -14,6 +14,7 @@ from typing import Any
 from wsgiref.simple_server import make_server
 
 from banking_agent.app.bootstrap import ModuleBundle, ModuleFactory, build_module_factory
+from banking_agent.app.conversation_context import context_memory_enabled, recent_public_context
 from banking_agent.app.api.dto import to_chat_turn_response_v1, to_developer_trace_v1
 from banking_agent.app.local_env import load_local_env
 from banking_agent.app.observability import TraceContext
@@ -169,6 +170,21 @@ class DemoApplication:
                     modules.recommendation,
                     self.store.conversation_profile_key,
                 ),
+                response_generator=modules.response_generator,
+                recommendation_response_generator=modules.recommendation_response_generator,
+                query_rewriter=modules.query_rewriter,
+                clarification_generator=modules.clarification_generator,
+            )
+        state_kwargs: dict[str, object] = {
+            "session_id": str(conversation["id"]),
+            "user_text": user_text,
+            "complaint_status": str(conversation["complaint_status"]),
+            "handoff_status": str(conversation["handoff_status"]),
+            "consent": str(conversation["consent"]),
+        }
+        if context_memory_enabled():
+            state_kwargs["conversation_context"] = recent_public_context(
+                conversation["messages"]
             )
         response = await modules.new_orchestrator(
             trace_sink=self.store,
@@ -179,13 +195,7 @@ class DemoApplication:
                 user_id=int(user["id"]),
             ),
         ).handle(
-            AgentState(
-                session_id=str(conversation["id"]),
-                user_text=user_text,
-                complaint_status=str(conversation["complaint_status"]),
-                handoff_status=str(conversation["handoff_status"]),
-                consent=str(conversation["consent"]),
-            )
+            AgentState(**state_kwargs)
         )
         public_response = to_chat_turn_response_v1(response).model_dump(mode="json")
         if response.status == "ok":

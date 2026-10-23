@@ -6,8 +6,8 @@ from banking_agent.app.orchestrator import Orchestrator
 from banking_agent.app.observability import TraceContext
 from banking_agent.app.llm_agent_support import LLMTextAssistant
 from banking_agent.app.providers import MockLLMClient
-from banking_agent.app.response_generator import GroundedResponseGenerator
-from banking_agent.schemas import AgentState
+from banking_agent.app.response_generator import GroundedResponseGenerator, RecommendationPresentationGenerator
+from banking_agent.schemas import AgentState, RecommendationItem
 
 
 class AnswerModules:
@@ -25,6 +25,84 @@ class AnswerModules:
 
 
 class LLMResponseOrchestratorTests(unittest.IsolatedAsyncioTestCase):
+    async def test_llm_recommendation_presentation_keeps_d_items_canonical(self) -> None:
+        class RecommendationModules(AnswerModules):
+            async def decide(self, state):
+                return {"status": "ok", "data": {"action": "RECOMMEND", "reason_code": "RECOMMENDATION_PERMITTED", "next_state": {}}}
+
+            async def recommend(self, session_id, complaint_status, handoff_status, consent):
+                return {
+                    "status": "ok",
+                    "data": {
+                        "allowed": True,
+                        "reason_code": "RECOMMENDATION_PERMITTED",
+                        "items": [
+                            {
+                                "product_id": "savings-flex",
+                                "name": "Demo Flexible Savings",
+                                "rank": 1,
+                                "reason": "Matches the synthetic savings goal.",
+                            }
+                        ],
+                    },
+                }
+
+        class Sink:
+            traces = []
+            def record_trace(self, trace): self.traces.append(trace)
+
+        modules, sink = RecommendationModules(), Sink()
+        generator = RecommendationPresentationGenerator(
+            MockLLMClient([{"introduction": "Here are the available options:"}]),
+            model="test-model",
+        )
+        response = await Orchestrator(
+            modules, modules, modules, modules,
+            recommendation_response_generator=generator,
+            trace_sink=sink,
+        ).handle(AgentState(session_id="llm-recommend", user_text="What can you recommend?"))
+
+        self.assertEqual(response.decision.action.value, "RECOMMEND")
+        self.assertEqual(
+            response.text,
+            "Here are the available options:\n\nDemo Flexible Savings: Matches the synthetic savings goal.",
+        )
+        self.assertEqual(response.recommendations, [RecommendationItem(
+            product_id="savings-flex", name="Demo Flexible Savings", rank=1,
+            reason="Matches the synthetic savings goal.",
+        )])
+        self.assertIn(
+            ("E.LLM.recommendation_presentation", "ok"),
+            [(event.module, event.status) for event in sink.traces[0].modules],
+        )
+
+    async def test_invalid_recommendation_presentation_falls_back_to_d_template(self) -> None:
+        class RecommendationModules(AnswerModules):
+            async def decide(self, state):
+                return {"status": "ok", "data": {"action": "RECOMMEND", "reason_code": "RECOMMENDATION_PERMITTED", "next_state": {}}}
+
+            async def recommend(self, session_id, complaint_status, handoff_status, consent):
+                return {"status": "ok", "data": {"allowed": True, "reason_code": "RECOMMENDATION_PERMITTED", "items": [{"product_id": "x", "name": "Canonical item", "rank": 1, "reason": "Canonical reason."}]}}
+
+        class Sink:
+            traces = []
+            def record_trace(self, trace): self.traces.append(trace)
+
+        modules, sink = RecommendationModules(), Sink()
+        generator = RecommendationPresentationGenerator(
+            MockLLMClient([{"introduction": "This product has a 5% return."}]),
+            model="test-model",
+        )
+        response = await Orchestrator(
+            modules, modules, modules, modules,
+            recommendation_response_generator=generator,
+            trace_sink=sink,
+        ).handle(AgentState(session_id="llm-recommend-fallback", user_text="What can you recommend?"))
+
+        self.assertEqual(response.text, "Canonical item: Canonical reason.")
+        event = next(event for event in sink.traces[0].modules if event.module == "E.LLM.recommendation_presentation")
+        self.assertEqual((event.status, event.error_code), ("fallback", "invalid_presentation"))
+
     async def test_validated_llm_steps_are_visible_in_the_sanitized_trace(self) -> None:
         class Sink:
             traces = []
@@ -127,3 +205,15 @@ class LLMResponseOrchestratorTests(unittest.IsolatedAsyncioTestCase):
         ).handle(AgentState(session_id="llm-fallback", user_text="What is the fee?"))
         self.assertIn("The synthetic replacement fee is SGD 10.", response.text)
         self.assertEqual(response.decision.reason_code, "POLICY_EVIDENCE_FOUND")
+
+    async def test_empty_optional_answer_never_replaces_the_public_fallback(self) -> None:
+        class EmptyGenerator:
+            async def generate(self, state, *, request_id):
+                return "   "
+
+        response = await Orchestrator(
+            AnswerModules(), AnswerModules(), AnswerModules(), AnswerModules(),
+            response_generator=EmptyGenerator(),
+        ).handle(AgentState(session_id="llm-empty", user_text="What is the fee?"))
+
+        self.assertIn("The synthetic replacement fee is SGD 10.", response.text)

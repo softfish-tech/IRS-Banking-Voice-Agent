@@ -68,6 +68,24 @@ class RecommendationItem(SchemaModel):
     reason: str = Field(min_length=1)
 
 
+class ConversationTurn(SchemaModel):
+    """A bounded, user-visible completed turn supplied by E as context.
+
+    This is not canonical business state and is never populated by a C state
+    patch. It exists only for one E-owned context window on the next turn.
+    """
+
+    user_text: str = Field(min_length=1, max_length=2_000)
+    assistant_text: str = Field(min_length=1, max_length=8_000)
+    action: Action
+
+
+class ConversationContext(SchemaModel):
+    """Recent public conversation turns, bounded for short-session B0 memory."""
+
+    turns: list[ConversationTurn] = Field(default_factory=list, max_length=3)
+
+
 class AgentState(SchemaModel):
     """Canonical per-session state shared by the orchestration workflow.
 
@@ -83,6 +101,13 @@ class AgentState(SchemaModel):
     complaint_status: ComplaintStatus = ComplaintStatus.NONE
     handoff_status: HandoffStatus = HandoffStatus.NOT_REQUIRED
     consent: ConsentStatus = ConsentStatus.UNKNOWN
+
+    # E-owned, request-local semantic context. C receives it only to know
+    # whether the current text has a validated referent; C continues to own
+    # every action and canonical state patch.
+    conversation_context: ConversationContext = Field(default_factory=ConversationContext)
+    context_reference_resolved: bool = False
+    resolved_user_text: str | None = Field(default=None, min_length=1, max_length=2_000)
 
     retrieved_docs: list[RetrievedDocument] = Field(default_factory=list)
     decision: Decision | None = None

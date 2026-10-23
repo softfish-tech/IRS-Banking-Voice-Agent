@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from banking_agent.app.intent_provider import build_intent_module
+from banking_agent.app.llm_agent_support import understanding_mode_from_environment
 from banking_agent.schemas import UnderstandingResult
 
 
@@ -17,6 +18,15 @@ class IntentProviderTests(unittest.TestCase):
     def test_rules_is_the_dependency_free_default(self) -> None:
         adapter = build_intent_module("rules")
         self.assertEqual(adapter.__class__.__name__, "IntentModuleAdapter")
+
+    @patch.dict("os.environ", {}, clear=True)
+    def test_llm_understanding_defaults_to_shadow_mode(self) -> None:
+        self.assertEqual(understanding_mode_from_environment(), "shadow")
+
+    @patch.dict("os.environ", {"BANKING_AGENT_LLM_UNDERSTANDING_MODE": "invalid"}, clear=True)
+    def test_invalid_llm_understanding_mode_fails_closed(self) -> None:
+        with self.assertRaisesRegex(ValueError, "llm_understanding_mode_must_be_shadow_or_fuse"):
+            understanding_mode_from_environment()
 
     def test_unknown_provider_fails_closed(self) -> None:
         with self.assertRaisesRegex(ValueError, "intent_provider_must_be_rules_trained_or_minilm_encoder"):
