@@ -22,11 +22,6 @@ from banking_agent.schemas import AgentState
 ROOT = Path(__file__).resolve().parents[1]
 
 
-class DeterministicReranker:
-    def rerank(self, query, candidates, top_k=5):
-        return [dict(item, score=float(top_k - index)) for index, item in enumerate(candidates[:top_k])]
-
-
 class Recording:
     def __init__(self, name, delegate, calls): self.name, self.delegate, self.calls = name, delegate, calls
     async def analyze(self, *args): self.calls.append(self.name); return await self.delegate.analyze(*args)
@@ -42,7 +37,9 @@ async def main() -> None:
     client = create_llm_client(LLMSettings.from_environment())
     classifier = EncoderIntentClassifier.from_pretrained()
     intent = FusedIntentModule(IntentModuleAdapter(classifier=classifier.classify), LLMUnderstanding(client, model=model))
-    retrieval = AsyncRetrievalAdapter(create_retriever("real", reranker=DeterministicReranker()))
+    # Exercise B's delivered BM25-plus-Cross-Encoder retrieval profile.  A
+    # missing local model is a technical failure, never a silent fallback.
+    retrieval = AsyncRetrievalAdapter(create_retriever("real"))
     recommendation = RecommendationAdapter(load_fixture(ROOT / "data/fixtures/recommendation.json"))
     cases = [
         ("answer", "How much does express card delivery cost?", {}, "ANSWER"),

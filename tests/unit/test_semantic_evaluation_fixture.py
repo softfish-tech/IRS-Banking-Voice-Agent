@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import unittest
 
+from scripts.evaluate_real_llm_e2e import FORBIDDEN_PATTERN_RUBRICS, RESPONSE_FACT_RUBRICS
 
 ROOT = Path(__file__).parents[2]
 FIXTURE_ROOT = ROOT / "tests/fixtures/evaluation/semantic/v1"
@@ -46,8 +47,8 @@ class SemanticEvaluationFixtureTests(unittest.TestCase):
     def test_policy_and_recommendation_gold_is_explicit(self) -> None:
         cases = {case["case_id"]: case for case in _scorecard_cases()}
         self.assertEqual(
-            cases["SEM-S01-LOST-CARD-FEE"]["retrieval"]["required_document_ids"],
-            ["NB-v1_1-lost_or_stolen_card-002"],
+            cases["SEM-S01-LOST-CARD-FEE"]["decision"]["action"],
+            "ESCALATE",
         )
         self.assertEqual(
             cases["SEM-S06-PERMITTED-SAVINGS-RECOMMENDATION"]["recommendation"]["required_product_ids"],
@@ -65,6 +66,35 @@ class SemanticEvaluationFixtureTests(unittest.TestCase):
                         re.compile(pattern, flags=re.IGNORECASE | re.DOTALL)
             for pattern in response.get("forbidden_patterns", []):
                 re.compile(pattern, flags=re.IGNORECASE | re.DOTALL)
+
+    def test_final_answer_semantic_rubrics_cover_all_reviewed_response_labels(self) -> None:
+        payloads = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted(FIXTURE_ROOT.glob("single_turn*.json"))
+        ]
+        response_records = [
+            case["response"]
+            for payload in payloads for case in payload["cases"]
+            if case.get("response")
+        ]
+        supplements = json.loads(
+            (FIXTURE_ROOT / "response_supplements_v1.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(supplements["schema_version"], "response-supplements-v1")
+        response_records.extend(supplements["complex"].values())
+        response_records.extend(supplements["expanded"].values())
+        required_ids = {
+            group["id"]
+            for response in response_records
+            for group in response.get("required_fact_groups", [])
+        }
+        forbidden_patterns = {
+            pattern
+            for response in response_records
+            for pattern in response.get("forbidden_patterns", [])
+        }
+        self.assertTrue(required_ids <= RESPONSE_FACT_RUBRICS.keys())
+        self.assertTrue(forbidden_patterns <= FORBIDDEN_PATTERN_RUBRICS.keys())
 
     def test_ambiguous_understanding_gold_declares_allowed_routes(self) -> None:
         cases = {case["case_id"]: case for case in _scorecard_cases()}

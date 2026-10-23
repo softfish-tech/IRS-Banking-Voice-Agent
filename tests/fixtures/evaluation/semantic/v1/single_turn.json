@@ -6,17 +6,15 @@
     {
       "case_id": "SEM-S01-LOST-CARD-FEE",
       "source_case_id": "E2E-S01-003",
-      "review_status": "confirmed_corpus",
+      "review_status": "confirmed_project_decision",
       "understanding": {"intent": "card_fee_enquiry", "risk_level": "LOW"},
-      "retrieval": {"required_document_ids": ["NB-v1_1-lost_or_stolen_card-002"]},
       "response": {
         "required_fact_groups": [
-          {"id": "lost_card_fee", "any_of": ["(?=.*\\b(?:lost|stolen)\\b)(?=.*\\b(?:replace|replacement)\\w*\\b)(?=.*\\b(?:sgd\\s*15|15\\s*sgd)\\b)" ]},
-          {"id": "express_shipping_fee", "any_of": ["(?=.*\\bexpress\\b)(?=.*\\b(?:shipping|delivery)\\b)(?=.*\\b(?:sgd\\s*10|10\\s*sgd)\\b)" ]}
+          {"id": "human_handoff", "any_of": ["\\b(?:human|specialist|support)\\b.{0,40}\\b(?:assist|help|handle)\\b", "\\b(?:escalat|handoff)\\w*\\b"]}
         ],
-        "forbidden_patterns": ["generic.{0,40}(?:sgd\\s*10|10\\s*sgd)"]
+        "forbidden_patterns": ["\\bsgd\\s*(?:0|10|15)\\b"]
       },
-      "decision": {"action": "ANSWER", "reason_code": "POLICY_EVIDENCE_FOUND"}
+      "decision": {"action": "ESCALATE", "reason_code": "CARD_SECURITY_RISK", "required_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}}
     },
     {
       "case_id": "SEM-S02-FEE-COMPLAINT",
