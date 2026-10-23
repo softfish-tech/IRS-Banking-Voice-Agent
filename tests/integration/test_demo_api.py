@@ -4,9 +4,10 @@ import asyncio
 import json
 import unittest
 
-from banking_agent.app.api.server import DemoApplication
+from banking_agent.app.api.server import DEFAULT_RECOMMENDATION_FIXTURE_PATH, DemoApplication
 from banking_agent.app.bootstrap import FixtureModuleFactory, ModuleBundle, StaticModuleFactory
 from banking_agent.app.persistence import InMemoryStore
+from banking_agent.modules.recommendation import RecommendationAdapter, load_fixture
 
 
 class RecordingFactory:
@@ -52,6 +53,29 @@ class ProductionModules:
         return {"status": "ok", "data": {"allowed": False, "reason_code": "NOT_REQUESTED", "items": []}}
 
 
+class RecommendationRouteModules(ProductionModules):
+    async def analyze(self, session_id, user_text):
+        self.calls.append("A")
+        return {
+            "status": "ok",
+            "data": {"intent": "product_recommendation", "confidence": 0.95, "risk_level": "LOW", "entities": []},
+        }
+
+    async def decide(self, state):
+        self.calls.append("C")
+        return {"status": "ok", "data": {"action": "RECOMMEND", "reason_code": "RECOMMENDATION_PERMITTED", "next_state": {}}}
+
+
+class RecordingRecommendation:
+    def __init__(self) -> None:
+        self.session_ids: list[str] = []
+        self.delegate = RecommendationAdapter(load_fixture(DEFAULT_RECOMMENDATION_FIXTURE_PATH))
+
+    async def recommend(self, session_id, complaint_status, handoff_status, consent):
+        self.session_ids.append(session_id)
+        return await self.delegate.recommend(session_id, complaint_status, handoff_status, consent)
+
+
 class DemoApiTests(unittest.TestCase):
     def setUp(self) -> None:
         self.app = DemoApplication(store=InMemoryStore())
@@ -64,9 +88,11 @@ class DemoApiTests(unittest.TestCase):
         status, headers, response = asyncio.run(self.app.api(method, path, raw, cookie))
         return status, dict(headers), json.loads(response)
 
-    def account(self, username: str) -> str:
+    def account(self, username: str, profile: str = "session-001") -> str:
         password = "testpw"
-        status, _, _ = self.api("POST", "/api/auth/register", {"username": username, "password": password})
+        status, _, _ = self.api(
+            "POST", "/api/auth/register", {"username": username, "password": password, "synthetic_profile_key": profile}
+        )
         self.assertEqual(status.value, 201)
         status, headers, _ = self.api("POST", "/api/auth/login", {"username": username, "password": password})
         self.assertEqual(status.value, 200)
@@ -87,7 +113,8 @@ class DemoApiTests(unittest.TestCase):
         modules = self.use_production_modules()
         status, _, config = self.api("GET", "/api/config")
         self.assertEqual(status.value, 200)
-        self.assertEqual(config, {"module_mode": "production"})
+        self.assertEqual(config["module_mode"], "production")
+        self.assertEqual({item["id"] for item in config["synthetic_profiles"]}, {"session-001", "session-002", "session-003", "session-004"})
         cookie = self.account("alice")
         text = "What is the synthetic replacement fee?"
         status, _, created = self.api("POST", "/api/conversations", {"user_text": text}, cookie)
@@ -109,6 +136,36 @@ class DemoApiTests(unittest.TestCase):
         trace = self.app.store.list_traces(1, conversation["id"])[0]
         self.assertIsNone(trace["scenario_id"])
         self.assertNotIn(text, str(trace))
+
+    def test_registration_requires_a_known_synthetic_profile_and_requests_cannot_override_it(self) -> None:
+        status, _, body = self.api(
+            "POST", "/api/auth/register", {"username": "alice", "password": "testpw", "synthetic_profile_key": "unknown"}
+        )
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "valid_synthetic_profile_key_required"})
+        cookie = self.account("alice", "session-002")
+        status, _, body = self.api(
+            "POST", "/api/conversations", {"scenario_id": "S01", "synthetic_profile_key": "session-001"}, cookie
+        )
+        self.assertEqual(status.value, 400)
+        self.assertEqual(body, {"error": "synthetic_profile_key_is_account_bound"})
+
+    def test_production_recommendation_resolves_conversation_uuid_to_profile_snapshot(self) -> None:
+        self.app.store.close()
+        modules = RecommendationRouteModules()
+        recommendation = RecordingRecommendation()
+        self.app = DemoApplication(
+            store=InMemoryStore(),
+            module_factory=StaticModuleFactory(ModuleBundle(modules, modules, modules, recommendation)),
+        )
+        cookie = self.account("alice", "session-002")
+        status, _, created = self.api(
+            "POST", "/api/conversations", {"user_text": "Recommend a synthetic savings product."}, cookie
+        )
+        self.assertEqual(status.value, 201)
+        self.assertEqual(created["response"]["decision"]["action"], "RECOMMEND")
+        self.assertEqual(recommendation.session_ids, ["session-002"])
+        self.assertNotEqual(created["conversation"]["id"], "session-002")
 
     def test_modes_reject_the_other_mode_input_shape(self) -> None:
         cookie = self.account("alice")

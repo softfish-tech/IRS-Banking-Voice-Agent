@@ -16,6 +16,7 @@ from banking_agent.modules.intent import (
     classify_by_rules,
     extract_entities,
 )
+from banking_agent.modules.intent import calibrate_project_route
 from banking_agent.modules.intent.banking77 import (
     BANKING77_LABELS,
     BANKING77_TO_OPERATIONAL_INTENT,
@@ -139,6 +140,12 @@ class RiskSignalTests(unittest.TestCase):
         self.assertLess(result.confidence or 1.0, 0.9)
         self.assertEqual(result.risk_level, RiskLevel.HIGH)
 
+    def test_social_engineering_transfer_report_is_high_risk(self) -> None:
+        result = classify_by_rules(
+            "I think someone is trying to trick me into making this transfer."
+        )
+        self.assertEqual(result.risk_level, RiskLevel.HIGH)
+
     def test_fee_complaint_baseline_is_medium(self) -> None:
         result = classify_by_rules("I was charged a fee I do not understand.")
         self.assertEqual(result.risk_level, RiskLevel.MEDIUM)
@@ -147,6 +154,35 @@ class RiskSignalTests(unittest.TestCase):
         result = classify("I need help with that thing from before.")
         self.assertEqual(result.risk_level, RiskLevel.UNKNOWN)
         self.assertNotEqual(result.risk_level, RiskLevel.LOW)
+
+
+class ProjectCalibrationTests(unittest.TestCase):
+    def test_colloquial_ambiguity_fee_and_replacement_routes_are_normalised(self) -> None:
+        baseline = UnderstandingResult(intent="policy_enquiry", confidence=0.95, risk_level=RiskLevel.LOW)
+        cases = (
+            ("help with that bank thing pls", "UNKNOWN", RiskLevel.UNKNOWN),
+            ("I got billed a weird card charge", "fee_complaint", RiskLevel.MEDIUM),
+            ("this fee on my card makes no sense", "fee_complaint", RiskLevel.MEDIUM),
+            ("why did u charge me this fee", "fee_complaint", RiskLevel.MEDIUM),
+            ("card replcement fee?", "card_fee_enquiry", RiskLevel.LOW),
+        )
+        for text, intent, risk in cases:
+            with self.subTest(text=text):
+                result = calibrate_project_route(text, baseline)
+                self.assertEqual(result.intent, intent)
+                self.assertEqual(result.risk_level, risk)
+
+    def test_replacement_delivery_does_not_become_a_fee_enquiry_without_price_language(self) -> None:
+        baseline = UnderstandingResult(
+            intent="policy_enquiry", confidence=0.97, risk_level=RiskLevel.LOW
+        )
+
+        result = calibrate_project_route(
+            "how long does a replacement card take to arrive", baseline
+        )
+
+        self.assertEqual(result.intent, "policy_enquiry")
+        self.assertEqual(result.risk_level, RiskLevel.LOW)
 
 
 class EntityExtractionTests(unittest.TestCase):
@@ -258,6 +294,42 @@ class ContractAdapterTests(unittest.TestCase):
             analyze({"session_id": "s", "user_text": "   "})["status"], "error"
         )
         self.assertEqual(analyze({"session_id": "s"})["status"], "error")
+
+
+class ProjectRouteCalibrationTests(unittest.TestCase):
+    def _model_result(self, intent: str = "policy_enquiry") -> UnderstandingResult:
+        return UnderstandingResult(
+            intent=intent, confidence=0.91, risk_level=RiskLevel.LOW
+        )
+
+    def test_unambiguous_project_routes_override_adjacent_banking77_route(self) -> None:
+        cases = (
+            ("Why was I charged this fee?", "fee_complaint", RiskLevel.MEDIUM),
+            ("There is a card fee on my account that I do not recognise.", "fee_complaint", RiskLevel.MEDIUM),
+            ("I do not recognise this fee, can you recommend something too", "fee_complaint", RiskLevel.MEDIUM),
+            ("Which savings product should I choose?", "product_recommendation", RiskLevel.LOW),
+            ("My fee dispute is still open. Which savings product should I choose?", "product_recommendation", RiskLevel.MEDIUM),
+            ("I do not recognise a purchase on my card.", "unauthorized_transaction", RiskLevel.HIGH),
+            ("Is this payment a scam?", "fraud_suspicion", RiskLevel.HIGH),
+            ("Could you tell me the fee for replacing my bank card?", "card_fee_enquiry", RiskLevel.LOW),
+            ("Can you help with that bank thing?", "UNKNOWN", RiskLevel.UNKNOWN),
+            ("What happens if I lose access to a crypto wallet?", "policy_enquiry", RiskLevel.LOW),
+        )
+        for text, intent, risk in cases:
+            with self.subTest(text=text):
+                result = calibrate_project_route(text, self._model_result())
+                self.assertEqual(result.intent, intent)
+                self.assertEqual(result.risk_level, risk)
+
+    def test_calibration_keeps_entities_from_the_model_result(self) -> None:
+        original = UnderstandingResult(
+            intent="policy_enquiry",
+            confidence=0.9,
+            risk_level=RiskLevel.LOW,
+            entities=[Entity(type="payment_method", value="card", confidence=0.9)],
+        )
+        calibrated = calibrate_project_route("Why was I charged this fee?", original)
+        self.assertEqual(calibrated.entities, original.entities)
 
 
 class Banking77MappingTests(unittest.TestCase):

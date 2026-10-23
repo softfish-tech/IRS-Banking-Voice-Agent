@@ -46,6 +46,10 @@ Modules follow the ownership boundaries in `module_ownership.md`. A, B, C, and D
 
 E owns module invocation, controlled State integration, API/UI/voice delivery, logging, and end-to-end validation. C owns action semantics, reason codes, complaint-state rules, escalation conditions, and the recommendation permission gate. D owns product-level eligibility filtering and ranking after C has permitted the recommendation flow.
 
+When B returns multiple ranked candidates, C—not E—owns any narrowing needed
+before answer rendering. E may invoke C's documented public evidence-selection
+hook, but must still obtain C's final `ANSWER` decision before generating text.
+
 Any shared schema, enum, or contract change must include compatible test updates, a review of `scenario_table.md`, API-contract updates when I/O changes, and E coordination for cross-module compatibility.
 
 ## 4. Configuration, secrets, and data

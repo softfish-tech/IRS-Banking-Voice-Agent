@@ -67,6 +67,16 @@ returned with a low confidence (0.31, matching S07) so that C can apply its
 low-confidence rule. `empty` is reserved for "no usable result"; `error` is
 reserved for technical failures such as a missing `user_text`.
 
+### Project-route calibration
+
+When an injected BANKING77 classifier is used, `IntentModuleAdapter` applies a
+small auditable calibration layer after inference. BANKING77 has no exact label
+for the project's fee-complaint, product-recommendation, replacement-fee, or
+anaphoric-help routes. Only unambiguous wording is corrected; ordinary banking
+language remains the classifier's result. The layer recomputes A's risk signal
+from the corrected route and original text, preserves extracted entities, and
+never creates a C-owned action, reason code, or State patch.
+
 ## Risk signals
 
 BANKING77 carries no risk labels, so risk is an explicit, auditable rule layer
@@ -78,6 +88,11 @@ rather than a learned output. The reported level is the **more severe** of:
   `dispute`, `refund`, `declined`, `failed`, `pending`, ...);
 - the intent baseline (high for fraud/unauthorised, medium for fee complaints,
   low for the remaining routes).
+
+A narrow social-engineering pattern (for example, someone trying to trick,
+deceive, coerce, or pressure the customer into a transfer or payment) is also
+`HIGH`. It requires both the inducement language and a money-movement term,
+so an unrelated use of those words is not escalated by this rule alone.
 
 Two invariants follow from the scenario table and must not be weakened:
 

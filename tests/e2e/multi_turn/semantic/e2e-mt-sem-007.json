@@ -1,0 +1,134 @@
+{
+  "sequence_id": "E2E-MT-SEM-007",
+  "status": "b0_oracle_ready",
+  "type": "semantic_context",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "b0_oracle_ready"
+  },
+  "semantic_oracle": {
+    "relation": "topic_switch",
+    "required_resolution": "Treat transfer as a new topic; do not inherit card-fee intent.",
+    "baseline": "context_disabled",
+    "b0_expected": {"action": "CLARIFY", "reason_code": "CONTEXT_REQUIRED", "resolution": "forbidden", "rationale": "Transfer is a new topic and its unresolved status/purpose must not inherit card-fee context."}
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "What is the replacement-card fee?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "card_fee_enquiry",
+            "confidence": 0.93,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "REPLACEMENT_REASON_REQUIRED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [
+              {
+                "document_id": "policy-card-fees-v1",
+                "title": "Card Fees Policy",
+                "source": "Synthetic Bank Policy",
+                "score": 0.89,
+                "excerpt": "The synthetic replacement card fee is SGD 10."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "reason_code": "REPLACEMENT_REASON_REQUIRED",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "clarification"
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "What about my transfer?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "clarification"
+      }
+    }
+  ]
+}

@@ -13,7 +13,13 @@ class CrossEncoderReranker:
             import torch
             model = CrossEncoder(model_name, revision=revision, device='cpu',
                                  max_length=512, activation_fn=torch.nn.Identity(),
-                                 trust_remote_code=False, local_files_only=local_files_only)
+                                 trust_remote_code=False, local_files_only=local_files_only,
+                                 # The immutable upstream revision includes both formats.
+                                 # Its safetensors artifact produces NaN activations under
+                                 # the pinned macOS ARM reference stack, while the matching
+                                 # PyTorch artifact yields finite logits.  Pin the verified
+                                 # artifact rather than silently accepting invalid scores.
+                                 model_kwargs={'use_safetensors': False})
         self.model = model
 
     def rerank(self, query: str, candidates: list[dict], top_k: int = 5) -> list[dict]:

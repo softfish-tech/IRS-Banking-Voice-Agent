@@ -1,0 +1,406 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S04-001",
+      "scenario_id": "S04",
+      "family": "fraud_suspicion",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "compromised_card",
+        "canonical_intent": "fraud_suspicion",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s04-1",
+        "user_text": "I think someone is trying to trick me into making this transfer."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fraud_suspicion",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "FRAUD_SUSPICION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "FRAUD_SUSPICION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fraud_suspicion",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S04-002",
+      "scenario_id": "S04",
+      "family": "fraud_suspicion",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "compromised_card",
+        "canonical_intent": "fraud_suspicion",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s04-2",
+        "user_text": "This transfer request feels like a scam."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fraud_suspicion",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "FRAUD_SUSPICION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "FRAUD_SUSPICION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fraud_suspicion",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S04-003",
+      "scenario_id": "S04",
+      "family": "fraud_suspicion",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "compromised_card",
+        "canonical_intent": "fraud_suspicion",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s04-3",
+        "user_text": "I may have been targeted by a fraudster."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fraud_suspicion",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "FRAUD_SUSPICION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "FRAUD_SUSPICION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fraud_suspicion",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S04-004",
+      "scenario_id": "S04",
+      "family": "fraud_suspicion",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "banking security wording"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "compromised_card",
+        "canonical_intent": "fraud_suspicion",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Project canonical intent; owner review required."
+      },
+      "input": {
+        "session_id": "e2e-s04-4",
+        "user_text": "Is this payment a scam?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fraud_suspicion",
+            "confidence": 0.9,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "FRAUD_SUSPICION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "reason_code": "FRAUD_SUSPICION",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fraud_suspicion",
+          "risk_level": "HIGH"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "escalation",
+          "must_contain": [
+            "human assistance",
+            "handoff"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

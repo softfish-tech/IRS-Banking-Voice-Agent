@@ -1,0 +1,125 @@
+{
+  "schema_version": "semantic-eval-v1",
+  "purpose": "Small, versioned semantic scorecard derived from maintained E2E cases, B's reviewed corpus, and D's synthetic fixture. It is separate from workflow E2E assertions.",
+  "scope": "synthetic only; no customer data",
+  "cases": [
+    {
+      "case_id": "SEM-S01-LOST-CARD-FEE",
+      "source_case_id": "E2E-S01-003",
+      "review_status": "confirmed_project_decision",
+      "understanding": {"intent": "card_fee_enquiry", "risk_level": "LOW"},
+      "response": {
+        "required_fact_groups": [
+          {"id": "human_handoff", "any_of": ["\\b(?:human|specialist|support)\\b.{0,40}\\b(?:assist|help|handle)\\b", "\\b(?:escalat|handoff)\\w*\\b"]}
+        ],
+        "forbidden_patterns": ["\\bsgd\\s*(?:0|10|15)\\b"]
+      },
+      "decision": {"action": "ESCALATE", "reason_code": "CARD_SECURITY_RISK", "required_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}}
+    },
+    {
+      "case_id": "SEM-S02-FEE-COMPLAINT",
+      "source_case_id": "E2E-S02-001",
+      "review_status": "confirmed_project_decision",
+      "understanding": {"intent": "fee_complaint", "risk_level": "MEDIUM"},
+      "decision": {"action": "HANDLE_COMPLAINT", "reason_code": "FEE_COMPLAINT", "required_state": {"complaint_status": "OPEN"}},
+      "response": {
+        "required_fact_groups": [{"id": "complaint_acknowledgement", "any_of": ["\\bcomplaint\\b", "\\bcase\\b.{0,40}\\bopen(?:ed)?\\b"]}],
+        "forbidden_patterns": ["\\brecommendation\\b", "\\bsgd\\s*10\\b"]
+      }
+    },
+    {
+      "case_id": "SEM-S03-UNAUTHORISED-CARD-PAYMENT",
+      "source_case_id": "E2E-S03-001",
+      "review_status": "confirmed_project_decision",
+      "understanding": {"intent": "unauthorized_transaction", "risk_level": "HIGH"},
+      "decision": {"action": "ESCALATE", "reason_code": "HIGH_RISK_TRANSACTION", "required_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}},
+      "response": {
+        "required_fact_groups": [
+          {"id": "human_assistance", "any_of": ["\\bhuman\\b.{0,40}\\b(?:assistance|support|specialist)\\b"]},
+          {"id": "handoff_or_escalation", "any_of": ["\\b(?:handoff|escalat\\w*)\\b"]}
+        ],
+        "forbidden_patterns": ["\\brecommendation\\b"]
+      }
+    },
+    {
+      "case_id": "SEM-S04-SOCIAL-ENGINEERING",
+      "source_case_id": "E2E-S04-001",
+      "review_status": "confirmed_project_decision",
+      "understanding": {"intent": "fraud_suspicion", "risk_level": "HIGH"},
+      "decision": {"action": "ESCALATE", "reason_code": "FRAUD_SUSPICION", "required_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}},
+      "response": {
+        "required_fact_groups": [
+          {"id": "human_assistance", "any_of": ["\\bhuman\\b.{0,40}\\b(?:assistance|support|specialist)\\b"]},
+          {"id": "handoff_or_escalation", "any_of": ["\\b(?:handoff|escalat\\w*)\\b"]}
+        ],
+        "forbidden_patterns": ["\\brecommendation\\b"]
+      }
+    },
+    {
+      "case_id": "SEM-S05-OPEN-COMPLAINT-BLOCKS-RECOMMENDATION",
+      "source_case_id": "E2E-S05-001",
+      "review_status": "confirmed_scenario_rule",
+      "understanding": {"allowed": [{"intent": "product_recommendation", "risk_level": "LOW"}, {"intent": "product_recommendation", "risk_level": "MEDIUM"}]},
+      "decision": {"action": "BLOCK", "reason_code": "UNRESOLVED_COMPLAINT"},
+      "recommendation": {"must_not_call_d": true, "required_product_ids": []}
+    },
+    {
+      "case_id": "SEM-S06-PERMITTED-SAVINGS-RECOMMENDATION",
+      "source_case_id": "E2E-S06-001",
+      "review_status": "confirmed_d_fixture",
+      "understanding": {"intent": "product_recommendation", "risk_level": "LOW"},
+      "decision": {"action": "RECOMMEND", "reason_code": "RECOMMENDATION_PERMITTED"},
+      "recommendation": {"required_product_ids": ["savings-premium", "savings-flex", "emergency-reserve"], "must_not_call_b": true}
+    },
+    {
+      "case_id": "SEM-S07-AMBIGUOUS-REQUEST",
+      "source_case_id": "E2E-S07-001",
+      "review_status": "confirmed_scenario_rule",
+      "understanding": {"intent": "UNKNOWN", "risk_level": "UNKNOWN"},
+      "decision": {"action": "CLARIFY", "reason_code": "LOW_INTENT_CONFIDENCE"},
+      "response": {
+        "required_fact_groups": [{"id": "clarification", "any_of": ["\\bclarif\\w*\\b", "\\b(?:could|can) you\\b", "\\bplease (?:tell|provide|share)\\b", "\\bmore (?:detail|details|information)\\b", "\\bhelp you with\\b", "\\?"]}],
+        "forbidden_patterns": ["\\bsgd\\s*10\\b", "\\brecommendation\\b"]
+      }
+    },
+    {
+      "case_id": "SEM-S08-CRYPTO-WALLET",
+      "source_case_id": "E2E-S08-001",
+      "review_status": "confirmed_corpus",
+      "understanding": {"intent": "policy_enquiry", "risk_level": "LOW"},
+      "retrieval": {"required_document_ids": ["NB-v1_1-fiat_currency_support-001"]},
+      "decision": {"action": "ANSWER", "reason_code": "POLICY_EVIDENCE_FOUND"},
+      "response": {
+        "required_fact_groups": [
+          {"id": "crypto_unsupported", "any_of": ["\\bcrypto(?:currency)?\\b.{0,80}\\bunsupported\\b", "\\bunsupported\\b.{0,80}\\bcrypto(?:currency)?\\b"]},
+          {"id": "no_wallet_recovery", "any_of": ["\\bwallet\\b.{0,80}\\b(?:recovery|recover)\\b.{0,80}\\b(?:not|no|unsupported)\\b", "\\b(?:not|no|unsupported)\\b.{0,80}\\bwallet\\b.{0,80}\\b(?:recovery|recover)\\b"]}
+        ],
+        "forbidden_patterns": ["\\bwallet recovery is supported\\b", "\\brecovery steps\\b"]
+      }
+    },
+    {
+      "case_id": "SEM-S09-CONSENT-BLOCKS-RECOMMENDATION",
+      "source_case_id": "E2E-S09-001",
+      "review_status": "confirmed_scenario_rule",
+      "understanding": {"intent": "product_recommendation", "risk_level": "LOW"},
+      "decision": {"action": "BLOCK", "reason_code": "CONSENT_REQUIRED"},
+      "recommendation": {"must_not_call_d": true, "required_product_ids": []}
+    },
+    {
+      "case_id": "SEM-S10-NO-ELIGIBLE-PRODUCT",
+      "source_case_id": "E2E-S10-001",
+      "review_status": "confirmed_d_fixture",
+      "understanding": {"intent": "product_recommendation", "risk_level": "LOW"},
+      "decision": {"action": "RECOMMEND", "reason_code": "RECOMMENDATION_PERMITTED"},
+      "recommendation": {"required_product_ids": [], "denial_reason": "NO_ELIGIBLE_PRODUCT", "must_not_call_b": true}
+    },
+    {
+      "case_id": "SEM-S12-HIGH-RISK-OVERRIDES-UNCERTAINTY",
+      "source_case_id": "E2E-S12-001",
+      "review_status": "confirmed_scenario_rule",
+      "understanding": {"allowed": [{"intent": "UNKNOWN", "risk_level": "HIGH"}, {"intent": "unauthorized_transaction", "risk_level": "HIGH"}]},
+      "decision": {"action": "ESCALATE", "reason_code": "HIGH_RISK_TRANSACTION", "required_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}},
+      "response": {"forbidden_patterns": ["\\bclarif\\w*\\b", "\\brecommendation\\b"]}
+    }
+  ]
+}

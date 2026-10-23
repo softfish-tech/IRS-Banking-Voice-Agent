@@ -1,0 +1,398 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S02-001",
+      "scenario_id": "S02",
+      "family": "fee_complaint",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "fee complaint"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "extra_charge_on_statement",
+        "canonical_intent": "fee_complaint",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Statement charge is adjacent; project complaint intent is broader."
+      },
+      "input": {
+        "session_id": "e2e-s02-1",
+        "user_text": "There is a card fee on my account that I do not recognise."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "FEE_COMPLAINT",
+              "next_state": {
+                "complaint_status": "OPEN"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "reason_code": "FEE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fee_complaint",
+          "risk_level": "MEDIUM"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "complaint",
+          "must_contain": [
+            "complaint"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S02-002",
+      "scenario_id": "S02",
+      "family": "fee_complaint",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "fee complaint"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "extra_charge_on_statement",
+        "canonical_intent": "fee_complaint",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Statement charge is adjacent; project complaint intent is broader."
+      },
+      "input": {
+        "session_id": "e2e-s02-2",
+        "user_text": "Why was I charged this fee?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "FEE_COMPLAINT",
+              "next_state": {
+                "complaint_status": "OPEN"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "reason_code": "FEE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fee_complaint",
+          "risk_level": "MEDIUM"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "complaint",
+          "must_contain": [
+            "complaint"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S02-003",
+      "scenario_id": "S02",
+      "family": "fee_complaint",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "fee complaint"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "extra_charge_on_statement",
+        "canonical_intent": "fee_complaint",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Statement charge is adjacent; project complaint intent is broader."
+      },
+      "input": {
+        "session_id": "e2e-s02-3",
+        "user_text": "I want to dispute an unexpected card charge."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "FEE_COMPLAINT",
+              "next_state": {
+                "complaint_status": "OPEN"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "reason_code": "FEE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fee_complaint",
+          "risk_level": "MEDIUM"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "complaint",
+          "must_contain": [
+            "complaint"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S02-004",
+      "scenario_id": "S02",
+      "family": "fee_complaint",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "fee complaint"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": "extra_charge_on_statement",
+        "canonical_intent": "fee_complaint",
+        "mapping_status": "candidate_pending_a_review",
+        "mapping_reason": "Statement charge is adjacent; project complaint intent is broader."
+      },
+      "input": {
+        "session_id": "e2e-s02-4",
+        "user_text": "This fee on my statement does not look right."
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "FEE_COMPLAINT",
+              "next_state": {
+                "complaint_status": "OPEN"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "reason_code": "FEE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "modules_not_called": [
+          "B",
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": [],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "fee_complaint",
+          "risk_level": "MEDIUM"
+        },
+        "rag": {
+          "should_call": false
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "complaint",
+          "must_contain": [
+            "complaint"
+          ],
+          "must_not_contain": [
+            "recommendation",
+            "SGD 10"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "not_called",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

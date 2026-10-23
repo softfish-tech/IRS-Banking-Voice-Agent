@@ -14,6 +14,31 @@ Before implementing or changing a module, read the relevant project references:
 
 When these sources overlap, the executable schema and enums take precedence for field names and allowed values, followed by the API contract and Scenario Table. Do not duplicate their detailed contents in this file.
 
+## Active delivery index
+
+For resuming the current E work after a new conversation, read these in order:
+
+1. `docs/evaluation_catalog.md` — current fixture inventory, what each metric
+   can prove, complex-language split discipline, and the next experiment.
+2. `docs/semantic_evaluation.md` — recorded A-only/shadow/fuse evidence,
+   complex-language semantic overlays, and scorecard conventions.
+3. `docs/e_integration_implementation_plan_local.md` — active roadmap. Its
+   B0 section records the delivered bounded recent-turn memory slice and its
+   limits; it must not be described as durable or cross-session memory.
+4. `docs/multi_turn_annotation_review.md` — approval record for the
+   13-sequence / 39-turn expanded multi-turn freeze fixture.
+
+The current experimental state is: complex-language development (36) and
+holdout (12) have reviewed semantic overlays; B0 bounded recent-turn memory is
+implemented behind an explicit feature flag and passed its focused real-Fuse
+18/18 regression. The expanded 13-sequence / 39-turn fixture is approved for
+freeze and MTX-013 passed its 3/3 targeted real-chain regression. The next
+delivery milestone is the unified three-repeat full-system freeze defined in
+`docs/evaluation_catalog.md`; do not start that full experiment without the
+project owner's explicit request. Tune only on development. Holdout is frozen
+and may be run only after the development policy is fixed. `fuse` remains
+experimental until the frozen result is reviewed.
+
 ## Repository rules
 
 - Use the existing checkout; do not create Git worktrees.

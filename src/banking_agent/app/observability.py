@@ -21,10 +21,21 @@ class TraceContext:
 
 @dataclass(frozen=True)
 class ModuleOutcome:
-    module: Literal["A", "B", "C", "D"]
-    status: Literal["ok", "empty", "error"]
+    """A sanitised module or E-owned LLM-assistance event.
+
+    ``E.LLM.*`` events deliberately record only whether an optional, typed
+    proposal was accepted or the deterministic fallback was used.  They never
+    contain prompts, model output, provider details, or customer text.
+    """
+
+    module: str
+    status: Literal["ok", "empty", "error", "fallback"]
     duration_ms: int
     error_code: str | None = None
+    attempts: int | None = None
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    total_tokens: int | None = None
 
 
 @dataclass(frozen=True)

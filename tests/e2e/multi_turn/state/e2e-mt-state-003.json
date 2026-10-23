@@ -1,0 +1,112 @@
+{
+  "sequence_id": "E2E-MT-STATE-003",
+  "status": "draft_pending_c_approval",
+  "type": "reliability",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "not_applicable"
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "What is the replacement-card fee?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "error"
+        }
+      },
+      "expected": {
+        "status": "error",
+        "module_call_order": [
+          "A"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "technical_error"
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "What is the replacement-card fee?",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "card_fee_enquiry",
+            "confidence": 0.93,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "REPLACEMENT_REASON_REQUIRED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "CLARIFY",
+              "reason_code": "REPLACEMENT_REASON_REQUIRED",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [
+              {
+                "document_id": "policy-card-fees-v1",
+                "title": "Card Fees Policy",
+                "source": "Synthetic Bank Policy",
+                "score": 0.89,
+                "excerpt": "The synthetic replacement card fee is SGD 10."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "CLARIFY",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "clarification"
+      }
+    }
+  ],
+  "sequence_assertions": {
+    "technical_failure_does_not_change_business_state": true
+  }
+}

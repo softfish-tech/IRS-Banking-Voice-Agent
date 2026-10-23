@@ -1,0 +1,154 @@
+{
+  "sequence_id": "E2E-MT-STATE-002",
+  "status": "draft_pending_c_approval",
+  "type": "business_state",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "not_applicable"
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "I need to complain about a fee.",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.91,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "FEE_COMPLAINT",
+              "next_state": {
+                "complaint_status": "OPEN"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "complaint"
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "Has my complaint been reviewed?",
+      "expected_state_before": {
+        "complaint_status": "OPEN",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "COMPLAINT_ALREADY_OPEN",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "complaint"
+      }
+    },
+    {
+      "turn_id": 3,
+      "user_text": "My complaint is now resolved.",
+      "expected_state_before": {
+        "complaint_status": "OPEN",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "fee_complaint",
+            "confidence": 0.9,
+            "risk_level": "MEDIUM",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "HANDLE_COMPLAINT",
+              "reason_code": "COMPLAINT_ALREADY_OPEN",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "HANDLE_COMPLAINT",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "complaint"
+      }
+    }
+  ],
+  "sequence_assertions": {
+    "state_is_carried_between_turns": true
+  }
+}

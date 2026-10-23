@@ -13,15 +13,20 @@ from pathlib import Path
 from typing import Any
 from wsgiref.simple_server import make_server
 
-from banking_agent.app.bootstrap import ModuleFactory, build_module_factory
+from banking_agent.app.bootstrap import ModuleBundle, ModuleFactory, build_module_factory
+from banking_agent.app.conversation_context import context_memory_enabled, recent_public_context
 from banking_agent.app.api.dto import to_chat_turn_response_v1, to_developer_trace_v1
+from banking_agent.app.local_env import load_local_env
 from banking_agent.app.observability import TraceContext
 from banking_agent.app.persistence import ApplicationStore, SESSION_LIFETIME_SECONDS, SQLiteStore, StoreError
+from banking_agent.app.recommendation_adapter import ConversationProfileRecommendationAdapter
+from banking_agent.modules.recommendation import load_fixture
 from banking_agent.schemas import AgentState
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_SCENARIOS_PATH = REPOSITORY_ROOT / "tests" / "fixtures" / "scenarios" / "core.json"
 DEFAULT_DATABASE_PATH = REPOSITORY_ROOT / "data" / "processed" / "local_demo.sqlite3"
+DEFAULT_RECOMMENDATION_FIXTURE_PATH = REPOSITORY_ROOT / "data" / "fixtures" / "recommendation.json"
 STATIC_PATH = Path(__file__).with_name("static") / "index.html"
 DEVELOPER_STATIC_PATH = Path(__file__).with_name("static") / "developer.html"
 SAFE_INITIAL_STATE = {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}
@@ -45,12 +50,14 @@ class DemoApplication:
         database_path: Path = DEFAULT_DATABASE_PATH,
         module_factory: ModuleFactory | None = None,
         store: ApplicationStore | None = None,
+        recommendation_fixture_path: Path = DEFAULT_RECOMMENDATION_FIXTURE_PATH,
         developer_dashboard: bool | None = None,
         developer_username: str | None = None,
     ) -> None:
         scenarios = json.loads(scenarios_path.read_text(encoding="utf-8"))
         self._scenarios = {scenario["id"]: scenario for scenario in scenarios}
         self.store = store or SQLiteStore(database_path)
+        self.synthetic_profile_keys = frozenset(load_fixture(recommendation_fixture_path).customer_profiles)
         self.module_factory = module_factory or build_module_factory(
             os.environ.get("BANKING_AGENT_MODULE_MODE", "fixture")
         )
@@ -109,6 +116,17 @@ class DemoApplication:
             raise StoreError("valid_scenario_id_required")
         return self._scenarios[scenario_id]
 
+    def _synthetic_profile_key(self, payload: dict[str, Any]) -> str:
+        profile_key = payload.get("synthetic_profile_key")
+        if not isinstance(profile_key, str) or profile_key not in self.synthetic_profile_keys:
+            raise StoreError("valid_synthetic_profile_key_required")
+        return profile_key
+
+    @staticmethod
+    def _reject_profile_override(payload: dict[str, Any]) -> None:
+        if "synthetic_profile_key" in payload:
+            raise StoreError("synthetic_profile_key_is_account_bound")
+
     @property
     def module_mode(self) -> str:
         mode = getattr(self.module_factory, "mode", None)
@@ -143,6 +161,31 @@ class DemoApplication:
         scenario: dict[str, Any] | None = None,
     ) -> tuple[dict[str, object], dict[str, object]]:
         modules = self.module_factory.create(scenario=scenario)
+        if self.module_mode == "production":
+            modules = ModuleBundle(
+                modules.intent,
+                modules.retrieval,
+                modules.rules,
+                ConversationProfileRecommendationAdapter(
+                    modules.recommendation,
+                    self.store.conversation_profile_key,
+                ),
+                response_generator=modules.response_generator,
+                recommendation_response_generator=modules.recommendation_response_generator,
+                query_rewriter=modules.query_rewriter,
+                clarification_generator=modules.clarification_generator,
+            )
+        state_kwargs: dict[str, object] = {
+            "session_id": str(conversation["id"]),
+            "user_text": user_text,
+            "complaint_status": str(conversation["complaint_status"]),
+            "handoff_status": str(conversation["handoff_status"]),
+            "consent": str(conversation["consent"]),
+        }
+        if context_memory_enabled():
+            state_kwargs["conversation_context"] = recent_public_context(
+                conversation["messages"]
+            )
         response = await modules.new_orchestrator(
             trace_sink=self.store,
             trace_context=TraceContext(
@@ -152,13 +195,7 @@ class DemoApplication:
                 user_id=int(user["id"]),
             ),
         ).handle(
-            AgentState(
-                session_id=str(conversation["id"]),
-                user_text=user_text,
-                complaint_status=str(conversation["complaint_status"]),
-                handoff_status=str(conversation["handoff_status"]),
-                consent=str(conversation["consent"]),
-            )
+            AgentState(**state_kwargs)
         )
         public_response = to_chat_turn_response_v1(response).model_dump(mode="json")
         if response.status == "ok":
@@ -175,7 +212,16 @@ class DemoApplication:
     async def api(self, method: str, path: str, body: bytes = b"", cookie_header: str = "") -> tuple[HTTPStatus, list[tuple[str, str]], bytes]:
         try:
             if method == "GET" and path == "/api/config":
-                return self._json(HTTPStatus.OK, {"module_mode": self.module_mode})
+                return self._json(
+                    HTTPStatus.OK,
+                    {
+                        "module_mode": self.module_mode,
+                        "synthetic_profiles": [
+                            {"id": key, "label": f"Synthetic profile {key}"}
+                            for key in sorted(self.synthetic_profile_keys)
+                        ],
+                    },
+                )
             if method == "GET" and path == "/api/scenarios":
                 if self.module_mode != "fixture":
                     raise StoreError("scenarios_are_only_available_in_fixture_mode")
@@ -183,7 +229,11 @@ class DemoApplication:
                 return self._json(HTTPStatus.OK, {"scenarios": scenarios})
             if method == "POST" and path == "/api/auth/register":
                 payload = self._payload(body)
-                user = self.store.register(payload.get("username", ""), payload.get("password", ""))
+                user = self.store.register(
+                    payload.get("username", ""),
+                    payload.get("password", ""),
+                    self._synthetic_profile_key(payload),
+                )
                 return self._json(HTTPStatus.CREATED, {"user": user})
             if method == "POST" and path == "/api/auth/login":
                 payload = self._payload(body)
@@ -214,6 +264,7 @@ class DemoApplication:
                 return self._json(HTTPStatus.OK, {"conversations": self.store.list_conversations(int(user["id"]))})
             if method == "POST" and path == "/api/conversations":
                 payload = self._payload(body)
+                self._reject_profile_override(payload)
                 if self.module_mode == "fixture":
                     if "user_text" in payload:
                         raise StoreError("user_text_not_allowed_in_fixture_mode")
@@ -239,6 +290,7 @@ class DemoApplication:
                 return self._json(HTTPStatus.OK, {"conversation": self.store.get_conversation(int(user["id"]), parts[3])})
             if len(parts) == 5 and parts[:3] == ["", "api", "conversations"] and parts[4] == "messages" and method == "POST":
                 payload = self._payload(body)
+                self._reject_profile_override(payload)
                 expected_version = self._expected_version(payload)
                 conversation = self.store.get_conversation(int(user["id"]), parts[3])
                 if self.module_mode == "fixture":
@@ -303,6 +355,7 @@ class DemoApplication:
 
 
 def main() -> None:
+    load_local_env()
     app = DemoApplication()
     with make_server("127.0.0.1", 8000, app) as server:
         print("Local account demo: http://127.0.0.1:8000")

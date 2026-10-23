@@ -33,6 +33,7 @@ from .mock import (
     extract_entities,
     score_intent,
 )
+from .project_calibration import calibrate_project_route
 
 __all__ = [
     "IntentModuleAdapter",
@@ -42,6 +43,7 @@ __all__ = [
     "analyze",
     "classify",
     "classify_by_rules",
+    "calibrate_project_route",
     "detect_risk",
     "extract_entities",
     "score_intent",

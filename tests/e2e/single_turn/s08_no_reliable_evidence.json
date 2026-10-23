@@ -1,0 +1,478 @@
+{
+  "schema_version": "v0",
+  "status": "draft_pending_c_approval",
+  "cases": [
+    {
+      "case_id": "E2E-S08-001",
+      "scenario_id": "S08",
+      "family": "no_reliable_evidence",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "unsupported policy boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "policy_enquiry",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "policy_enquiry is project routing, not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s08-1",
+        "user_text": "What is the bank policy for crypto wallet recovery?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "policy_enquiry",
+            "confidence": 0.87,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "modules_not_called": [
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "policy_enquiry",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": true,
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "answer",
+          "must_contain": [
+            "cryptocurrency"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "mock_retriever_aligned_empty",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S08-002",
+      "scenario_id": "S08",
+      "family": "no_reliable_evidence",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "unsupported policy boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "policy_enquiry",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "policy_enquiry is project routing, not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s08-2",
+        "user_text": "Can NovaBank recover my cryptocurrency wallet?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "policy_enquiry",
+            "confidence": 0.87,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "modules_not_called": [
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "policy_enquiry",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": true,
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "answer",
+          "must_contain": [
+            "cryptocurrency"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "scripted_empty",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S08-003",
+      "scenario_id": "S08",
+      "family": "no_reliable_evidence",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "unsupported policy boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "policy_enquiry",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "policy_enquiry is project routing, not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s08-3",
+        "user_text": "What happens if I lose access to a crypto wallet?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "policy_enquiry",
+            "confidence": 0.87,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "modules_not_called": [
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "policy_enquiry",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": true,
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "answer",
+          "must_contain": [
+            "cryptocurrency"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "scripted_empty",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    },
+    {
+      "case_id": "E2E-S08-004",
+      "scenario_id": "S08",
+      "family": "no_reliable_evidence",
+      "source": {
+        "type": "project-authored synthetic",
+        "reference": "unsupported policy boundary"
+      },
+      "intent_provenance": {
+        "utterance_source": "project-authored synthetic",
+        "reference_taxonomy": "BANKING77",
+        "reference_label": null,
+        "canonical_intent": "policy_enquiry",
+        "mapping_status": "no_direct_equivalent",
+        "mapping_reason": "policy_enquiry is project routing, not a BANKING77 label."
+      },
+      "input": {
+        "session_id": "e2e-s08-4",
+        "user_text": "Does the bank support crypto wallet restoration?"
+      },
+      "initial_state": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "policy_enquiry",
+            "confidence": 0.87,
+            "risk_level": "LOW",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "next_state": {}
+            }
+          },
+          {
+            "status": "ok",
+            "data": {
+              "action": "ANSWER",
+              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "next_state": {}
+            }
+          }
+        ],
+        "B": {
+          "status": "ok",
+          "data": {
+            "docs": [{
+              "document_id": "NB-v1_1-fiat_currency_support-001",
+              "title": "Supported balances and funding boundaries",
+              "source": "Synthetic Bank Policy",
+              "score": 0.99,
+              "excerpt": "Other fiat currencies, cryptocurrency and precious metals are unsupported."
+            }]
+          }
+        }
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ANSWER",
+        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "module_call_order": [
+          "A",
+          "C",
+          "B",
+          "C"
+        ],
+        "modules_not_called": [
+          "D"
+        ],
+        "state_after": {
+          "complaint_status": "NONE",
+          "handoff_status": "NOT_REQUIRED",
+          "consent": "UNKNOWN"
+        },
+        "citation_ids": ["NB-v1_1-fiat_currency_support-001"],
+        "recommendation_count": 0
+      },
+      "acceptance": {
+        "understanding": {
+          "intent": "policy_enquiry",
+          "risk_level": "LOW"
+        },
+        "rag": {
+          "should_call": true,
+          "expected_status": "ok",
+          "required_document_ids": ["NB-v1_1-fiat_currency_support-001"]
+        },
+        "recommendation": {
+          "should_call": false
+        },
+        "public_response": {
+          "kind": "answer",
+          "must_contain": [
+            "cryptocurrency"
+          ],
+          "must_not_contain": [
+            "Card Fees Policy"
+          ]
+        }
+      },
+      "validation": {
+        "orchestrator_contract": "verified_scripted",
+        "a_label_mapping": "pending_a_owner_review",
+        "rag_backend_alignment": "scripted_empty",
+        "d_adapter_alignment": "not_called",
+        "c_policy_approval": "pending"
+      }
+    }
+  ]
+}

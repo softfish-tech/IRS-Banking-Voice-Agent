@@ -1,0 +1,112 @@
+{
+  "sequence_id": "E2E-MT-STATE-004",
+  "status": "draft_pending_c_approval",
+  "type": "business_state",
+  "validation": {
+    "orchestrator_contract": "verified_scripted",
+    "c_policy_approval": "pending",
+    "context_contract_status": "not_applicable"
+  },
+  "initial_state": {
+    "complaint_status": "NONE",
+    "handoff_status": "NOT_REQUIRED",
+    "consent": "UNKNOWN"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "user_text": "Someone used my card without permission.",
+      "expected_state_before": {
+        "complaint_status": "NONE",
+        "handoff_status": "NOT_REQUIRED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "unauthorized_transaction",
+            "confidence": 0.91,
+            "risk_level": "HIGH",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HIGH_RISK_TRANSACTION",
+              "next_state": {
+                "complaint_status": "OPEN",
+                "handoff_status": "ESCALATED"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "escalation"
+      }
+    },
+    {
+      "turn_id": 2,
+      "user_text": "I need help with something.",
+      "expected_state_before": {
+        "complaint_status": "OPEN",
+        "handoff_status": "ESCALATED",
+        "consent": "UNKNOWN"
+      },
+      "scripted_module_envelopes": {
+        "A": {
+          "status": "ok",
+          "data": {
+            "intent": "UNKNOWN",
+            "confidence": 0.25,
+            "risk_level": "UNKNOWN",
+            "entities": []
+          }
+        },
+        "C": [
+          {
+            "status": "ok",
+            "data": {
+              "action": "ESCALATE",
+              "reason_code": "HANDOFF_ALREADY_ACTIVE",
+              "next_state": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "ok",
+        "action": "ESCALATE",
+        "module_call_order": [
+          "A",
+          "C"
+        ],
+        "state_after": {
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
+          "consent": "UNKNOWN"
+        },
+        "public_message_kind": "escalation"
+      }
+    }
+  ],
+  "sequence_assertions": {
+    "state_is_carried_between_turns": true,
+    "handoff_not_cleared_by_e": true
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "sequence_id": "E2E-MT-SEM-018",
+  "status": "b0_oracle_ready",
+  "type": "semantic_context",
+  "validation": {"orchestrator_contract": "verified_scripted", "c_policy_approval": "pending", "context_contract_status": "b0_oracle_ready"},
+  "semantic_oracle": {"relation": "topic_switch", "required_resolution": "A fraud report is a new high-risk topic and overrides the prior fee context.", "baseline": "current_turn_sufficient", "b0_expected": {"action": "ESCALATE", "reason_code": "FRAUD_SUSPICION", "resolution": "forbidden", "rationale": "The explicit new fraud topic overrides the open fee-complaint context."}},
+  "initial_state": {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"},
+  "turns": [
+    {"turn_id": 1, "user_text": "I do not recognise this card fee.", "expected_state_before": {"complaint_status": "NONE", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}, "scripted_module_envelopes": {"A": {"status": "ok", "data": {"intent": "fee_complaint", "confidence": 0.91, "risk_level": "MEDIUM", "entities": []}}, "C": [{"status": "ok", "data": {"action": "HANDLE_COMPLAINT", "reason_code": "FEE_COMPLAINT", "next_state": {"complaint_status": "OPEN"}}}]}, "expected": {"status": "ok", "action": "HANDLE_COMPLAINT", "module_call_order": ["A", "C"], "state_after": {"complaint_status": "OPEN", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}, "public_message_kind": "complaint"}},
+    {"turn_id": 2, "user_text": "Different issue: I was tricked into sending a transfer.", "expected_state_before": {"complaint_status": "OPEN", "handoff_status": "NOT_REQUIRED", "consent": "UNKNOWN"}, "scripted_module_envelopes": {"A": {"status": "ok", "data": {"intent": "fraud_suspicion", "confidence": 0.95, "risk_level": "HIGH", "entities": []}}, "C": [{"status": "ok", "data": {"action": "ESCALATE", "reason_code": "FRAUD_SUSPICION", "next_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}}}]}, "expected": {"status": "ok", "action": "ESCALATE", "module_call_order": ["A", "C"], "state_after": {"complaint_status": "OPEN", "handoff_status": "ESCALATED", "consent": "UNKNOWN"}, "public_message_kind": "escalation"}}
+  ],
+  "sequence_assertions": {"state_is_carried_between_turns": true, "unauthorised_d_call_count": 0}
+}

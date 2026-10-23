@@ -26,8 +26,22 @@ The table specifies expected workflow behavior, not exact final-response wording
 | S04 | **Fraud suspicion** — “I think this transfer may be a scam.” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `fraud_suspicion`, `0.95`, `HIGH` | `ESCALATE`, `FRAUD_SUSPICION`; patch: `complaint=OPEN`, `handoff=ESCALATED` | E calls A and C only; B and D are not called | Safe handoff response; complaint remains unresolved; no recommendation |
 | S05 | **Open complaint blocks recommendation** — “Can you recommend a savings product while my fee complaint is still open?” | `complaint=OPEN`, `handoff=NOT_REQUIRED`, `consent=GRANTED` | A: `product_recommendation`, `0.91`, `LOW` | `BLOCK`, `UNRESOLVED_COMPLAINT` | D is not called | Response explains recommendation is unavailable until resolution; `recommendations=[]` |
 | S06 | **Recommendation after resolution** — “My complaint is resolved. Can you recommend a suitable savings product?” | `complaint=RESOLVED`, `handoff=NOT_REQUIRED`, `consent=GRANTED` | A: `product_recommendation`, `0.93`, `LOW`; D: allowed, ranked items | `RECOMMEND`, `RECOMMENDATION_PERMITTED` | C permits D; D filters eligible synthetic products and ranks them | D is called; recommendations are non-empty; response presents permitted recommendation(s) |
-| S07 | **Low confidence** — “I need help with that thing from before.” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `UNKNOWN`, `0.31`, `UNKNOWN` | `CLARIFY`, `LOW_INTENT_CONFIDENCE` | B and D are not called | Response asks a targeted clarification; no unsupported assumption |
-| S08 | **No reliable evidence** — “What is the bank policy for crypto wallet recovery?” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `policy_enquiry`, `0.88`, `LOW`; B: `status=empty`, `docs=[]` | `ABSTAIN`, `INSUFFICIENT_EVIDENCE` | C pre-check allows retrieval; E calls B; C post-check returns `ABSTAIN`; D is not called | No unsupported policy answer; response states reliable information is unavailable and offers further assistance |
+| S07 | **Low confidence** — “I need help with that thing from before.” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `UNKNOWN`, `0.31`, `UNKNOWN` | `CLARIFY`, `LOW_INTENT_CONFIDENCE` or `UNKNOWN_INTENT` when a validated ambiguity draft confirms missing context | B and D are not called | Response asks a targeted clarification; no unsupported assumption |
+| S08 | **Unsupported crypto-wallet service** — “What is the bank policy for crypto wallet recovery?” | `complaint=NONE`, `handoff=NOT_REQUIRED`, `consent=UNKNOWN` | A: `policy_enquiry`, `0.88`, `LOW`; B: reviewed `NB-v1_1-fiat_currency_support-001`, which explicitly says cryptocurrency is unsupported | `ANSWER`, `POLICY_EVIDENCE_FOUND` | C pre-check allows retrieval; E calls B; C accepts only the reviewed unsupported-service boundary document; D is not called | Answer may state that NovaBank cannot provide crypto-wallet recovery because cryptocurrency is unsupported. It must not invent recovery steps. If that document is absent, C returns `ABSTAIN`. |
+
+S01 assumes the retrieved excerpt actually states a generic replacement fee.
+The maintained B corpus currently states a *lost-card* replacement fee of
+SGD 15, while E's S01 mock states a generic SGD 10. If the generic S01 question
+receives only that reason-specific B excerpt, the final C decision is
+`CLARIFY / REPLACEMENT_REASON_REQUIRED`; E should ask which replacement reason
+applies. A specific lost-card question may use the B excerpt after evidence
+checking. The team should align the S01 fixture and policy wording before
+claiming a real-backend S01 answer.
+
+The same boundary applies to a generic replacement-delivery question. The
+customer must identify the replacement circumstance before C can apply a
+reason-specific delivery branch; a generic physical-card delivery estimate is
+not authority to assume that the request is for a replacement.
 
 ## Rule-precedence case
 
@@ -52,6 +66,29 @@ These scenarios are valuable but are not required for the first text-mock demons
 | S10 | No eligible product after C permits Recommendation | D returns `allowed=false`, `NO_ELIGIBLE_PRODUCT` | D + E |
 | S11 | Complaint lifecycle | `OPEN → UNDER_REVIEW → RESOLVED` | C |
 
+## C safety extensions for joint acceptance
+
+These cases supplement S01–S11 without changing the shared State or action
+enums. C unit tests and a local C/E composition preview cover them; E should
+carry them into its maintained integration/E2E suite when the branches join.
+
+| ID | Input condition | Expected C decision | E acceptance |
+| --- | --- | --- | --- |
+| C-S12 | A labels “I lost my card”, “lost-card replacement fee”, or a clarification follow-up such as “It is my lost card” as a low-confidence policy enquiry | `ESCALATE / CARD_SECURITY_RISK`; request `OPEN` and `ESCALATED` patches | Do not call B or D; keep any existing unresolved case open. |
+| C-S13 | A labels “Can you recommend a savings product?” as a policy enquiry while complaint is OPEN | `BLOCK / UNRESOLVED_COMPLAINT` | Do not call D or render a product offer. |
+| C-S14 | B returns a high-scoring card-fee excerpt for an unrelated or missing-detail question | `ABSTAIN / INSUFFICIENT_EVIDENCE` | Do not render the excerpt as an answer. |
+| C-S15 | User requests their balance or asks the text mock to execute a transfer, even if A labels it policy enquiry | `BLOCK / AUTHENTICATION_REQUIRED` or `BLOCK / OPERATION_NOT_SUPPORTED` | No account read or transaction is executed. |
+| C-S16 | An OPEN complaint is repeated, including a bounded-context follow-up such as “Can I challenge that?” or “Could that be waived?”; a human reviews and resolves with evidence | `HANDLE_COMPLAINT / COMPLAINT_ALREADY_OPEN`; state machine permits `OPEN → UNDER_REVIEW → RESOLVED` only with authenticated human events and a resolution reference | E persists case revision, event IDs, evidence and human-role provenance before applying resolution. |
+| C-S17 | A replacement-fee question retrieves a delivery time or an express-shipping price but no replacement-fee amount, even when joined to a pending-fee statement | `ABSTAIN / INSUFFICIENT_EVIDENCE` | Do not render the unrelated value as the fee. |
+| C-S18 | A misclassified first-person report says the account was hacked or credentials leaked | `ESCALATE / ACCOUNT_SECURITY_RISK` or `ESCALATE / CREDENTIAL_SECURITY_RISK` | Open a case, escalate handoff and keep the reason aligned with the affected asset. |
+| C-S19 | A labels a report of being tricked, deceived, coerced, or pressured into a payment or transfer as low-risk policy enquiry | `ESCALATE / FRAUD_SUSPICION`; request `OPEN` and `ESCALATED` patches | Do not call B or D. C's text safety guard must remain effective independently of A's risk output. |
+| C-S20 | A labels “My card was used without permission; recommend a safer savings product” as a low-risk recommendation | `ESCALATE / HIGH_RISK_TRANSACTION`; request `OPEN` and `ESCALATED` patches | The unauthorised-card report takes precedence over recommendation; do not call B or D. |
+| C-S21 | A assigns a confident generic policy intent to “Need help with a card”, “I need help with a transfer”, or “Is it covered?” | `CLARIFY / CONTEXT_REQUIRED` | Do not call B or D; a short request without a task or condition cannot be made answerable by classifier confidence. |
+| C-S22 | A labels “My card got used by someone else” as policy enquiry, or a context-free “What happens next?” as a policy enquiry | `ESCALATE / HIGH_RISK_TRANSACTION` for the former; `CLARIFY / CONTEXT_REQUIRED` for the latter | Do not call B or D. C's text boundary must protect against a missed unauthorised-use label and a context-free LLM/A interpretation. |
+| C-S23 | A customer supplies damage as the replacement condition, including after an earlier generic replacement question or by reporting a damaged card chip | `ANSWER / POLICY_EVIDENCE_FOUND` when reviewed damaged-card evidence is retrieved; no complaint or handoff patch | Use the damaged-card evidence. Explain the predecessor-retirement requirement and do not treat ordinary damage as a lost/stolen-card safety event. |
+| C-S24 | A contextual follow-up supplies “still pending” for an earlier transfer question | `ANSWER / POLICY_EVIDENCE_FOUND` when `NB-v1_1-pending_transfer-001` is retrieved | State the up-to-24-hour pending window and duplicate-transfer warning; do not promise completion or bypass a hold. |
+| C-S25 | A labels an explicit complaint request, such as “I need to complain about a fee”, as a generic policy enquiry; or labels an OPEN-case request for a savings product as policy enquiry | `HANDLE_COMPLAINT` for the explicit complaint; `BLOCK / UNRESOLVED_COMPLAINT` for the product request | Do not retrieve instead of opening/maintaining the complaint; do not call D or market a product while the complaint is unresolved. |
+
 ## Future E2E fixture mapping
 
 When implementation begins, each core scenario maps to a fixture under `tests/fixtures/scenarios/` and a test under `tests/e2e/`, using the same `S01`–`S08` identifier.
@@ -71,3 +108,10 @@ eligible, ranked recommendations. The existing core fixture is unchanged.
 The same check covers no eligible products, unknown sessions, defensive denial,
 C's complaint patch before D, and rejection of a consent patch.
 This establishes E/D compatibility, not real A/B/C quality or voice completion.
+
+For the local application, E maps each registered synthetic user to one D
+fixture profile and snapshots that association onto each new conversation. When
+D is reached in production composition, E resolves the conversation UUID to the
+snapshot before calling D. A payload cannot select a different profile, and a
+missing legacy snapshot fails closed. This is local fixture configuration, not
+customer authentication.
