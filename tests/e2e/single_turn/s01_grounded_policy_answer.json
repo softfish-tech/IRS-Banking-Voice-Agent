@@ -281,17 +281,9 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
-              "next_state": {}
-            }
-          },
-          {
-            "status": "ok",
-            "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
-              "next_state": {}
+              "action": "ESCALATE",
+              "reason_code": "CARD_SECURITY_RISK",
+              "next_state": {"complaint_status": "OPEN", "handoff_status": "ESCALATED"}
             }
           }
         ],
@@ -312,25 +304,22 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
-        "reason_code": "POLICY_EVIDENCE_FOUND",
+        "action": "ESCALATE",
+        "reason_code": "CARD_SECURITY_RISK",
         "module_call_order": [
           "A",
-          "C",
-          "B",
           "C"
         ],
         "modules_not_called": [
+          "B",
           "D"
         ],
         "state_after": {
-          "complaint_status": "NONE",
-          "handoff_status": "NOT_REQUIRED",
+          "complaint_status": "OPEN",
+          "handoff_status": "ESCALATED",
           "consent": "UNKNOWN"
         },
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ],
+        "citation_ids": [],
         "recommendation_count": 0
       },
       "acceptance": {
@@ -339,23 +328,18 @@
           "risk_level": "LOW"
         },
         "rag": {
-          "should_call": true,
-          "expected_status": "ok",
-          "required_document_ids": [
-            "policy-card-fees-v1"
-          ]
+          "should_call": false
         },
         "recommendation": {
           "should_call": false
         },
         "public_response": {
-          "kind": "answer",
+          "kind": "escalation",
           "must_contain": [
-            "SGD 10",
-            "Card Fees Policy"
+            "human"
           ],
           "must_not_contain": [
-            "RECOMMENDATION_PERMITTED"
+            "SGD 10"
           ]
         }
       },

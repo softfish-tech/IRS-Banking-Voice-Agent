@@ -76,20 +76,20 @@ synthetic fixture until E adds those case-management capabilities.
 
 B's `ok` and ranking score mean candidate retrieval, not answer permission.
 Before final arbitration, E may call C's public
-`RuleEngine.select_relevant_evidence(question, docs)` hook. It removes
-candidates that cannot safely be rendered for this question; C then checks the
-highest-ranked individually answerable excerpt and makes the required final
-decision. It rejects
-empty/malformed documents, non-finite scores,
-topic mismatch and missing requested details or values. It requires each
-rendered excerpt to cover all salient request terms after a small set of
-normalizations, so paraphrases outside that set can cause safe abstention.
-For fee questions it also requires a monetary value tied to the requested
-subject within the same short clause; delivery times and separate shipping
-charges do not count, including when joined by a comma or conjunction.
-It does not use a cross-backend score threshold. A generic card-replacement fee question is
-clarified when the evidence only states a reason-specific price; a specified
-lost-card fee can be answered from matching evidence.
+`RuleEngine.select_relevant_evidence(question, docs)` hook. It removes only
+malformed or duplicate documents and preserves B's bounded rank order; C does
+not replace B's ranking with a single-document relevance decision. C then
+checks that at least one admissible source supports the complete requested
+fact. Less-relevant but structurally valid candidates do not veto the answer
+and remain available to the grounded response model as context. For fee
+questions, a supporting source must still contain a monetary value tied to the
+requested subject within the same short clause; delivery times and separate
+shipping charges do not count. A generic card-replacement fee question is
+clarified when the evidence only states a reason-specific price. An explicit
+lost-card condition is a card-security report and takes the urgent escalation
+route before retrieval, even when phrased as a fee question. The grounded response
+model must cite only C-admissible sources and must not combine facts from
+different conditional branches.
 
 This deterministic gate cannot prove arbitrary natural-language entailment,
 resolve all conflicting policy conditions, or certify real-bank accuracy. It

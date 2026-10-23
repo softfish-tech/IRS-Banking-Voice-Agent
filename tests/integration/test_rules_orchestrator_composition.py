@@ -124,7 +124,7 @@ class CWithEOrchestratorTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.decision.reason_code, "CONSENT_REQUIRED")
         self.assertEqual(modules.calls, ["A", "C"])
 
-    async def test_real_b_mock_specific_fee_and_generic_ambiguity(self):
+    async def test_generic_fee_clarifies_and_lost_card_fee_escalates(self):
         corpus = (
             Path(__file__).resolve().parents[2]
             / "src/banking_agent/modules/rag/chunks/NovaBank_knowledge_chunks_v1_1.jsonl"
@@ -139,7 +139,7 @@ class CWithEOrchestratorTests(unittest.IsolatedAsyncioTestCase):
 
         for question, expected in (
             ("What is the replacement fee for my card?", "CLARIFY"),
-            ("How much does replacing a lost card cost?", "ANSWER"),
+            ("How much does replacing a lost card cost?", "ESCALATE"),
         ):
             with self.subTest(question=question):
                 modules = ScriptedModules({

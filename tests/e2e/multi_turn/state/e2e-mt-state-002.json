@@ -82,10 +82,8 @@
             "status": "ok",
             "data": {
               "action": "HANDLE_COMPLAINT",
-              "reason_code": "COMPLAINT_UNDER_REVIEW",
-              "next_state": {
-                "complaint_status": "UNDER_REVIEW"
-              }
+              "reason_code": "COMPLAINT_ALREADY_OPEN",
+              "next_state": {}
             }
           }
         ]
@@ -98,7 +96,7 @@
           "C"
         ],
         "state_after": {
-          "complaint_status": "UNDER_REVIEW",
+          "complaint_status": "OPEN",
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
@@ -109,7 +107,7 @@
       "turn_id": 3,
       "user_text": "My complaint is now resolved.",
       "expected_state_before": {
-        "complaint_status": "UNDER_REVIEW",
+        "complaint_status": "OPEN",
         "handoff_status": "NOT_REQUIRED",
         "consent": "UNKNOWN"
       },
@@ -128,10 +126,8 @@
             "status": "ok",
             "data": {
               "action": "HANDLE_COMPLAINT",
-              "reason_code": "COMPLAINT_RESOLVED",
-              "next_state": {
-                "complaint_status": "RESOLVED"
-              }
+              "reason_code": "COMPLAINT_ALREADY_OPEN",
+              "next_state": {}
             }
           }
         ]
@@ -144,7 +140,7 @@
           "C"
         ],
         "state_after": {
-          "complaint_status": "RESOLVED",
+          "complaint_status": "OPEN",
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },

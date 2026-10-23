@@ -61,16 +61,16 @@
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_RETRIEVAL_PERMITTED",
+              "action": "CLARIFY",
+              "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           },
           {
             "status": "ok",
             "data": {
-              "action": "ANSWER",
-              "reason_code": "POLICY_EVIDENCE_FOUND",
+              "action": "CLARIFY",
+              "reason_code": "REPLACEMENT_REASON_REQUIRED",
               "next_state": {}
             }
           }
@@ -92,7 +92,7 @@
       },
       "expected": {
         "status": "ok",
-        "action": "ANSWER",
+        "action": "CLARIFY",
         "module_call_order": [
           "A",
           "C",
@@ -104,10 +104,7 @@
           "handoff_status": "NOT_REQUIRED",
           "consent": "UNKNOWN"
         },
-        "public_message_kind": "answer",
-        "citation_ids": [
-          "policy-card-fees-v1"
-        ]
+        "public_message_kind": "clarification"
       }
     }
   ],

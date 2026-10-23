@@ -54,8 +54,14 @@ class RuleEngine:
     )
     _RECOMMENDATION_REQUEST = re.compile(
         r"^\s*(?:(?:can|could|would)\s+you\s+|please\s+)?(?:recommend|suggest)\b"
-        r"|\bi\s+(?:would\s+like|want|need)\s+(?:you\s+to\s+)?(?:recommend|suggest)\b",
+        r"|\bi\s+(?:would\s+like|want|need)\s+(?:you\s+to\s+)?(?:recommend|suggest)\b"
+        r"|\b(?:can|could|may)\s+i\s+(?:get|open)\s+(?:a\s+)?(?:savings\s+)?product\b",
         re.I,
+    )
+    _EXPLICIT_COMPLAINT_REQUEST = re.compile(
+        r"\b(?:want|need|would\s+like)\s+to\s+complain\b"
+        r"|\b(?:make|file|raise)\s+(?:a\s+)?complaint\b"
+        r"|\bcomplaint\s+about\b", re.I
     )
     _ACCOUNT_READ_REQUEST = re.compile(
         r"\b(?:what(?:'s| is)|check|show(?: me)?|tell me)\s+my\s+"
@@ -65,7 +71,29 @@ class RuleEngine:
     _TRANSACTION_REQUEST = re.compile(
         r"^\s*(?:(?:can|could|would)\s+you\s+|please\s+)?"
         r"(?:make|send|execute|initiate)\s+(?:a\s+)?(?:bank\s+)?(?:transfer|payment)\b"
-        r"|^\s*(?:(?:can|could|would)\s+you\s+|please\s+)?transfer\s+money\b",
+        r"|^\s*(?:(?:can|could|would)\s+you\s+|please\s+)?transfer\s+money\b"
+        r"|^\s*send\s+money\b"
+        r"|^\s*skip(?:\s+\w+){0,4}\s+and\s+transfer\s+money\b",
+        re.I,
+    )
+    # These complete utterances identify neither a banking task nor a required
+    # detail.  They must not be converted into a retrieval route merely
+    # because A happened to assign a confident generic intent.
+    _CONTEXT_FREE_AMBIGUITY_REQUEST = re.compile(
+        r"^\s*(?:(?:i\s+)?need\s+help\s+with\s+(?:a\s+)?(?:card|account)|"
+        r"(?:i\s+)?need\s+help\s+with\s+(?:a\s+)?(?:bank\s+)?transfer|"
+        r"help\s+with\s+that\s+(?:bank\s+)?thing\s*(?:pls|please)?|"
+        r"is\s+it\s+covered|what\s+happens\s+next|"
+        r"what\s+about\s+(?:the\s+same\s+card|my\s+(?:transfer|payment))|"
+        r"i\s+need\s+help\s+with\s+another\s+thing|"
+        r"can\s+you\s+check\s+again|what\s+needs\s+to\s+happen\s+first)\s*[?.!]*\s*$",
+        re.I,
+    )
+    _CONTEXTUAL_FEE_DISPUTE_REQUEST = re.compile(
+        r"\b(?:challenge|dispute|waiv(?:e|ed|er)|refund)\b", re.I
+    )
+    _CONTEXTUAL_FEE_REFERENCE = re.compile(
+        r"\b(?:that|it|this|the)\s+(?:fee|charge)\b|\b(?:that|it)\b",
         re.I,
     )
 
@@ -85,9 +113,37 @@ class RuleEngine:
         understanding = state.understanding
         intent = (understanding.intent or "").strip().lower()
 
-        # An urgent report cannot be downgraded by an unreliable classifier.
+        # Explicit requests for unavailable account operations are not fraud
+        # reports: reject them before a coarse high-risk classifier can route
+        # them as an escalation.
+        if intent in self._ACCOUNT_READ_INTENTS or self._ACCOUNT_READ_REQUEST.search(state.user_text):
+            return self._result(Action.BLOCK, "AUTHENTICATION_REQUIRED")
+        if intent in self._TRANSACTION_INTENTS or self._TRANSACTION_REQUEST.search(state.user_text):
+            return self._result(Action.BLOCK, "OPERATION_NOT_SUPPORTED")
+
+        resolved_fee_follow_up = (
+            state.context_reference_resolved
+            and state.resolved_user_text
+            and "fee" in state.resolved_user_text.casefold()
+        )
+        open_complaint_reference_follow_up = (
+            state.complaint_status in (ComplaintStatus.OPEN, ComplaintStatus.UNDER_REVIEW)
+            and bool(state.conversation_context.turns)
+            and bool(self._CONTEXTUAL_FEE_REFERENCE.search(state.user_text))
+        )
+        contextual_fee_dispute = (
+            (resolved_fee_follow_up or open_complaint_reference_follow_up)
+            and bool(self._CONTEXTUAL_FEE_DISPUTE_REQUEST.search(state.user_text))
+        )
+        # Raw customer risk reports always retain absolute precedence. A
+        # classifier-only HIGH label may be wrong for a typed fee dispute, so
+        # that narrow contextual route is allowed to reach C's complaint
+        # lifecycle below.
+        explicit_urgent_reason = self.complaints.explicit_urgent_reason(state)
+        if explicit_urgent_reason is not None:
+            return RulesResult(data=self.complaints.urgent_decision(state, explicit_urgent_reason))
         urgent_reason = self.complaints.urgent_reason(state, intent)
-        if urgent_reason is not None:
+        if urgent_reason is not None and not contextual_fee_dispute:
             return RulesResult(data=self.complaints.urgent_decision(state, urgent_reason))
 
         is_recommendation = (
@@ -97,11 +153,6 @@ class RuleEngine:
 
         # This text mock has neither authenticated account access nor a
         # transaction executor. Retrieval must not be used as a substitute.
-        if intent in self._ACCOUNT_READ_INTENTS or self._ACCOUNT_READ_REQUEST.search(state.user_text):
-            return self._result(Action.BLOCK, "AUTHENTICATION_REQUIRED")
-        if intent in self._TRANSACTION_INTENTS or self._TRANSACTION_REQUEST.search(state.user_text):
-            return self._result(Action.BLOCK, "OPERATION_NOT_SUPPORTED")
-
         # Business constraints precede uncertainty: an open complaint cannot
         # be made marketable by low classifier confidence or a model response.
         if is_recommendation:
@@ -121,6 +172,24 @@ class RuleEngine:
 
         if state.handoff_status != HandoffStatus.NOT_REQUIRED:
             return self._result(Action.ESCALATE, "HANDOFF_ALREADY_ACTIVE")
+
+        # A clear complaint request must not become an unsupported policy
+        # retrieval merely because A/Fuse supplied a generic enquiry label.
+        if self._EXPLICIT_COMPLAINT_REQUEST.search(state.user_text):
+            complaint = self.complaints.complaint_decision(state, "complaint")
+            if complaint is not None:
+                return RulesResult(data=complaint)
+
+        if contextual_fee_dispute:
+            complaint = self.complaints.complaint_decision(state, "fee_complaint")
+            if complaint is not None:
+                return RulesResult(data=complaint)
+
+        if (
+            self._CONTEXT_FREE_AMBIGUITY_REQUEST.match(state.user_text)
+            and not state.context_reference_resolved
+        ):
+            return self._result(Action.CLARIFY, "CONTEXT_REQUIRED")
 
         confidence = understanding.confidence
         if confidence is None or confidence < self.confidence_threshold:
@@ -145,7 +214,10 @@ class RuleEngine:
             return self._result(Action.ABSTAIN, "RETRIEVAL_ERROR")
         if rag_status == "empty" or not state.retrieved_docs:
             return self._result(Action.ABSTAIN, "INSUFFICIENT_EVIDENCE")
-        evidence = self.evidence.assess(state.user_text, state.retrieved_docs)
+        evidence = self.evidence.assess(
+            state.resolved_user_text or state.user_text,
+            state.retrieved_docs,
+        )
         if not evidence.sufficient:
             if evidence.reason_code == "REPLACEMENT_REASON_REQUIRED":
                 return self._result(Action.CLARIFY, evidence.reason_code)

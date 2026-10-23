@@ -103,12 +103,11 @@ class CurrentMainCompositionTests(unittest.TestCase):
         self.assertEqual(self.retrieval.calls, 1)
         self.assertEqual(self.recommendation.calls, 0)
 
-    def test_specific_lost_card_fee_uses_cited_evidence(self):
+    def test_lost_card_fee_escalates_before_retrieval(self):
         body = self.create("How much does replacing a lost card cost?")
-        self.assertEqual(body["response"]["decision"]["action"], "ANSWER")
-        self.assertIn("SGD 15", body["response"]["message"]["text"])
-        self.assertTrue(body["response"]["citations"])
-        self.assertEqual(self.retrieval.calls, 1)
+        self.assertEqual(body["response"]["decision"]["action"], "ESCALATE")
+        self.assertFalse(body["response"]["citations"])
+        self.assertEqual(self.retrieval.calls, 0)
 
     def test_misclassified_scam_escalates_and_persists(self):
         body = self.create("I think this transfer may be a scam.")

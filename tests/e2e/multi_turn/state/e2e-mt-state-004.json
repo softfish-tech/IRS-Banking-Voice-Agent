@@ -82,8 +82,8 @@
           {
             "status": "ok",
             "data": {
-              "action": "CLARIFY",
-              "reason_code": "LOW_INTENT_CONFIDENCE",
+              "action": "ESCALATE",
+              "reason_code": "HANDOFF_ALREADY_ACTIVE",
               "next_state": {}
             }
           }
@@ -91,7 +91,7 @@
       },
       "expected": {
         "status": "ok",
-        "action": "CLARIFY",
+        "action": "ESCALATE",
         "module_call_order": [
           "A",
           "C"
@@ -101,7 +101,7 @@
           "handoff_status": "ESCALATED",
           "consent": "UNKNOWN"
         },
-        "public_message_kind": "clarification"
+        "public_message_kind": "escalation"
       }
     }
   ],
