@@ -114,7 +114,8 @@ model hash, and platform-specific build commands are in the
 
 ## SECTION 6 : PROJECT REPORT / PAPER
 
-Place the final report and user-guide PDF files in [`ProjectReport/`](ProjectReport/).
+The project report is available here:
+[IRS Group 34 — NovaBank Report](ProjectReport/IRS-Group34-NovaBank-Report.pdf).
 
 The runnable project includes technical contracts, safety rules, evaluation
 scope, data provenance and recorded limitations in
