@@ -75,6 +75,24 @@ profile, and send a question. For grounded answers, use **View evidence** to
 inspect policy excerpts and citations. The system may also ask for clarification,
 abstain, or provide escalation guidance according to its safety rules.
 
+### Use the browser application
+
+1. Open `http://127.0.0.1:8000` and select **Create account**.
+2. Enter a local username and password, then choose one of the synthetic demo
+   profiles. No real account or personal information is required.
+3. Sign in and start a new conversation, or choose an existing local
+   conversation from the sidebar.
+4. Enter a banking-service question and select **Send**. The agent may answer
+   with cited policy evidence, ask for clarification, abstain where evidence is
+   insufficient, or provide escalation or complaint guidance.
+5. For a grounded answer, select **View evidence** to inspect the supporting
+   policy excerpts and citation identifiers.
+6. If ASR is configured, select **Voice**, record a request, review or edit the
+   transcript, then select **Use text** to send it as a normal text request.
+
+The prototype never executes transactions, accesses real accounts, or makes
+binding financial decisions.
+
 ### Optional local ASR
 
 ASR is disabled by default. It uses a developer-installed local `whisper.cpp`
