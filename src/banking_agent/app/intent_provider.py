@@ -15,7 +15,10 @@ from banking_agent.modules.intent import (
 
 
 def build_intent_module(
-    provider: str | None = None, model_path: str | Path | None = None
+    provider: str | None = None,
+    model_path: str | Path | None = None,
+    *,
+    local_files_only: bool = False,
 ) -> IntentModule:
     """Return A's rules adapter or a supplied trained artifact adapter.
 
@@ -29,7 +32,7 @@ def build_intent_module(
     if selected == "rules":
         adapter: IntentModule = IntentModuleAdapter()
     elif selected == "minilm_encoder":
-        classifier = EncoderIntentClassifier.from_pretrained()
+        classifier = EncoderIntentClassifier.from_pretrained(local_files_only=local_files_only)
         adapter = IntentModuleAdapter(classifier=classifier.classify)
     elif selected != "trained":
         raise ValueError("intent_provider_must_be_rules_trained_or_minilm_encoder")

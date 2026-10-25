@@ -7,12 +7,12 @@ it does not create business state or put dialogue text into decision traces.
 
 from __future__ import annotations
 
-import os
 import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
 from banking_agent.schemas import Action, ConversationContext, ConversationTurn
+from banking_agent.app.delivery_profile import delivery_setting
 
 
 _MAX_USER_TEXT = 2_000
@@ -36,7 +36,12 @@ def deterministic_follow_up_resolution(
     recent = "\n".join(turn.user_text.casefold() for turn in context.turns)
     current = user_text.strip().casefold().rstrip("?!.")
     prior_tokens = set(re.findall(r"[a-z]+", prior))
-    is_replacement_card = {"replacement", "card"} <= prior_tokens
+    # Customers commonly say "replace my card" rather than "replacement
+    # card".  Both forms name the same subject, but this resolver remains
+    # constrained to the immediately preceding CLARIFY turn below.
+    is_replacement_card = "card" in prior_tokens and bool(
+        {"replace", "replacement"} & prior_tokens
+    )
     if is_replacement_card:
         if current == "does that include delivery" and "fee" in prior:
             return "Does the replacement-card fee include delivery?"
@@ -50,7 +55,7 @@ def deterministic_follow_up_resolution(
         # clarification, not a fresh safety report.  It is deliberately
         # restricted to the exact damaged-card wording; lost, stolen, and
         # compromised cards keep their raw-text safety routes.
-        if current in {"it was damaged", "it is damaged"}:
+        if current in {"it was damaged", "it is damaged", "because it was damaged", "because it is damaged"}:
             if "fee" in prior or "how much" in prior:
                 return "What is the replacement-card fee for a damaged card?"
             return "When will a damaged replacement card arrive?"
@@ -78,7 +83,7 @@ def deterministic_follow_up_resolution(
 def context_memory_enabled() -> bool:
     """Keep semantic memory an explicit delivery opt-in during B0."""
 
-    selected = os.environ.get("BANKING_AGENT_CONTEXT_MEMORY", "off").strip().lower()
+    selected = delivery_setting("BANKING_AGENT_CONTEXT_MEMORY", "off").strip().lower()
     if selected not in {"off", "enabled"}:
         raise ValueError("context_memory_must_be_off_or_enabled")
     return selected == "enabled"

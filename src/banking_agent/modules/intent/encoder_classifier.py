@@ -183,11 +183,14 @@ class EncoderIntentClassifier:
         encoder: object | None = None,
         device: str | None = None,
         verify_checksums: bool = True,
+        local_files_only: bool = False,
     ) -> "EncoderIntentClassifier":
         """Load and validate the exported artifact.
 
         ``encoder`` is injectable so unit and integration tests can exercise the
         wrapper without downloading model weights or importing torch.
+        ``local_files_only`` is intended for the local product composition,
+        which must fail closed rather than making an implicit network request.
         """
         directory = (
             Path(artifact_dir) if artifact_dir is not None else DEFAULT_ARTIFACT_DIR
@@ -246,7 +249,7 @@ class EncoderIntentClassifier:
             revision = encoder_config.get("revision")
             if not isinstance(model_id, str) or not isinstance(revision, str):
                 raise EncoderArtifactError("manifest encoder id/revision is missing")
-            kwargs: dict[str, Any] = {"revision": revision}
+            kwargs: dict[str, Any] = {"revision": revision, "local_files_only": local_files_only}
             if device is not None:
                 kwargs["device"] = device
             encoder = SentenceTransformer(model_id, **kwargs)

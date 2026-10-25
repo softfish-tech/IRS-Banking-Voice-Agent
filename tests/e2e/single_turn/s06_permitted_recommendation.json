@@ -120,12 +120,12 @@
         "public_response": {
           "kind": "recommendation",
           "must_contain": [
-            "Demo Premium Savings",
-            "Demo Flexible Savings",
-            "Demo Emergency Reserve"
+            "product options"
           ],
           "must_not_contain": [
-            "Card Fees Policy"
+            "Card Fees Policy",
+            "synthetic 'savings' goal",
+            "demo age, residency and deposit conditions"
           ]
         }
       },
@@ -255,12 +255,12 @@
         "public_response": {
           "kind": "recommendation",
           "must_contain": [
-            "Demo Premium Savings",
-            "Demo Flexible Savings",
-            "Demo Emergency Reserve"
+            "product options"
           ],
           "must_not_contain": [
-            "Card Fees Policy"
+            "Card Fees Policy",
+            "synthetic 'savings' goal",
+            "demo age, residency and deposit conditions"
           ]
         }
       },
@@ -390,12 +390,12 @@
         "public_response": {
           "kind": "recommendation",
           "must_contain": [
-            "Demo Premium Savings",
-            "Demo Flexible Savings",
-            "Demo Emergency Reserve"
+            "product options"
           ],
           "must_not_contain": [
-            "Card Fees Policy"
+            "Card Fees Policy",
+            "synthetic 'savings' goal",
+            "demo age, residency and deposit conditions"
           ]
         }
       },
@@ -525,12 +525,12 @@
         "public_response": {
           "kind": "recommendation",
           "must_contain": [
-            "Demo Premium Savings",
-            "Demo Flexible Savings",
-            "Demo Emergency Reserve"
+            "product options"
           ],
           "must_not_contain": [
-            "Card Fees Policy"
+            "Card Fees Policy",
+            "synthetic 'savings' goal",
+            "demo age, residency and deposit conditions"
           ]
         }
       },

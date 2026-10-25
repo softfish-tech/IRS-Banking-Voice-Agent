@@ -109,6 +109,15 @@ class ScenarioTableTests(unittest.TestCase):
         self.assertEqual(decision.reason_code, "RECOMMENDATION_PERMITTED")
         self.assertIsNone(decision.next_state.complaint_status)
 
+    def test_no_complaint_and_consented_recommendation_is_permitted(self) -> None:
+        state = make_state(
+            "product_recommendation", 0.93, RiskLevel.LOW,
+            complaint=ComplaintStatus.NONE, consent=ConsentStatus.GRANTED,
+        )
+        decision = self.rules.evaluate(state).data
+        self.assertEqual(decision.action, Action.RECOMMEND)
+        self.assertEqual(decision.reason_code, "RECOMMENDATION_PERMITTED")
+
     def test_s07_low_confidence_clarifies(self) -> None:
         state = make_state("UNKNOWN", 0.31, RiskLevel.UNKNOWN)
         decision = self.rules.evaluate(state).data
@@ -610,6 +619,25 @@ class EvidenceArbitrationTests(unittest.TestCase):
                 "What is the replacement fee for my card?", [low_score]
             ).sufficient
         )
+
+    def test_plural_currency_and_transaction_terms_match_grounded_policy(self) -> None:
+        currency_policy = RetrievedDocument(
+            document_id="card-currencies",
+            title="Merchant and currency acceptance for Visa debit",
+            source="Synthetic policy",
+            score=0.9,
+            excerpt=(
+                "Only SGD, USD, EUR, GBP and AUD transaction currencies are supported "
+                "for card payments."
+            ),
+        )
+
+        result = self.gate.assess(
+            "Which currencies are supported for card transactions?", [currency_policy]
+        )
+
+        self.assertTrue(result.sufficient)
+        self.assertEqual(result.reason_code, "EVIDENCE_SCOPE_MATCHED")
 
     def test_high_score_does_not_launder_wrong_topic(self) -> None:
         wrong = POLICY_DOC.model_copy(update={"score": 100.0})

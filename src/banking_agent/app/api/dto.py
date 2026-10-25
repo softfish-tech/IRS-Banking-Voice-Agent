@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from banking_agent.schemas import Action
+from banking_agent.schemas import Action, TranscriptionResult, TranscriptionStatus
 from banking_agent.schemas.response import AgentResponse
 from banking_agent.schemas.state import SchemaModel
 
@@ -34,6 +34,7 @@ class PublicDecision(SchemaModel):
 class PublicCitation(SchemaModel):
     title: str = Field(min_length=1)
     source: str = Field(min_length=1)
+    excerpt: str = Field(min_length=1, max_length=2_000)
 
 
 class PublicRecommendation(SchemaModel):
@@ -57,6 +58,29 @@ class ChatTurnResponseV1(SchemaModel):
     citations: list[PublicCitation] = Field(default_factory=list)
     recommendations: list[PublicRecommendation] = Field(default_factory=list)
     error: PublicError | None = None
+
+
+class TranscriptionResponseV1(SchemaModel):
+    """Public, non-persistent result of one local ASR attempt."""
+
+    api_version: Literal["v1"] = PUBLIC_API_VERSION
+    status: TranscriptionStatus
+    text: str | None = None
+    language: str | None = None
+    duration_seconds: float | None = None
+    error_code: str | None = None
+
+
+def to_transcription_response_v1(result: TranscriptionResult) -> TranscriptionResponseV1:
+    """Hide backend/model details and ASR diagnostics from the browser API."""
+
+    return TranscriptionResponseV1(
+        status=result.status,
+        text=result.text,
+        language=result.language,
+        duration_seconds=result.duration_seconds,
+        error_code=result.error_code,
+    )
 
 
 MESSAGE_KIND_BY_ACTION: dict[Action, str] = {
@@ -89,7 +113,10 @@ def to_chat_turn_response_v1(response: AgentResponse) -> ChatTurnResponseV1:
         status="ok",
         message=PublicMessage(kind=MESSAGE_KIND_BY_ACTION[action], text=response.text),
         decision=PublicDecision(action=action),
-        citations=[PublicCitation(title=item.title, source=item.source) for item in response.citations],
+        citations=[
+            PublicCitation(title=item.title, source=item.source, excerpt=item.excerpt)
+            for item in response.citations
+        ],
         recommendations=[
             PublicRecommendation(name=item.name, rank=item.rank, reason=item.reason)
             for item in response.recommendations

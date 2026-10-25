@@ -6,6 +6,7 @@ module implementation logic.
 
 from dataclasses import dataclass
 import os
+from pathlib import Path
 from typing import Any, Mapping, Protocol
 
 from banking_agent.app.demo import ScenarioModules
@@ -23,6 +24,7 @@ from banking_agent.app.llm_agent_support import (
     build_llm_text_assistant_from_environment,
     middle_loop_enabled,
 )
+from banking_agent.app.delivery_profile import delivery_setting
 from banking_agent.app.orchestrator.interfaces import (
     IntentModule,
     RecommendationModule,
@@ -60,11 +62,11 @@ class ModuleBundle:
         query_rewriter = self.query_rewriter or (
             assistant
             if middle_loop_enabled()
-            and os.environ.get("BANKING_AGENT_LLM_QUERY_REWRITE", "off").lower() == "llm"
+            and delivery_setting("BANKING_AGENT_LLM_QUERY_REWRITE", "off").lower() == "llm"
             else None
         )
         clarification_generator = self.clarification_generator or (
-            assistant if os.environ.get("BANKING_AGENT_LLM_CLARIFICATION", "off").lower() == "llm" else None
+            assistant if delivery_setting("BANKING_AGENT_LLM_CLARIFICATION", "off").lower() == "llm" else None
         )
         return Orchestrator(
             self.intent,
@@ -115,6 +117,29 @@ class StaticModuleFactory:
 
     def create(self, *, scenario: Mapping[str, Any] | None = None) -> ModuleBundle:
         return self._modules
+
+
+def build_production_module_bundle(recommendation_fixture_path: Path) -> ModuleBundle:
+    """Compose the delivered A/B/C/D implementations for the local product path.
+
+    This is E-owned application composition, not a replacement for an owner's
+    module. B fails closed when its pinned local reranker is unavailable instead
+    of silently switching the browser demo to a mock ranking.
+    """
+
+    from banking_agent.app.intent_provider import build_intent_module
+    from banking_agent.app.retrieval_adapter import AsyncRetrievalAdapter
+    from banking_agent.modules.rag import create_retriever
+    from banking_agent.modules.recommendation import RecommendationAdapter, load_fixture
+    from banking_agent.modules.rules import RuleEngine
+
+    intent_provider = os.environ.get("BANKING_AGENT_INTENT_PROVIDER", "minilm_encoder")
+    return ModuleBundle(
+        build_intent_module(intent_provider, local_files_only=True),
+        AsyncRetrievalAdapter(create_retriever("real")),
+        RuleEngine(),
+        RecommendationAdapter(load_fixture(recommendation_fixture_path)),
+    )
 
 
 def build_module_factory(mode: str, *, production_modules: ModuleBundle | None = None) -> ModuleFactory:

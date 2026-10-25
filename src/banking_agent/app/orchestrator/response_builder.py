@@ -1,6 +1,7 @@
 """Deterministic text rendering; business decisions are supplied by C."""
 import re
 
+from banking_agent.app.answer_evidence import presentation_documents, presentation_excerpt
 from banking_agent.schemas import Action, AgentState
 
 MESSAGES = {
@@ -40,9 +41,10 @@ def _render_answer(state: AgentState) -> str:
             "is not supported. "
             f"[Source: {doc.title}; {doc.document_id}]"
         )
+    question = state.resolved_user_text or state.user_text
     return "\n".join(
-        f"{doc.excerpt} [Source: {doc.title}; {doc.document_id}]"
-        for doc in state.retrieved_docs
+        f"{presentation_excerpt(question, doc)} [Source: {doc.title}; {doc.document_id}]"
+        for doc in presentation_documents(question, state.retrieved_docs)
     )
 
 def build_response(state: AgentState) -> str:
@@ -52,7 +54,7 @@ def build_response(state: AgentState) -> str:
     if action == Action.ANSWER:
         return _render_answer(state)
     if action == Action.RECOMMEND:
-        return "\n".join(f"{item.name}: {item.reason}" for item in state.recommendations) or "No eligible recommendation is available."
+        return "Here are product options that may suit your request." if state.recommendations else "No eligible recommendation is available."
     if action == Action.CLARIFY and state.decision.reason_code == "REPLACEMENT_REASON_REQUIRED":
         return "Could you clarify why the card needs replacing—for example, whether it was lost, stolen, damaged, or compromised?"
     if action == Action.HANDLE_COMPLAINT and state.decision.reason_code == "FEE_COMPLAINT":

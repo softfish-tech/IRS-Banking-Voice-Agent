@@ -65,7 +65,7 @@ class LLMResponseOrchestratorTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response.decision.action.value, "RECOMMEND")
         self.assertEqual(
             response.text,
-            "Here are the available options:\n\nDemo Flexible Savings: Matches the synthetic savings goal.",
+            "Here are the available options:\n\nHere are product options that may suit your request.",
         )
         self.assertEqual(response.recommendations, [RecommendationItem(
             product_id="savings-flex", name="Demo Flexible Savings", rank=1,
@@ -99,7 +99,7 @@ class LLMResponseOrchestratorTests(unittest.IsolatedAsyncioTestCase):
             trace_sink=sink,
         ).handle(AgentState(session_id="llm-recommend-fallback", user_text="What can you recommend?"))
 
-        self.assertEqual(response.text, "Canonical item: Canonical reason.")
+        self.assertEqual(response.text, "Here are product options that may suit your request.")
         event = next(event for event in sink.traces[0].modules if event.module == "E.LLM.recommendation_presentation")
         self.assertEqual((event.status, event.error_code), ("fallback", "invalid_presentation"))
 

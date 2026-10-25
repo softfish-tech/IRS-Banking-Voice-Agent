@@ -24,6 +24,8 @@ from banking_agent.app.providers import (
     LLMSettings,
     create_llm_client,
 )
+from banking_agent.app.answer_evidence import presentation_documents, presentation_excerpt
+from banking_agent.app.delivery_profile import delivery_setting
 from banking_agent.schemas import Action, AgentState, RetrievedDocument
 
 
@@ -78,13 +80,13 @@ class GroundedResponseGenerator:
         self.last_outcomes: dict[str, tuple[str, int, int, int | None, int | None, int | None, str | None]] = {}
 
     @staticmethod
-    def _sources(documents: Sequence[RetrievedDocument]) -> list[dict[str, str]]:
+    def _sources(question: str, documents: Sequence[RetrievedDocument]) -> list[dict[str, str]]:
         return [
             {
                 "document_id": document.document_id,
                 "title": document.title,
                 "source": document.source,
-                "excerpt": document.excerpt,
+                "excerpt": presentation_excerpt(question, document),
             }
             for document in documents
         ]
@@ -136,8 +138,9 @@ class GroundedResponseGenerator:
         if not state.retrieved_docs:
             return None
 
-        source_ids = {document.document_id for document in state.retrieved_docs}
         question = state.resolved_user_text or state.user_text
+        documents = presentation_documents(question, state.retrieved_docs)
+        source_ids = {document.document_id for document in documents}
         crypto_wallet_boundary = (
             _CRYPTO_WALLET_RECOVERY.search(question) is not None
             and _CRYPTO_BOUNDARY_DOCUMENT_ID in source_ids
@@ -159,7 +162,7 @@ class GroundedResponseGenerator:
         prompt = json.dumps(
             {
                 "question": question,
-                "sources": self._sources(state.retrieved_docs),
+                "sources": self._sources(question, documents),
                 "instructions": instructions,
             },
             ensure_ascii=False,
@@ -218,7 +221,7 @@ class GroundedResponseGenerator:
         citation_ids = set(generated.citation_ids)
         cited_documents = [
             document
-            for document in state.retrieved_docs
+            for document in documents
             if document.document_id in citation_ids
         ]
         self.last_outcomes[request_id] = (
@@ -326,7 +329,7 @@ class RecommendationPresentationGenerator:
 def build_response_generator_from_environment() -> ResponseGenerator | None:
     """Enable model rendering only when explicitly requested by server config."""
 
-    selected = os.environ.get("BANKING_AGENT_RESPONSE_GENERATOR", "template").strip().lower()
+    selected = delivery_setting("BANKING_AGENT_RESPONSE_GENERATOR", "template").strip().lower()
     if selected == "template":
         return None
     if selected != "llm":
@@ -342,7 +345,7 @@ def build_response_generator_from_environment() -> ResponseGenerator | None:
 def build_recommendation_response_generator_from_environment() -> RecommendationResponseGenerator | None:
     """Enable LLM presentation of D results only by explicit opt-in."""
 
-    selected = os.environ.get("BANKING_AGENT_RECOMMENDATION_RESPONSE_GENERATOR", "template").strip().lower()
+    selected = delivery_setting("BANKING_AGENT_RECOMMENDATION_RESPONSE_GENERATOR", "template").strip().lower()
     if selected == "template":
         return None
     if selected != "llm":

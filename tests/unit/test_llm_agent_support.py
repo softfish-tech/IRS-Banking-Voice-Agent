@@ -97,6 +97,43 @@ class LLMAgentSupportTests(unittest.IsolatedAsyncioTestCase):
             deterministic_follow_up_resolution("It was damaged.", context),
             "What is the replacement-card fee for a damaged card?",
         )
+        self.assertEqual(
+            deterministic_follow_up_resolution("Because it is damaged.", context),
+            "What is the replacement-card fee for a damaged card?",
+        )
+        natural_wording_context = ConversationContext(turns=[ConversationTurn(
+            user_text="How much does it cost to replace my card?",
+            assistant_text="Which replacement reason applies?",
+            action=Action.CLARIFY,
+        )])
+        self.assertEqual(
+            deterministic_follow_up_resolution("Because it is damaged.", natural_wording_context),
+            "What is the replacement-card fee for a damaged card?",
+        )
+
+    async def test_llm_resolves_a_short_reply_to_the_immediately_prior_clarification(self):
+        context = ConversationContext(turns=[ConversationTurn(
+            user_text="How much does it cost to replace my card?",
+            assistant_text="What is the reason you need to replace your card?",
+            action=Action.CLARIFY,
+        )])
+        module = FusedIntentModule(
+            Baseline("policy_enquiry", 0.95, "LOW"),
+            LLMUnderstanding(MockLLMClient([{
+                "intent": "card_fee_enquiry", "confidence": 0.94, "risk_level": "LOW",
+                "entities": [], "context_resolved": True,
+                "resolved_user_text": "What is the fee for replacing a damaged debit card?",
+            }]), model="test"),
+        )
+
+        result = await module.analyze_with_context("s", "Because it is damaged.", context)
+
+        self.assertEqual(result["data"]["intent"], "card_fee_enquiry")
+        self.assertTrue(module.last_context_reference_resolved)
+        self.assertEqual(
+            module.last_resolved_user_text,
+            "What is the replacement-card fee for a damaged card?",
+        )
 
     async def test_deterministic_resolution_can_use_the_bounded_recent_window(self):
         context = ConversationContext(turns=[
