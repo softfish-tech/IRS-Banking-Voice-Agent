@@ -15,12 +15,12 @@ venv/
 !.env.example
 
 # Local data, model artifacts, and generated files
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-models/
-artifacts/
+SystemCode/IRS-Banking-Voice-Agent/data/raw/*
+!SystemCode/IRS-Banking-Voice-Agent/data/raw/.gitkeep
+SystemCode/IRS-Banking-Voice-Agent/data/processed/*
+!SystemCode/IRS-Banking-Voice-Agent/data/processed/.gitkeep
+SystemCode/IRS-Banking-Voice-Agent/models/
+SystemCode/IRS-Banking-Voice-Agent/artifacts/
 
 # Editor and operating-system files
 .DS_Store
