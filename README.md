@@ -44,11 +44,7 @@ technical documentation are retained together in
 The system-design video is available on YouTube:
 [NovaGuide System Design](https://youtu.be/4mE9YxnD7vU).
 
-The accompanying use-case demonstration is listed in [`Video/README.md`](Video/README.md).
-
-Suggested demonstration paths and browser acceptance steps are documented in
-`SystemCode/IRS-Banking-Voice-Agent/docs/video_demo_use_cases.md` and
-`SystemCode/IRS-Banking-Voice-Agent/docs/local_browser_acceptance.md`.
+The accompanying promotion video is listed in [`Video/README.md`](Video/README.md).
 
 ---
 
