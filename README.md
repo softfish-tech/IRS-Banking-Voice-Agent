@@ -32,7 +32,7 @@ technical documentation are retained together in
 | :------------ |:---------------:| :-----| :-----|
 | Shao Junzhe | A0356163A |  B modules, RAG,	Knowledge base construction, and RAG evaluation| shaojunzhe@u.nus.edu |
 | Lin zhi | A0356103N | D modules, product recommendation, eligibility filtering, ranking, and module testing| zhi_lin@u.nus.edu |
-| Zhao Xinyu | A0352367Y | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567C@outlook.com |
+| Zhao Xinyu | A0352367Y | A modules, intent classification, 77-label route mapping, and intent evaluation| zhaoxinyu@u.nus.edu |
 | Xie Yuchen | A0350890B | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567D@yahoo.com |
 | Ruan Yu | A0351861A | E modules, system integration, backend/ui development, LLM integration| ruanyu@u.nus.edu |
 
