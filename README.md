@@ -2,9 +2,7 @@
 
 ---
 
-## SECTION 1 : PROJECT TITLE
-
-## NovaBank Intelligent RAG Customer Agent 
+## SECTION 1 : NovaBank Intelligent RAG Customer Agent 
 
 NovaGuide is a text-first banking service-agent prototype for a fictional
 Singapore retail bank. 
@@ -127,10 +125,6 @@ scope, data provenance and recorded limitations in
 ---
 
 ## SECTION 7 : MISCELLANEOUS
-
-Use [`Miscellaneous/`](Miscellaneous/) for approved supplementary submission
-material that is not executable system code, a report, or a demonstration
-video.
 
 Historical LLM and hardware-specific ASR evaluation artifacts are intentionally
 not committed. Their documented hashes, scope and limitations remain in the
