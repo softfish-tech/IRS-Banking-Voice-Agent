@@ -30,7 +30,7 @@ technical documentation are retained together in
 
 | Official Full Name  | Student ID (MTech Applicable)  | Work Items (Who Did What) | Email (Optional) |
 | :------------ |:---------------:| :-----| :-----|
-| Shao Junzhe | A0356163A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567A@nus.edu.sg |
+| Shao Junzhe | A0356163A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| shaojunzhe@u.nus.edu |
 | Lin zhi | A0356103N | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567B@gmail.com |
 | Zhao Xinyu | A0352367Y | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567C@outlook.com |
 | Xie Yuchen | A0350890B | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567D@yahoo.com |
