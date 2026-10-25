@@ -4,11 +4,10 @@
 
 ## SECTION 1 : PROJECT TITLE
 
-## NovaGuide — Safe Evidence-Grounded Banking Voice Agent
+## NovaBank Intelligent RAG Customer Agent 
 
 NovaGuide is a text-first banking service-agent prototype for a fictional
-Singapore retail bank. It is a synthetic-data project and does not connect to
-real banking systems, process customer records, or execute transactions.
+Singapore retail bank. 
 
 ---
 
