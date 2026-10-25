@@ -41,8 +41,10 @@ technical documentation are retained together in
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-Place the final demonstration recording in [`Video/`](Video/), or replace this
-section with the approved hosted-video link before submission.
+The system-design video is available on YouTube:
+[NovaGuide System Design](https://youtu.be/4mE9YxnD7vU).
+
+The accompanying use-case demonstration is listed in [`Video/README.md`](Video/README.md).
 
 Suggested demonstration paths and browser acceptance steps are documented in
 `SystemCode/IRS-Banking-Voice-Agent/docs/video_demo_use_cases.md` and
