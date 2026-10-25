@@ -34,7 +34,7 @@ technical documentation are retained together in
 | Lin zhi | A0356103N | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567B@gmail.com |
 | Zhao Xinyu | A0352367Y | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567C@outlook.com |
 | Xie Yuchen | A0350890B | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567D@yahoo.com |
-| Ruan Yu | A0351861A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567E@qq.com |
+| Ruan Yu | A0351861A | E modules, system integration, backend/ui development, LLM integration| ruanyu@u.nus.edu |
 
 
 ---
