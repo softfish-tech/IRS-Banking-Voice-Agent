@@ -30,12 +30,14 @@ technical documentation are retained together in
 
 ## SECTION 3 : CREDITS / PROJECT CONTRIBUTION
 
-| Team member | Contribution |
-| :--- | :--- |
-| Team members | Add final names, student IDs and individual contributions before submission. |
+| Official Full Name  | Student ID (MTech Applicable)  | Work Items (Who Did What) | Email (Optional) |
+| :------------ |:---------------:| :-----| :-----|
+| Shao Junzhe | A0356163A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567A@nus.edu.sg |
+| Lin zhi | A0356103N | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567B@gmail.com |
+| Zhao Xinyu | A0352367Y | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567C@outlook.com |
+| Xie Yuchen | A0350890B | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567D@yahoo.com |
+| Ruan Yu | A0351861A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567E@qq.com |
 
-The current repository records module ownership and integration boundaries in
-`SystemCode/IRS-Banking-Voice-Agent/docs/module_ownership.md`.
 
 ---
 
