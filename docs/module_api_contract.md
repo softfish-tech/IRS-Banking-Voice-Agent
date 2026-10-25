@@ -42,7 +42,10 @@ E may optionally invoke its context-aware Fusion adapter with an E-owned,
 bounded `ConversationContext` in addition to this unchanged A public input.
 The baseline A adapter always receives the current `user_text` alone. The
 context window contains at most three complete, successful, public
-user/assistant pairs from the same conversation.  Each retained user text is
+user/assistant pairs from the same conversation. The optional E resolver may
+interpret a short direct answer to the immediately preceding `CLARIFY` message
+only as a bounded retrieval restatement; it never creates a business action.
+Each retained user text is
 bounded to 2,000 characters and each retained assistant text to 8,000
 characters.  The window is enabled only by
 `BANKING_AGENT_CONTEXT_MEMORY=enabled`. It is untrusted context, not a new
@@ -201,6 +204,9 @@ fact; it retains hard business conditions such as requiring a replacement
 reason before applying a reason-specific card fee. The response model must
 cite only document IDs from this C-admissible set and must not combine facts
 from mutually conditional sources.
+For a reviewed condition-specific answer, E may narrow a source excerpt for
+customer presentation to sentences directly responsive to that condition; this
+does not alter C's admitted evidence, decision, trace, or citation ID.
 
 ## D — Recommendation / Synthetic Data
 
@@ -251,7 +257,10 @@ from mutually conditional sources.
 }
 ```
 
-D owns product-level eligibility filtering and ranking. It does not bypass C's consent, risk, or complaint gate.
+D owns product-level eligibility filtering and ranking. It does not bypass C's consent, risk, or complaint gate. A local production conversation bound to an authenticated synthetic profile supplies `GRANTED` consent as its authorized profile source; fixture scenarios retain their declared consent input.
+The browser presents only customer-facing product names and a neutral
+introduction. D's fixture eligibility reasons remain trace/API data and are
+not rendered as customer copy.
 
 ## Orchestrator integration rules
 
@@ -277,11 +286,17 @@ non-ambiguous high-confidence draft, available same-session history, and no
 high-risk signal. Provider failure, invalid output, an ambiguous reference, or
 a missing history window leaves the existing current-turn path unchanged.
 
-The delivery configuration keeps understanding fusion and retrieval-query
+The baseline configuration keeps understanding fusion and retrieval-query
 rewriting disabled unless `BANKING_AGENT_LLM_MIDDLE_LOOP=enabled` is explicitly
-set. When LLM understanding is enabled, `BANKING_AGENT_LLM_UNDERSTANDING_MODE`
-defaults to `shadow`: E validates and traces a draft but passes A's original
-result to C. `fuse` is an additional explicit opt-in and may only use a draft
+set. The named `BANKING_AGENT_DELIVERY_PROFILE=frozen-20261023` delivery
+profile instead selects the reviewed full chain: context memory, typed
+understanding, `fuse`, query rewriting, clarification wording, grounded answer
+rendering, and recommendation presentation. It still requires explicit model,
+provider and credential configuration; it does not silently use mock output.
+Outside that profile, when LLM understanding is enabled,
+`BANKING_AGENT_LLM_UNDERSTANDING_MODE` defaults to `shadow`: E validates and
+traces a draft but passes A's original result to C. `fuse` is an additional
+explicit opt-in and may only use a draft
 for A `UNKNOWN`/low-confidence results, an explicit context reference together
 with an LLM draft marked `ambiguous=true` and `UNKNOWN` (which becomes safe
 `UNKNOWN`), a higher risk signal supported by an explicit urgent text signal,
@@ -484,7 +499,7 @@ same-origin JSON endpoints:
 | `POST /api/auth/register` | Creates a synthetic local account. | Username, 6+ character test password, and `synthetic_profile_key` selected from `GET /api/config`. The choice is local fixture configuration, not authentication. |
 | `POST /api/auth/login` / `logout` | Starts or clears the local session. | Login returns an HttpOnly cookie. |
 | `GET /api/me` | Returns the current synthetic account. | Requires authentication. |
-| `GET /api/config` | Returns the active application module mode, valid local synthetic profiles, and whether local voice input is available. | `{ "module_mode": "fixture" | "production", "synthetic_profiles": [{"id":"session-001","label":"..."}], "voice_input_available": false }`; used by the UI to select its input surface and registration profile. |
+| `GET /api/config` | Returns the active application module mode, valid local synthetic profiles, selected delivery profile, and whether local voice input is available. | `{ "module_mode": "fixture" | "production", "synthetic_profiles": [{"id":"session-001","label":"..."}], "delivery_profile": "baseline" | "frozen-20261023", "voice_input_available": false }`; used by the UI to select its input surface and registration profile. |
 | `POST /api/transcriptions` | Authenticated, production-only local ASR adapter. It accepts raw `audio/wav` bytes and returns an unconfirmed transcript. | Only enabled when E explicitly configures a local ASR service. The response is `{ "api_version": "v1", "status": "OK" | "EMPTY" | "ERROR", "text", "language", "duration_seconds", "error_code" }`. Backend/model/quality details are not public. No conversation, `AgentState`, trace, or persisted message is created. |
 | `GET /api/scenarios` | Lists the selectable S01--S08 synthetic scenarios. | Fixture mode only; scenario IDs and fixture user text only. |
 | `GET` / `POST /api/conversations` | Lists or creates the caller's conversations. | Fixture mode creates with `{"scenario_id":"S01"}`. Production mode creates and runs the first turn with `{"user_text":"synthetic test text"}`. The account's profile key is snapshotted server-side; payloads carrying `synthetic_profile_key` are rejected. |
@@ -515,9 +530,11 @@ only in the decision trace.
 
 In fixture mode, the server uses `ScenarioModules`, which replays the fixture's
 pre-scripted module envelopes and is deliberately not an A/B/C/D implementation.
-Production mode accepts only 1--2,000-character synthetic test text after E has
-explicitly injected a complete owner-provided `ModuleBundle`; it remains a loopback
-development aid and must not be exposed as a production banking endpoint. The core
+The default server mode is `production`: E's composition root supplies the
+delivered MiniLM A adapter, real local B retrieval adapter, C `RuleEngine`, and
+D synthetic recommendation adapter as a `ModuleBundle`. Production mode accepts
+only 1--2,000-character synthetic test text; it remains a loopback development
+aid and must not be exposed as a production banking endpoint. The core
 orchestrator remains storage-independent:
 the application restores a state snapshot before a turn and saves only the
 resulting valid state after a successful response. The persisted message history
@@ -539,11 +556,12 @@ is created.
 
 `app/bootstrap.py` is the E-owned composition root. Routes request a
 `ModuleBundle` from its `ModuleFactory`; routes do not import or construct A/B/C/D
-adapters. The default `fixture` mode creates a fresh `ScenarioModules` bundle for
-each selected fixture, preserving deterministic scenario behavior. `production`
-mode fails closed until E explicitly supplies a `ModuleBundle` of owner-provided
-adapters implementing the existing public Protocols. Thus, replacing fixtures
-with real implementations changes composition only—not the API, session store,
+adapters. The default `production` mode composes the delivered implementations;
+the real A encoder, B reranker, and configured LLM helpers fail closed rather
+than silently falling back to a mock or making an implicit model download.
+Explicit `fixture` mode creates a fresh `ScenarioModules`
+bundle for each selected fixture, preserving deterministic scenario behavior.
+Replacing an adapter still changes composition only—not the API, session store,
 frontend, shared schema, or orchestrator.
 
 ## Voice / ASR extension

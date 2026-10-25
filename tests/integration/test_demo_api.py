@@ -3,12 +3,15 @@
 import asyncio
 from io import BytesIO
 import json
+from pathlib import Path
+import tempfile
 import unittest
 import wave
+from unittest.mock import patch
 
 from banking_agent.app.api.server import DEFAULT_RECOMMENDATION_FIXTURE_PATH, DemoApplication
 from banking_agent.app.bootstrap import FixtureModuleFactory, ModuleBundle, StaticModuleFactory
-from banking_agent.app.persistence import InMemoryStore
+from banking_agent.app.persistence import InMemoryStore, SQLiteStore
 from banking_agent.modules.recommendation import RecommendationAdapter, load_fixture
 from banking_agent.modules.voice import ASRService, MockASRBackend
 from banking_agent.schemas import TranscriptionResult, TranscriptionStatus
@@ -92,7 +95,7 @@ class RecordingRecommendation:
 
 class DemoApiTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.app = DemoApplication(store=InMemoryStore())
+        self.app = DemoApplication(store=InMemoryStore(), module_factory=FixtureModuleFactory())
 
     def tearDown(self) -> None:
         self.app.store.close()
@@ -123,12 +126,39 @@ class DemoApiTests(unittest.TestCase):
         _, _, body = self.api("GET", "/api/scenarios")
         self.assertEqual([item["id"] for item in body["scenarios"]], [f"S{i:02}" for i in range(1, 9)])
 
+    def test_service_start_invalidates_prior_browser_sessions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            database_path = Path(directory) / "demo.sqlite3"
+            original = SQLiteStore(database_path)
+            original.register("alice", "testpw", "session-001")
+            _, token = original.login("alice", "testpw")
+            original.close()
+
+            restarted = DemoApplication(database_path=database_path, module_factory=FixtureModuleFactory())
+            try:
+                self.assertIsNone(restarted.store.current_user(token))
+            finally:
+                restarted.store.close()
+
+    def test_default_application_composes_the_real_production_bundle(self) -> None:
+        self.app.store.close()
+        modules = ProductionModules()
+        bundle = ModuleBundle(modules, modules, modules, modules)
+        with patch("banking_agent.app.api.server.build_production_module_bundle", return_value=bundle) as builder:
+            self.app = DemoApplication(store=InMemoryStore())
+        self.assertEqual(self.app.module_mode, "production")
+        builder.assert_called_once_with(DEFAULT_RECOMMENDATION_FIXTURE_PATH)
+
     def test_production_mode_runs_free_text_and_keeps_trace_sanitized(self) -> None:
         modules = self.use_production_modules()
         status, _, config = self.api("GET", "/api/config")
         self.assertEqual(status.value, 200)
         self.assertEqual(config["module_mode"], "production")
         self.assertEqual({item["id"] for item in config["synthetic_profiles"]}, {"session-001", "session-002", "session-003", "session-004"})
+        profile = next(item for item in config["synthetic_profiles"] if item["id"] == "session-001")
+        self.assertEqual(profile["label"], "Adult · Singapore resident")
+        self.assertEqual(profile["available_deposit_display"], "SGD 1,500.00")
+        self.assertEqual(profile["goal"], "Savings")
         cookie = self.account("alice")
         text = "What is the synthetic replacement fee?"
         status, _, created = self.api("POST", "/api/conversations", {"user_text": text}, cookie)
@@ -180,6 +210,50 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(created["response"]["decision"]["action"], "RECOMMEND")
         self.assertEqual(recommendation.session_ids, ["session-002"])
         self.assertNotEqual(created["conversation"]["id"], "session-002")
+
+    def test_bound_production_profile_is_the_authorized_recommendation_source(self) -> None:
+        self.app.store.close()
+        modules = RecommendationRouteModules()
+        recommendation = RecordingRecommendation()
+        self.app = DemoApplication(
+            store=InMemoryStore(),
+            module_factory=StaticModuleFactory(ModuleBundle(modules, modules, modules, recommendation)),
+        )
+        cookie = self.account("profile_recommendation", "session-001")
+        status, _, created = self.api(
+            "POST", "/api/conversations", {"user_text": "Recommend a savings product."}, cookie
+        )
+        self.assertEqual(status.value, 201)
+        self.assertEqual(created["response"]["decision"]["action"], "RECOMMEND")
+        self.assertEqual(created["conversation"]["consent"], "GRANTED")
+        self.assertEqual(recommendation.session_ids, ["session-001"])
+
+    def test_bound_profile_recommendation_remains_authorized_on_a_later_turn(self) -> None:
+        """A local account's profile binding is stable for the whole conversation."""
+
+        self.app.store.close()
+        modules = RecommendationRouteModules()
+        recommendation = RecordingRecommendation()
+        self.app = DemoApplication(
+            store=InMemoryStore(),
+            module_factory=StaticModuleFactory(ModuleBundle(modules, modules, modules, recommendation)),
+        )
+        cookie = self.account("profile_recommendation_later", "session-001")
+        status, _, created = self.api(
+            "POST", "/api/conversations", {"user_text": "Recommend a savings product."}, cookie
+        )
+        self.assertEqual(status.value, 201)
+        conversation = created["conversation"]
+        status, _, continued = self.api(
+            "POST", f"/api/conversations/{conversation['id']}/messages",
+            {"user_text": "Please show the recommendation again.", "expected_version": 1}, cookie,
+        )
+
+        self.assertEqual(status.value, 200)
+        self.assertEqual(continued["response"]["decision"]["action"], "RECOMMEND")
+        self.assertEqual(continued["conversation"]["consent"], "GRANTED")
+        self.assertEqual(continued["conversation"]["version"], 2)
+        self.assertEqual(recommendation.session_ids, ["session-001", "session-001"])
 
     def test_modes_reject_the_other_mode_input_shape(self) -> None:
         cookie = self.account("alice")
@@ -313,7 +387,8 @@ class DemoApiTests(unittest.TestCase):
 
         self.app.store.close()
         self.app = DemoApplication(
-            store=InMemoryStore(), developer_dashboard=True, developer_username="developer"
+            store=InMemoryStore(), module_factory=FixtureModuleFactory(),
+            developer_dashboard=True, developer_username="developer"
         )
         developer = self.account("developer")
         other_user = self.account("otheruser")

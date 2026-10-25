@@ -11,9 +11,27 @@ class ResponseBuilderTests(unittest.TestCase):
                 self.assertTrue(build_response(state))
                 self.assertEqual(state.decision.action, action)
 
-    def test_recommendation_renders_returned_items(self):
+    def test_recommendation_does_not_render_fixture_eligibility_reasoning(self):
         state = AgentState(session_id='test', user_text='Hello', decision=Decision(action=Action.RECOMMEND, reason_code='TEST'), recommendations=[RecommendationItem(product_id='synthetic', name='Synthetic Savings', rank=1, reason='Synthetic match')])
-        self.assertIn('Synthetic Savings: Synthetic match', build_response(state))
+        response = build_response(state)
+        self.assertIn('product options', response)
+        self.assertNotIn('Synthetic', response)
+
+    def test_damaged_replacement_fallback_omits_unrelated_freeze_paragraph(self):
+        state = AgentState(
+            session_id='test', user_text='How much does it cost to replace my damaged card?',
+            decision=Decision(action=Action.ANSWER, reason_code='POLICY_EVIDENCE_FOUND'),
+            retrieved_docs=[RetrievedDocument(
+                document_id='damage-policy', title='Damaged card replacement', source='Synthetic policy', score=0.9,
+                excerpt=(
+                    'A temporary customer freeze may be removed within 60 seconds. '
+                    'Damaged-card replacement costs SGD 15. Standard delivery costs SGD 0.'
+                ),
+            )],
+        )
+        response = build_response(state)
+        self.assertIn('Damaged-card replacement costs SGD 15.', response)
+        self.assertNotIn('temporary customer freeze', response)
 
     def test_crypto_wallet_recovery_renders_reviewed_unsupported_boundary(self):
         state = AgentState(

@@ -37,7 +37,8 @@ is a pre-retrieval check; `ok`, `empty`, or `error` denotes the B outcome.
    fraud escalation, independently of A's label. An existing OPEN or
    UNDER_REVIEW complaint is preserved; otherwise an OPEN case is requested.
    Handoff becomes ESCALATED.
-2. **Hard constraints:** recommendation is blocked for unresolved complaint,
+2. **Hard constraints:** recommendation is blocked for an OPEN or
+   UNDER_REVIEW complaint,
    active handoff, absent trusted resolution, missing consent, or risk other
    than LOW. Account-specific reads and transaction commands are blocked
    because current State has no authentication or transaction capability.

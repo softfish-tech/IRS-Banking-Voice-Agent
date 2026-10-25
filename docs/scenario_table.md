@@ -10,7 +10,8 @@ The table specifies expected workflow behavior, not exact final-response wording
 
 - All state and action values follow `src/banking_agent/schemas/`.
 - High-risk signals take precedence over low intent confidence.
-- An unresolved complaint blocks Recommendation before D is called.
+- An OPEN or UNDER_REVIEW complaint blocks Recommendation before D is called;
+  `NONE` is not an unresolved complaint.
 - C controls whether the Recommendation flow is permitted; D performs product-level eligibility filtering and ranking.
 - An unsupported answer must not be generated without reliable evidence.
 - `CLARIFY` means the request is unclear or missing required information. `ABSTAIN` means the request is understood but lacks reliable evidence.

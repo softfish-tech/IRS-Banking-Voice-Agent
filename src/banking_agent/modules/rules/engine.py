@@ -163,8 +163,6 @@ class RuleEngine:
                 return self._result(Action.BLOCK, "UNRESOLVED_COMPLAINT")
             if state.handoff_status != HandoffStatus.NOT_REQUIRED:
                 return self._result(Action.BLOCK, "HANDOFF_ACTIVE")
-            if state.complaint_status != ComplaintStatus.RESOLVED:
-                return self._result(Action.BLOCK, "SERVICE_NOT_RESOLVED")
             if state.consent != ConsentStatus.GRANTED:
                 return self._result(Action.BLOCK, "CONSENT_REQUIRED")
             if understanding.risk_level != RiskLevel.LOW:

@@ -18,16 +18,15 @@ evaluation. Detailed fixture denominators and methods remain in
 
 ## Current phase
 
-The project is currently in Phase 1: text-first integration design and mock readiness.
+The project is currently a local, synthetic-data integration prototype.
 
 - The repository skeleton, module boundaries, shared State schema, API contract, scenario acceptance table, and engineering conventions are in place.
 - The current architecture covers UI/API/voice integration, orchestration, A/B/C/D module boundaries, and safe routing.
-- The browser application, real B/D integration bridges, provider gateway, and
-  terminal-only local ASR boundary are available. The audio browser interface
-  remains future work.
-- Part A publishes a frozen `all-MiniLM-L6-v2` + logistic-regression BANKING77 artifact (test Macro-F1 0.9307) behind the opt-in `EncoderIntentClassifier`; the default path remains deterministic rules.
+- The browser application, real A/B/C/D composition, provider gateway, and
+  local ASR input boundary are available.
+- Part A publishes a frozen `all-MiniLM-L6-v2` + logistic-regression BANKING77 artifact (test Macro-F1 0.9307), used by the default local production composition.
 
-For a local, fixture-backed browser application with synthetic account
+For the default local production browser application with synthetic account
 registration/login and persisted conversation history, run:
 
 ```bash
@@ -43,11 +42,18 @@ Then open `http://127.0.0.1:8000`. Create a local-only account with a test
 password of at least 6 characters and select one clearly-labelled synthetic
 demo profile; it is fixed for that account and snapshotted on new conversations
 for D recommendation tests. The SQLite database is stored under
-`data/processed/` and is ignored by Git. The default fixture mode runs synthetic
-S01--S08 fixtures through the real orchestrator; its scenario adapters are not
-A/B/C/D production implementations. When E explicitly injects a complete
-production `ModuleBundle`, the local UI switches to a 1--2,000-character
+`data/processed/` and is ignored by Git. The default mode composes the delivered
+MiniLM A adapter, real local B BM25-plus-Cross-Encoder retriever, C `RuleEngine`,
+and D synthetic recommendation adapter. The UI uses its 1--2,000-character
 free-text synthetic-test surface. Do not enter real personal or banking data.
+The real A encoder and B reranker are local-files-only; startup fails closed if
+either pinned model is unavailable.
+
+For deterministic fixture development, opt in explicitly before starting:
+
+```bash
+BANKING_AGENT_MODULE_MODE=fixture PYTHONPATH=src python -m banking_agent.app.api.server
+```
 
 The developer trace page is disabled by default. For local diagnostics only,
 start the server with an explicit registered developer username, then open
@@ -128,25 +134,27 @@ and reasons unchanged. Invalid or unavailable output falls back to the same
 deterministic recommendation list, so this setting cannot alter eligibility or
 which product is shown.
 
-For the delivery configuration, LLMs are limited to C-approved clarification
-wording and C-approved evidence-grounded answers. LLM understanding and query
-rewriting are experimental because they can alter A/B inputs: they require both
-their individual setting (`BANKING_AGENT_LLM_UNDERSTANDING=llm` or
-`BANKING_AGENT_LLM_QUERY_REWRITE=llm`) **and**
-`BANKING_AGENT_LLM_MIDDLE_LOOP=enabled`. The latter is `off` by default. When
-understanding is enabled, it runs in `shadow` mode by default and records a
-sanitized draft comparison without changing A's result; set
-`BANKING_AGENT_LLM_UNDERSTANDING_MODE=fuse` only after reviewed shadow results.
-`BANKING_AGENT_LLM_CLARIFICATION=llm` remains available without that flag,
-because C has already selected `CLARIFY` before it runs.
+For a normal offline demo or CI run, all optional LLM helpers remain off. To
+run the reviewed full delivery chain, set the named profile below alongside the
+provider/model configuration:
 
-The bounded B0 multi-turn context path is off by default. Set
-`BANKING_AGENT_CONTEXT_MEMORY=enabled` only together with the configured LLM
-understanding/Fuse path. E then supplies at most three completed public turns
-from the same conversation to the typed understanding draft. A context draft
-may clarify an explicit reference in the current turn, but cannot create a C
-decision or state patch; unavailable, ambiguous, or invalid context falls back
-to current-turn behavior.
+```bash
+export BANKING_AGENT_DELIVERY_PROFILE=frozen-20261023
+```
+
+This selects the configuration used by the structured freeze: bounded recent
+context, typed LLM understanding in guarded `fuse` mode, query rewrite,
+clarification wording, evidence-grounded final-answer rendering, and
+non-factual recommendation presentation. It does not supply a provider URL,
+key, or model name: those must still be explicit server-side settings. Startup
+therefore fails closed if the profile is selected without a usable model
+configuration. Any individual `BANKING_AGENT_*` helper variable remains an
+explicit override, including an override to `off` for diagnosis or rollback.
+
+The B0 context window contains at most three completed public turns from the
+same conversation. A context draft may clarify an explicit reference in the
+current turn, but cannot create a C decision or state patch; unavailable,
+ambiguous, or invalid context falls back to current-turn behavior.
 
 After configuring a compatible provider in the ignored `.env`, run the small
 paid, synthetic-only terminal smoke test with
@@ -236,10 +244,10 @@ and 10 MiB. The public ASCEND smoke evaluation remains local because its
 reports include public source transcripts and hypotheses; model binaries,
 audio, and reports are ignored by Git.
 
-The server defaults to `BANKING_AGENT_MODULE_MODE=fixture`. Its E-owned module
-composition layer is intentionally separate from the API: future owner-provided
-A/B/C/D adapters are injected as a `production` `ModuleBundle`, while fixtures
-remain available for deterministic development and CI checks.
+The server defaults to `BANKING_AGENT_MODULE_MODE=production`. Its E-owned
+composition root selects the delivered A/B/C/D adapters; fixture replay remains
+available only through explicit `fixture` mode for deterministic development and
+CI checks.
 
 ## Architecture
 

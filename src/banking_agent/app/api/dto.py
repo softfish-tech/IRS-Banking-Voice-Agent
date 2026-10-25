@@ -34,6 +34,7 @@ class PublicDecision(SchemaModel):
 class PublicCitation(SchemaModel):
     title: str = Field(min_length=1)
     source: str = Field(min_length=1)
+    excerpt: str = Field(min_length=1, max_length=2_000)
 
 
 class PublicRecommendation(SchemaModel):
@@ -112,7 +113,10 @@ def to_chat_turn_response_v1(response: AgentResponse) -> ChatTurnResponseV1:
         status="ok",
         message=PublicMessage(kind=MESSAGE_KIND_BY_ACTION[action], text=response.text),
         decision=PublicDecision(action=action),
-        citations=[PublicCitation(title=item.title, source=item.source) for item in response.citations],
+        citations=[
+            PublicCitation(title=item.title, source=item.source, excerpt=item.excerpt)
+            for item in response.citations
+        ],
         recommendations=[
             PublicRecommendation(name=item.name, rank=item.rank, reason=item.reason)
             for item in response.recommendations

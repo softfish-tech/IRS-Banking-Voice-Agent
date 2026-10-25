@@ -76,3 +76,22 @@ class GroundedResponseGeneratorTests(unittest.IsolatedAsyncioTestCase):
         state.decision = Decision(action=Action.ABSTAIN, reason_code="INSUFFICIENT_EVIDENCE")
         self.assertIsNone(await generator.generate(state, request_id="opaque-request"))
         self.assertEqual(client.requests, [])
+
+    async def test_damaged_replacement_prompt_excludes_unrelated_freeze_sentence(self) -> None:
+        state = answer_state()
+        state.user_text = 'How much does it cost to replace my damaged card?'
+        state.retrieved_docs[0] = RetrievedDocument(
+            document_id='policy-1', title='Damaged card replacement', source='Synthetic source', score=0.9,
+            excerpt=(
+                'A temporary customer freeze may be removed within 60 seconds. '
+                'Damaged-card replacement costs SGD 15.'
+            ),
+        )
+        client = MockLLMClient([{'answer': 'The damaged-card replacement costs SGD 15.', 'citation_ids': ['policy-1']}])
+        generator = GroundedResponseGenerator(client, model='test-model')
+
+        await generator.generate(state, request_id='opaque-request')
+
+        prompt = client.requests[0].messages[-1].content
+        self.assertIn('Damaged-card replacement costs SGD 15.', prompt)
+        self.assertNotIn('temporary customer freeze', prompt)

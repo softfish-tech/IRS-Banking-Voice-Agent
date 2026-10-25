@@ -37,7 +37,7 @@ class IntentProviderTests(unittest.TestCase):
         load.return_value = _EncoderDouble()
         adapter = build_intent_module("minilm_encoder")
         self.assertEqual(adapter.__class__.__name__, "IntentModuleAdapter")
-        load.assert_called_once_with()
+        load.assert_called_once_with(local_files_only=False)
 
     def test_trained_provider_requires_an_explicit_artifact(self) -> None:
         with self.assertRaisesRegex(ValueError, "trained_intent_model_path_required"):

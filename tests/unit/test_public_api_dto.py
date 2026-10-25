@@ -24,11 +24,10 @@ class PublicApiDtoTests(unittest.TestCase):
         self.assertEqual(payload["api_version"], "v1")
         self.assertEqual(payload["message"], {"kind": "answer", "text": "Synthetic answer"})
         self.assertEqual(payload["decision"], {"action": "ANSWER"})
-        self.assertEqual(payload["citations"], [{"title": "Policy", "source": "Synthetic"}])
+        self.assertEqual(payload["citations"], [{"title": "Policy", "source": "Synthetic", "excerpt": "Private excerpt"}])
         self.assertNotIn("state", str(payload))
         self.assertNotIn("INTERNAL_REASON", str(payload))
         self.assertNotIn("internal-doc-id", str(payload))
-        self.assertNotIn("Private excerpt", str(payload))
 
     def test_error_uses_a_generic_public_code(self) -> None:
         state = AgentState(session_id="session-1", user_text="test")
